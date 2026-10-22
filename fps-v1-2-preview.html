@@ -483,7 +483,7 @@ for(const a of [-1,1])cube(arm,.048,.22,.39,steel,a*.185,-.09,-.04);
 arms.push(arm);
 }
 fpsWeaponParts.arms=arms;
-}else{
+}else if(type==='sword'||type==='spear'){
 // High-detail rune blade or royal spear, both visibly held at 3D angle.
 const handle=new THREE.Group();model.add(handle);
 cube(handle,.13,.13,.60,obsidian,0,-.12,.05);
@@ -504,7 +504,7 @@ cube(handle,.032,.072,1.10,magenta,side*.123,-.08,-1.14);
 gem(handle,.14,steel,side*.08,-.08,-1.74,[.65,.6,1.1])}
 const point=new THREE.Mesh(new THREE.ConeGeometry(.119,.39,4),steel);point.rotation.x=-Math.PI/2;point.position.set(0,-.08,-1.88);point.renderOrder=601;handle.add(point);
 gem(handle,.19,magenta,0,-.04,-.5);
-}else{
+}else if(type==='spear'){
 cube(handle,.115,.10,1.72,body,0,-.12,-1.16);
 cylinder(handle,.09,.10,1.8,steel,0,-.12,-1.18,Math.PI/2);
 for(let z of [-.65,-1.14,-1.62])torus(handle,.15,.022,magenta,0,-.12,z);
