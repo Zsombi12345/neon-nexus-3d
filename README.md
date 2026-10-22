@@ -1,5 +1,21 @@
 # NEON NEXUS 3D — Combat Edition v3.4.0
 
+## FPS Boss Hunter v1.1 — új funkciók (csak az FPS változatban)
+
+Az eredeti, külső nézetes játék változatlan: https://zsombi12345.github.io/neon-nexus-3d/
+
+Az új **FPS Boss Hunter v1.1** változat: https://zsombi12345.github.io/neon-nexus-3d/fps.html
+
+- **Minden 5. hullám boss**: az 5., 10., 15. stb. hullámokban Titán boss jelenik meg két kísérővel, több HP-val, nagyobb sebzéssel, gyorsabban támadva. A boss figyelmeztetett területi sokkhullámot küld, és erősítést hív.
+- **Minden karakternek kissé több élete van**: normál játékosok 115 HP, Fekete villanás harcosok 185 HP; a kristály 125 HP. A normál, futó és páncélos ellenfelek, valamint az idézett farkasok és nyuszik is több HP-val rendelkeznek.
+- **Az idézettek a mozgás irányába fordulnak**: a farkasok és nyuszik az általuk követett útvonal szerint fordulnak el, és a multiplayerben is a szerverük szinkronizálja a forgást.
+- **Boss-exkluzív jutalmak**: csak legyőzött boss után jelennek meg az aranyszínű, ritka fejlesztések. Minden játékos a saját három ritka opciójából választhat egyet; legalább egy aktiválható képesség mindig szerepel.
+- **3 F-gombos boss képesség**: Égi Meteor (területi sebzés), Időfagyasztás (ellenfelek megállítása), Titánpajzs (a csapat és kristály védelme). A használatuk után visszatöltési idő következik.
+- **További boss-ereklyék**: Boss dühe (extra sebzés és gyorsaság), Lélekszívás (ütéskor életerőt gyógyít), Árnyéklégió (csak Árnyékidézőnek: több és erősebb idézett).
+- **Irányítás**: `F` aktiválja a kiválasztott boss képességet. Ha többet szereztél, `G`-vel válthatsz közöttük. A ritka fejlesztések a jobb oldali HUD-on is látszanak; érintéses gombok is vannak.
+
+A bónuszok és a boss-harcok a szobagazda által számolt, többjátékos állapotban működnek. Az eredeti `index.html` ettől függetlenül megmaradt.
+
 ## Két külön játékmód (az eredeti játék megmaradt)
 
 - **Eredeti, külső nézetes NEON NEXUS:** https://zsombi12345.github.io/neon-nexus-3d/
