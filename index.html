@@ -1,4 +1,4 @@
-<!doctype html><html lang="hu"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NEON NEXUS 3D | Anime Edition v3.0</title><style>
+<!doctype html><html lang="hu"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NEON NEXUS 3D | Marin Edition v3.2</title><style>
 *{box-sizing:border-box}body{margin:0;background:#050a1b;color:#e7fbff;font:15px system-ui;overflow:hidden}canvas{display:block}button,input{font:inherit;border:1px solid #4fdcf7;border-radius:9px;background:#0c203b;color:white;padding:12px}button{cursor:pointer}button:hover{background:#14436a}.primary{background:#3be3f5;color:#031020;font-weight:800}#menu,#end{position:fixed;inset:0;background:#02091de8;display:grid;place-items:center}section{width:min(460px,94vw);padding:32px;border:1px solid #43ddf78a;border-radius:20px;background:#09152e;box-shadow:0 0 80px #008ff62b;text-align:center}h1{font-size:52px;line-height:.95;color:#65edff;text-shadow:0 0 30px #15b4ff}p{color:#9ebcd2}input{width:100%;margin:6px 0 12px}section button{width:100%;margin:5px 0}.row{display:flex;gap:8px}.row input{flex:1;min-width:0}.row button{width:auto}.hidden{display:none!important}#hud{position:fixed;top:15px;left:15px;right:15px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}#hud>div{padding:12px 16px;background:#071b36dd;border:1px solid #4fe6f866;border-radius:12px;pointer-events:auto}#hud b{color:#62f6ff}#hud button{padding:5px 9px}#team{position:fixed;left:15px;top:100px;padding:12px;background:#071b36dd;border-radius:12px;min-width:165px}#tips{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);padding:10px 20px;background:#071b36dd;border-radius:10px;white-space:nowrap}#announce{position:fixed;top:28%;left:50%;transform:translateX(-50%);font-size:32px;font-weight:900;text-shadow:0 0 20px cyan;pointer-events:none}#touch{position:fixed;bottom:20px;left:15px;right:15px;display:none;justify-content:space-between;pointer-events:none}#touch button{pointer-events:auto}#fire{border-radius:50%;width:80px;height:80px}@media(pointer:coarse){#touch:not(.hidden){display:flex}#tips{display:none}#team{top:auto;bottom:145px}}@media(max-width:600px){#hud{font-size:11px}#hud>div{padding:7px}h1{font-size:40px}}
 
 #perks{position:fixed;right:15px;top:105px;width:230px;max-height:55vh;overflow:auto;border:1px solid #5adff666;background:#07182de8;border-radius:12px;padding:13px;pointer-events:none}
@@ -77,10 +77,38 @@ radial-gradient(ellipse 60% 70% at 85% 90%,#ff70af22,transparent 70%),#050719eb}
 @media(max-width:380px){#selector .pick strong{font-size:11px}.cosplay-portrait{width:64px;height:64px}#menu section{padding:16px 8px}}
 @media(prefers-reduced-motion:reduce){#menu .primary,#selector .pick{transition:none}}
 
+
+/* v3.2 — reference-inspired Marin outfit cards */
+#selector .selection-grid:has(button[data-skin]){grid-template-columns:repeat(3,minmax(0,1fr))}
+#selector .pick[data-skin]{min-height:174px;background:linear-gradient(165deg,#241b45,#10182e)}
+#selector .pick[data-skin="school"]{--accent-glow:#92c7ff}
+#selector .pick[data-skin="blazer"]{--accent-glow:#c67aaf}
+#selector .pick[data-skin="yukata"]{--accent-glow:#ffac72}
+#selector .pick[data-skin].selected{box-shadow:0 0 0 2px #e9dfff55,inset 0 0 34px #ff83be21,0 0 19px var(--accent-glow)}
+.cosplay-portrait{width:90px;height:94px;border-radius:18px 18px 12px 12px;background:radial-gradient(circle at 32% 22%,#fff7ee,#d1acee 65%,#644580)}
+.cosplay-portrait .hair-back{left:18px;top:3px;width:56px;height:82px;z-index:1;border-radius:25px 25px 15px 15px}
+.cosplay-portrait .neck{left:39px;top:48px;z-index:3}
+.cosplay-portrait .face{left:28px;top:16px;width:36px;height:40px;z-index:3}
+.cosplay-portrait .fringe{left:25px;top:11px;width:42px;height:20px;z-index:5}
+.cosplay-portrait .eyes{left:34px;top:33px;width:24px;z-index:5;border-color:#a8497b}
+.cosplay-portrait .hair-tips{position:absolute;z-index:2;left:16px;top:56px;width:61px;height:36px;background:linear-gradient(to bottom,transparent,var(--tips));clip-path:polygon(5% 0,26% 0,31% 100%,40% 9%,64% 5%,68% 100%,80% 8%,97% 0,94% 100%,0 100%)}
+.cosplay-portrait .outfit{left:19px;top:62px;width:54px;height:32px;z-index:5;border-radius:13px 13px 0 0}
+.cosplay-portrait .tie{position:absolute;left:42px;top:64px;z-index:7;width:8px;height:24px;background:var(--trim);clip-path:polygon(0 0,100% 0,72% 100%,28% 100%)}
+.cosplay-portrait .ribbon{z-index:8;left:36px;top:60px;background:var(--trim)}
+.cosplay-portrait .skirt{position:absolute;z-index:5;left:17px;top:85px;height:17px;width:58px;background:repeating-linear-gradient(90deg,transparent 0px,#2c526c77 2px,transparent 4px,transparent 12px),var(--skirt);clip-path:polygon(11% 0,89% 0,100% 100%,0 100%)}
+#selector [data-skin="blazer"] .outfit{border:4px solid #c9d0dd;border-left-width:6px;border-right-width:6px}
+#selector [data-skin="blazer"] .tie{background:#a33653}
+#selector [data-skin="yukata"] .outfit{background:radial-gradient(circle at 20% 52%,#50404e 0 4px,transparent 5px),radial-gradient(circle at 78% 30%,#483e48 0 5px,transparent 6px),#191b23;border-top:3px solid #766e73}
+#selector [data-skin="yukata"] .tie{left:20px;top:83px;width:53px;height:11px;background:#9e2c53;clip-path:none}
+#selector [data-skin="yukata"] .skirt{background:#191b23}
+#selector [data-skin="yukata"] .ribbon{display:none}
+@media(max-width:720px){#selector .selection-grid:has(button[data-skin]){grid-template-columns:repeat(2,minmax(0,1fr))}#selector .pick[data-skin]{min-height:176px}}
+@media(max-width:390px){#selector .selection-grid:has(button[data-skin]){grid-template-columns:1fr}#selector .pick[data-skin]{min-height:126px}}
+
 </style><canvas id="c"></canvas><div id="menu"><section><small>ANIME EDITION • 3D ONLINE CO-OP</small><h1>NEON<br>NEXUS</h1><p>Védd meg a kristályt a drónoktól a barátaiddal! Maximum 6 játékos, közös hullámok, pontszámok.</p>
 <div id="selector" aria-label="Anime karakter összeállítása">
 <h2>01 / COSPLAY SKIN</h2>
-<p class="select-subtitle">My Dress-Up Darling-ihlette, saját készítésű anime karakterek. A skinedet a többiek is látják.</p>
+<p class="select-subtitle">A három feltöltött Marin-referencia alapján készült, részletes, anime-stílusú 3D skinek. A többi játékos is látja őket.</p>
 <div class="selection-grid" id="skinChoices" role="group" aria-label="Skinválasztás"></div>
 <h2>02 / ÁTOKTECHNIKA</h2>
 <p class="select-subtitle">Jujutsu Kaisen ihlette különleges képesség. Játék közben Q-val aktiválható.</p>
@@ -88,7 +116,7 @@ radial-gradient(ellipse 60% 70% at 85% 90%,#ff70af22,transparent 70%),#050719eb}
 <p class="character-tip">✦ Választásaid megmaradnak a böngésződben • Hullámok után további fejlesztéseket kapsz</p>
 </div>
 <input id="name" maxlength="14" placeholder="Játékosneved" value="Játékos"><button class="primary" id="create">MULTIPLAYER SZOBA LÉTREHOZÁSA</button><div class="row"><input id="room" maxlength="6" placeholder="SZOBAKÓD"><button id="join">CSATLAKOZÁS</button></div><button id="solo">EGYJÁTÉKOS DEMO</button><p id="status"></p></section></div>
-<div id="hud" class="hidden"><div><strong>NEON NEXUS</strong><br>SZOBA: <b id="code">SOLO</b></div><div>HULLÁM <b id="wave">1</b> • KRISTÁLY <b id="health">100%</b><br>ÉLETERŐ <b id="hp">100</b></div><div><button id="invite">MEGHÍVÁS</button><button id="leave">KILÉPÉS</button></div></div><div id="version-badge" aria-label="Játékverzió">◆ NEON NEXUS • v3.0.0 ANIME EDITION</div>
+<div id="hud" class="hidden"><div><strong>NEON NEXUS</strong><br>SZOBA: <b id="code">SOLO</b></div><div>HULLÁM <b id="wave">1</b> • KRISTÁLY <b id="health">100%</b><br>ÉLETERŐ <b id="hp">100</b></div><div><button id="invite">MEGHÍVÁS</button><button id="leave">KILÉPÉS</button></div></div><div id="version-badge" aria-label="Játékverzió">◆ NEON NEXUS • v3.2.0 MARIN EDITION</div>
 <div id="abilityHud" class="hidden"><button id="useAbility" title="Különleges képesség: Q"><span id="abilitySymbol">✦</span><span class="ability-meta"><strong id="abilityName">Képesség</strong><small id="abilityTimer">Q • KÉSZ</small></span><strong>Q</strong></button><div id="abilityBar"><div id="abilityFill"></div></div></div>
 <div id="team" class="hidden"></div><div id="tips" class="hidden">WASD: MOZGÁS • EGÉR: CÉLZÁS • KATTINTÁS: LÖVÉS • Q: ÁTOKTECHNIKA</div><div id="announce"></div><div id="touch" class="hidden"><div><button data-k="w">▲</button><br><button data-k="a">◀</button><button data-k="s">▼</button><button data-k="d">▶</button></div><button id="fire">LŐ</button></div><div id="end" class="hidden"><section><h1>VÉGE</h1><p id="result"></p><button id="again" class="primary">ÚJRAINDÍTÁS</button><button id="back">MENÜ</button></section></div>
 <div id="perks" class="hidden"><h3>⚡ FEJLESZTÉSEID</h3><div id="perklist">Az első hullám után választhatsz.</div></div>
@@ -122,7 +150,7 @@ const UPGRADES={
 rapid:{icon:'⚡',name:'Plazma gyorsító',desc:'16%-kal gyorsabb lövés minden szinten.'},
 damage:{icon:'💥',name:'Erősebb lövedék',desc:'+1 sebzés minden találatra.'},
 speed:{icon:'👟',name:'Turbó hajtómű',desc:'+14% mozgási sebesség.'},
-multi:{icon:'🎯',name:'Többszörös lövés',desc:'Még egy lézersugár egyszerre (max. 4).'},
+multi:{icon:'🎯',name:'Többszörös lövés',desc:'Még egy, a célkereszthez szorosabban tartó sugár (max. 4).'},
 heal:{icon:'❤️',name:'Páncélfejlesztés',desc:'+25 maximális életerő, azonnali gyógyulással.'},
 regen:{icon:'✨',name:'Nanobot regeneráció',desc:'Folyamatosan visszatöltő életerő.'},
 pierce:{icon:'🔱',name:'Átütő plazma',desc:'A lövés további ellenfeleken is áthatol.'},
@@ -135,10 +163,9 @@ tank:{color:0xffb44e,speed:1.75,hp:4,damage:7,period:1.65,radius:.95},
 boss:{color:0xb760ff,speed:1.35,hp:65,damage:17,period:1.8,radius:2.15}
 };
 const SKINS={
-sunny:{name:'Marin-ihlette gyaru',desc:'Szőke haj • rózsaszín masni • iskolai cosplay',hair:0xffd17b,skin:0xffdfbf,outfit:0x243568,trim:0xff7db4,accent:0xfaf0fc},
-goth:{name:'Shizuku-ihlette gótikus',desc:'Lila-fekete ruha • elegáns cosplay',hair:0x35224c,skin:0xffd4c5,outfit:0x271736,trim:0xbe85eb,accent:0xf1deff},
-idol:{name:'Rizu-ihlette anime idol',desc:'Csillagos popfellépő • aqua kiegészítők',hair:0x8edcf3,skin:0xf4d6cd,outfit:0xffffff,trim:0x5fbbe8,accent:0x5f7de5},
-street:{name:'Marin-ihlette streetwear',desc:'Divatos kabát • világos haj',hair:0xe5b18d,skin:0xffd8b9,outfit:0xf19dbf,trim:0x6f3b9c,accent:0xffec9a}
+sunny:{name:'Marin – iskolai egyenruha',desc:'Fehér ing, sötét nyakkendő, kék kockás rakott szoknya',kind:'school',hair:0xf1c783,tips:0xf49bb3,skin:0xffdfca,outfit:0xf6f8fb,skirt:0x8eaeca,trim:0x395677,accent:0x668aa8,eye:0x9f4d69,boots:0x392f3a},
+goth:{name:'Marin – blézeres viselet',desc:'Sötétkék blézer, piros nyakkendő, réteges felső',kind:'blazer',hair:0xf1c783,tips:0xed91b8,skin:0xffdfca,outfit:0x253860,skirt:0x99b7d0,trim:0xbb3c57,accent:0xf4f5fa,eye:0x9f4d69,boots:0x2c2735},
+idol:{name:'Marin – fekete jukata',desc:'Fekete virágmintás jukata, bordó obi, arany fények',kind:'yukata',hair:0xe4a964,tips:0xee85ad,skin:0xffd9b5,outfit:0x191a20,skirt:0x191a20,trim:0x92284d,accent:0xd7aa65,eye:0xa34052,boots:0x272228}
 };
 const POWERS={
 purple:{name:'Lila energiatörés',desc:'Erős, egyenes energiacsapás, több drónt eltalál.',icon:'🟣',cooldown:9,color:0xb069ff},
@@ -153,9 +180,9 @@ function renderCharacterChoices(){
 const hex=n=>'#'+n.toString(16).padStart(6,'0');
 const skinRoot=$('skinChoices'),powerRoot=$('powerChoices');skinRoot.replaceChildren();powerRoot.replaceChildren();
 for(const [key,skin] of Object.entries(SKINS)){
-const button=document.createElement('button');button.type='button';button.className='pick'+(selectedSkin===key?' selected':'');button.setAttribute('aria-pressed',String(selectedSkin===key));
-const portrait=document.createElement('span');portrait.className='cosplay-portrait';portrait.style.setProperty('--hair',hex(skin.hair));portrait.style.setProperty('--skin',hex(skin.skin));portrait.style.setProperty('--outfit',hex(skin.outfit));portrait.style.setProperty('--trim',hex(skin.trim));
-for(const cls of ['hair-back','neck','face','fringe','eyes','outfit','ribbon']){const elem=document.createElement('i');elem.className=cls;portrait.append(elem)}
+const button=document.createElement('button');button.type='button';button.className='pick'+(selectedSkin===key?' selected':'');button.setAttribute('aria-pressed',String(selectedSkin===key));button.dataset.skin=skin.kind;
+const portrait=document.createElement('span');portrait.className='cosplay-portrait';portrait.style.setProperty('--hair',hex(skin.hair));portrait.style.setProperty('--skin',hex(skin.skin));portrait.style.setProperty('--outfit',hex(skin.outfit));portrait.style.setProperty('--trim',hex(skin.trim));portrait.style.setProperty('--tips',hex(skin.tips));portrait.style.setProperty('--skirt',hex(skin.skirt));
+for(const cls of ['hair-back','neck','face','fringe','eyes','hair-tips','outfit','tie','ribbon','skirt']){const elem=document.createElement('i');elem.className=cls;portrait.append(elem)}
 const name=document.createElement('strong');name.textContent=skin.name;const desc=document.createElement('small');desc.textContent=skin.desc;button.append(portrait,name,desc);
 button.onclick=()=>{selectedSkin=key;try{localStorage.setItem('neon-nexus-skin',key)}catch{}renderCharacterChoices()};skinRoot.append(button)}
 for(const [key,power] of Object.entries(POWERS)){
@@ -212,13 +239,66 @@ e.hp-=damage;
 if(e.hp<=0){state.enemies=state.enemies.filter(x=>x!==e);owner.kills++;
 if(e.kind==='boss'){ring(e.x,e.z,0xcf65ff,4);burst(e.x,e.z,0xff8bdf,40,1.8);announce('🏆 BOSS LEGYŐZVE!')}
 else burst(e.x,e.z,ENEMY_TYPES[e.kind||'normal'].color,8,.7)}}
-function powerVisual(effect){if(!effect||!POWERS[effect.type])return;
+// Cinematic but bounded spell visuals; every primitive is cleaned up by frame().
+function fxItem(obj,life=.45,type='glow',v=null){if(particles.length>345){obj.geometry?.dispose();obj.material?.dispose();return}
+scene.add(obj);particles.push({obj,life,max:life,type,v})}
+function fxMaterial(color,opacity=.85){return new THREE.MeshBasicMaterial({color,transparent:true,opacity,depthWrite:false,blending:THREE.AdditiveBlending,side:THREE.DoubleSide})}
+function fxSphere(x,z,color,r=.7,life=.38,y=1.35){const m=new THREE.Mesh(new THREE.SphereGeometry(r,18,13),fxMaterial(color,.42));m.position.set(x,y,z);fxItem(m,life,'flare')}
+function fxArc(a,b,color=0xffffff,life=.38,width=1){const geo=new THREE.BufferGeometry().setFromPoints(a.map(p=>new THREE.Vector3(p.x,p.y||1.5,p.z)));const l=new THREE.Line(geo,new THREE.LineBasicMaterial({color,transparent:true,opacity:1,blending:THREE.AdditiveBlending,depthWrite:false,linewidth:width}));fxItem(l,life,'glow')}
+function fxLightning(x,z,tx,tz,color=0xe9b5ff,segments=11,life=.35){
+const pts=[];for(let i=0;i<=segments;i++){let f=i/segments;pts.push({x:x+(tx-x)*f+(i&&i<segments?rnd(-.43,.43):0),y:1.55+Math.sin(f*Math.PI)*.8+rnd(-.17,.17),z:z+(tz-z)*f+(i&&i<segments?rnd(-.43,.43):0)})}
+fxArc(pts,color,life);fxArc(pts,0xffffff,life*.65)}
+function fxSeal(x,z,color,radius=3,life=.75){if(particles.length>260)return;
+const outer=new THREE.Mesh(new THREE.RingGeometry(radius-.06,radius+.055,64),fxMaterial(color,.78));outer.rotation.x=-Math.PI/2;outer.position.set(x,.11,z);fxItem(outer,life,'seal');
+const inner=new THREE.Mesh(new THREE.RingGeometry(radius*.55,radius*.55+.035,64),fxMaterial(0xffffff,.6));inner.rotation.x=-Math.PI/2;inner.position.set(x,.13,z);fxItem(inner,life,'seal');
+const pts=[];for(let j=0;j<10;j++){const a=j*Math.PI/5,rr=radius*.65;pts.push({x:x+Math.sin(a)*rr,y:.16,z:z+Math.cos(a)*rr},{x:x+Math.sin(a)*radius*.95,y:.16,z:z+Math.cos(a)*radius*.95})}
+const geo=new THREE.BufferGeometry().setFromPoints(pts.map(p=>new THREE.Vector3(p.x,p.y,p.z)));const obj=new THREE.LineSegments(geo,new THREE.LineBasicMaterial({color,transparent:true,opacity:.7,depthWrite:false,blending:THREE.AdditiveBlending}));fxItem(obj,life,'glow')}
+function fxPetals(x,z,color,count=18,r=4){
+for(let i=0;i<count&&particles.length<325;i++){const a=rnd(-Math.PI,Math.PI),s=rnd(.7,4.5),rad=rnd(.08,.2);const p=new THREE.Mesh(new THREE.OctahedronGeometry(rad),fxMaterial(i%4?color:0xffffff,.82));
+p.scale.set(1.2,.55,1.7);p.position.set(x+rnd(-1,1),rnd(.65,2.5),z+rnd(-1,1));fxItem(p,rnd(.55,1.15),'petal',new THREE.Vector3(Math.cos(a)*s,rnd(1.4,3.4),Math.sin(a)*s))}}
+function fxStorm(x,z,color,size=5){fxSeal(x,z,color,size*.72,.9);ring(x,z,color,size*.64);fxSphere(x,z,color,size*.48,.42);
+for(let j=0;j<11;j++){const a=j*Math.PI*2/11,tx=x+Math.cos(a)*size,tz=z+Math.sin(a)*size;
+fxLightning(x,z,tx,tz,j%3?color:0xffffff,6,.4)}}
+function powerVisual(effect){
+if(!effect||!POWERS[effect.type])return;
 const c=POWERS[effect.type].color,{x,z}=effect;
-if(effect.type==='purple'){const to=effect.to||{x:x+10,z};laser({x,z},to,c,true);for(let j=1;j<9;j++){const q=j/9;burst(x+(to.x-x)*q,z+(to.z-z)*q,j%2?0xcc88ff:0xffe8ff,3,.7)}ring(to.x,to.z,0xd09dff,2)}
-if(effect.type==='infinity'){for(const size of [1.2,2.4,4.3])ring(x,z,c,size);burst(x,z,0xa3ddff,30,1.4)}
-if(effect.type==='shadow'){ring(x,z,0x9650d7,1.5);burst(x,z,0x7b50b0,18,1);for(const q of effect.targets||[]){laser({x,z},q,0xa17bff,true);burst(q.x,q.z,0x8f72ff,6,.6)}}
-if(effect.type==='flash'){for(const size of [1.1,3.5,5.7])ring(x,z,0xf6a3ff,size);burst(x,z,0xf1b3ff,35,2)}
-if(effect.type==='reverse'){ring(x,z,0x7cfbd9,2);ring(0,0,0x87fbd2,2.3);burst(x,z,c,26,1.3);for(const t of effect.targets||[])burst(t.x,t.z,c,6,.6)}
+if(effect.type==='purple'){
+const to=effect.to||{x:x+10,z};fxSeal(x,z,0x9660ff,2.3,.75);
+laser({x,z},to,c,true);
+fxSphere(x,z,0x6bbfff,1.05,.3);fxSphere(x,z,0xff8cfa,.65,.28);
+for(let j=0;j<11;j++){const q=(j+.5)/11,px=x+(to.x-x)*q,pz=z+(to.z-z)*q;
+fxSphere(px,pz,j%2?0xb159ff:0x61d7ff,rnd(.22,.45),.25);
+if(j%2===0)burst(px,pz,j%4?0xe198ff:0x87dbff,3,.9)}
+fxLightning(x,z,to.x,to.z,0xe3a3ff,22,.52);
+fxLightning(x,z,to.x,to.z,0x8deeff,23,.42);fxSeal(to.x,to.z,0xe1a2ff,2,.55);
+shake=Math.max(shake,.62)}
+if(effect.type==='infinity'){
+for(const size of [1.3,2.8,4.6,6.8])ring(x,z,c,size);
+fxSeal(x,z,0x70ceff,7.2,.95);fxSphere(x,z,0x3c9eff,4.0,.8,1.9);
+for(let j=0;j<14;j++){const a=j*Math.PI/7;let tx=x+Math.cos(a)*6.8,tz=z+Math.sin(a)*6.8;fxSphere(tx,tz,j%2?0xffffff:c,.30,.45,1.4)}
+fxPetals(x,z,0xa0d8ff,21,4);
+shake=Math.max(shake,.25)}
+if(effect.type==='shadow'){
+fxSeal(x,z,0x6d3bbb,5.6,.85);for(const size of [1.1,2.4,3.7])ring(x,z,0x8155bb,size);
+fxSphere(x,z,0x6534ad,2.1,.55);
+fxPetals(x,z,0x4f347f,23);
+for(const q of effect.targets||[]){laser({x,z},q,0x9a60ff,true);fxLightning(x,z,q.x,q.z,0x9a6ae5,9,.5);
+burst(q.x,q.z,0x8d66dc,9,1.3);fxSeal(q.x,q.z,0x9e79ed,1.0,.43)}
+shake=Math.max(shake,.20)}
+if(effect.type==='flash'){
+fxSeal(x,z,0xb884ff,6.4,.7);
+for(const size of [1.1,3.5,5.7])ring(x,z,0xf6a3ff,size);
+fxSphere(x,z,0x2d0a54,3.2,.4);fxSphere(x,z,0xe3adff,1.4,.3);
+for(let j=0;j<13;j++){const a=j*Math.PI*2/13,tx=x+Math.cos(a)*6.6,tz=z+Math.sin(a)*6.6;
+fxLightning(x,z,tx,tz,j%2?0xefb5ff:0xffffff,6,.45)}
+fxPetals(x,z,0xf1acff,21);shake=Math.max(shake,.84)}
+if(effect.type==='reverse'){
+fxSeal(x,z,0x87ffce,6.2,.95);fxSeal(0,0,0x86d4ff,3.2,.9);
+for(const size of [1.2,3,5.7])ring(x,z,0x7cfbd9,size);
+fxSphere(x,z,0x44edb5,3.2,.64,1.45);fxSphere(0,0,0x7efeea,2.35,.6,2);
+fxPetals(x,z,0x85ffdf,31);
+for(const p of effect.targets||[]){fxSphere(p.x,p.z,0x85ffb2,.62,.46);fxPetals(p.x,p.z,0xa7ffe3,5)}
+shake=Math.max(shake,.20)}
 }
 function castPower(p){if(!state||state.phase!=='fight'||p.hp<=0||p.powerCool>0)return;
 const type=Object.hasOwn(POWERS,p.power)?p.power:'purple',power=POWERS[type],x=p.x,z=p.z,fx={type,x,z,targets:[]};
@@ -245,7 +325,7 @@ p.revive=0;p.powerCool=Math.max(0,p.powerCool-dt);p.x=lim(p.x+i.x*8*Math.pow(1.1
 if(i.special&&p.powerCool<=0&&state.phase==='fight')castPower(p);
 if(p.perks.regen)p.hp=Math.min(p.maxHp,p.hp+dt*p.perks.regen*1.4);
 if(i.fire&&p.cool===0){p.cool=Math.max(.055,.22*Math.pow(.84,p.perks.rapid||0));const shots=1+Math.min(3,p.perks.multi||0),damage=1+(p.perks.damage||0),penetration=1+(p.perks.pierce||0),color=colors[state.players.indexOf(p)%6];
-for(let j=0;j<shots;j++){const angle=p.angle+(j-(shots-1)/2)*.17,dx=Math.sin(angle),dz=Math.cos(angle),hits=[];
+for(let j=0;j<shots;j++){const angle=p.angle+(j-(shots-1)/2)*.045,dx=Math.sin(angle),dz=Math.cos(angle),hits=[];
 for(const e of state.enemies){const ex=e.x-p.x,ez=e.z-p.z,along=ex*dx+ez*dz,dist=Math.abs(ex*dz-ez*dx),radius=ENEMY_TYPES[e.kind||'normal'].radius;if(along>0&&along<23&&dist<radius+.3)hits.push({e,along})}
 hits.sort((a,b)=>a.along-b.along);const struck=hits.slice(0,penetration),last=struck.at(-1),to=last?{x:last.e.x,z:last.e.z}:{x:p.x+dx*23,z:p.z+dz*23},from={x:p.x,z:p.z};
 laser(from,to,color,!!last);if(mode==='host')broadcast({type:'laser',a:from,b:to,color,hit:!!last});
@@ -267,37 +347,106 @@ if(enemy){const r=t.radius;const shape=kind==='boss'?new THREE.DodecahedronGeome
 if(kind==='boss'){const halo=new THREE.Mesh(new THREE.TorusGeometry(2.7,.07,8,64),mat(0xff58bf,1.9));halo.position.y=2.5;halo.rotation.x=Math.PI/2.5;g.add(halo);g.userData.halo=halo;for(let j=0;j<7;j++){const a=j*Math.PI*2/7;const spike=new THREE.Mesh(new THREE.ConeGeometry(.42,1.65,4),mat(0xe178ff,1.6));spike.position.set(Math.cos(a)*1.9,2.5,Math.sin(a)*1.9);spike.rotation.z=Math.PI/2;g.add(spike)}const glow=new THREE.PointLight(0xa24fff,22,10);glow.position.y=2;g.add(glow)}
 else{const wing=new THREE.Mesh(new THREE.TorusGeometry(r*1.2,.065,6,16),mat(color,2));wing.position.y=r+.22;wing.rotation.x=Math.PI/2;g.add(wing);g.userData.halo=wing}}
 else{
-const style=SKINS[o.skin]||SKINS.sunny,shade=0x170b29;
-const toon=(c,glow=0)=>new THREE.MeshToonMaterial({color:c,emissive:c,emissiveIntensity:glow,side:THREE.FrontSide});
-const create=(geometry,color,position,outlines=true)=>{const mesh=new THREE.Mesh(geometry,toon(color));mesh.position.set(...position);g.add(mesh);
-if(outlines){const line=new THREE.Mesh(geometry,new THREE.MeshBasicMaterial({color:shade,side:THREE.BackSide}));line.position.copy(mesh.position);line.scale.setScalar(1.065);g.add(line)}return mesh};
-const body=create(new THREE.BoxGeometry(.85,.89,.48),style.outfit,[0,1.35,0]);
-create(new THREE.CylinderGeometry(.50,.81,.73,12),style.outfit,[0,.71,0]);
-create(new THREE.CylinderGeometry(.82,.83,.10,12),style.trim,[0,.35,0],false);
-create(new THREE.BoxGeometry(.75,.13,.5),style.trim,[0,1.79,0],false);
-for(const dir of [-1,1]){create(new THREE.CylinderGeometry(.13,.14,.58,8),style.skin,[dir*.26,.38,0]);
-create(new THREE.BoxGeometry(.33,.18,.53),0x281a41,[dir*.26,.105,.14]);
-create(new THREE.CylinderGeometry(.15,.13,.73,8),style.outfit,[dir*.6,1.29,.03],false);
-create(new THREE.SphereGeometry(.16,8,7),style.skin,[dir*.6, .89,.02],false)}
-create(new THREE.CylinderGeometry(.16,.17,.28,8),style.skin,[0,1.84,0],false);
-const head=create(new THREE.SphereGeometry(.48,22,18),style.skin,[0,2.14,0]);
-for(const side of [-1,1]){create(new THREE.SphereGeometry(.115,10,8),0xffffff,[side*.2,2.17,.424],false);
-create(new THREE.SphereGeometry(.062,10,8),0x302144,[side*.2,2.17,.513],false);
-create(new THREE.SphereGeometry(.025,8,8),0xffffff,[side*.22,2.195,.567],false);
-create(new THREE.SphereGeometry(.065,8,8),0xff9ab9,[side*.31,2.03,.383],false)}
-create(new THREE.SphereGeometry(.045,8,8),0x8d4878,[0,1.995,.442],false);
-const hairGeometry=new THREE.SphereGeometry(.53,20,12,0,Math.PI*2,0,Math.PI*.48);
-create(hairGeometry,style.hair,[0,2.34,0],true);
-for(let b=0;b<3;b++){const fringe=create(new THREE.ConeGeometry(.18,.47,6),style.hair,[-.28+b*.26,2.365,.35],false);fringe.rotation.z=-.16+b*.19}
-const hairLength=o.skin==='goth'?.92:o.skin==='sunny'?.8:o.skin==='idol'?.68:.52;
-for(const side of [-1,1]){const lock=create(new THREE.CylinderGeometry(.22,.13,hairLength,8),style.hair,[side*.45,2.06-hairLength*.26,-.07]);lock.rotation.z=side*.11}
-if(o.skin==='idol')for(const side of [-1,1]){create(new THREE.SphereGeometry(.25,12,10),style.hair,[side*.72,2.48,-.12]);create(new THREE.ConeGeometry(.2,.58,9),style.hair,[side*.78,2.14,-.12])}
-if(o.skin==='goth'){create(new THREE.ConeGeometry(.17,.54,7),style.trim,[-.30,2.6,-.1],false);create(new THREE.ConeGeometry(.17,.54,7),style.trim,[.30,2.6,-.1],false)}
-const frontRibbon=create(new THREE.OctahedronGeometry(.17),style.trim,[0,1.63,.3],false);frontRibbon.scale.set(1.6,.65,.56);
-const weapon=create(new THREE.BoxGeometry(.18,.19,.91),style.accent,[.32,1.18,.72]);weapon.rotation.x=-.15;
-const rune=new THREE.Mesh(new THREE.TorusGeometry(.83,.035,6,48),new THREE.MeshBasicMaterial({color:(POWERS[o.power]||POWERS.purple).color,transparent:true,opacity:.68}));
-rune.rotation.x=-Math.PI/2;rune.position.y=.085;g.add(rune);g.userData.rune=rune;
-const label=makeLabel(o.name);g.userData.label=label;g.userData.skin=o.skin;g.add(label.sprite)}
+// Reference-inspired hand-built toon character: white blouse / blazer / flower-patterned yukata.
+const style=SKINS[o.skin]||SKINS.sunny,shade=0x21142e,kind=style.kind;
+const materials=new Map(),ink=new THREE.MeshBasicMaterial({color:shade,side:THREE.BackSide});
+const material=(c,shine=0)=>{const k=c+':'+shine;if(!materials.has(k))materials.set(k,new THREE.MeshToonMaterial({color:c,emissive:c,emissiveIntensity:shine}));return materials.get(k)};
+function create(geometry,color,at,outlined=true,rotate=[0,0,0],scale=[1,1,1],shine=0){
+const mesh=new THREE.Mesh(geometry,material(color,shine));mesh.position.set(...at);mesh.rotation.set(...rotate);mesh.scale.set(...scale);g.add(mesh);
+if(outlined){const border=new THREE.Mesh(geometry,ink);border.position.copy(mesh.position);border.rotation.copy(mesh.rotation);border.scale.set(scale[0]*1.065,scale[1]*1.065,scale[2]*1.065);g.add(border)}
+return mesh}
+const cyl=(r1,r2,h,n=12)=>new THREE.CylinderGeometry(r1,r2,h,n);
+const orb=(r,n=14)=>new THREE.SphereGeometry(r,n,Math.max(8,n-3));
+const cube=(x,y,z)=>new THREE.BoxGeometry(x,y,z);
+const colorWhite=0xfbfaff,skin=style.skin;
+const flower=(px,py,pz,size,tint,rot=0)=>{
+create(orb(size*.22,8),0xe0b59b,[px,py,pz+.018],false);
+for(let j=0;j<5;j++){const t=rot+j*Math.PI*2/5;create(orb(size*.34,8),tint,[px+Math.sin(t)*size*.37,py+Math.cos(t)*size*.37,pz],false,[0,0,-t],[.9,1.4,.35])}};
+for(const side of [-1,1]){
+// Long, slender legs, socks and shoes.
+create(cyl(.137,.125,.87,10),skin,[side*.25,.56,.01],true,[side*.035,0,0]);
+create(cyl(.145,.14,.29,10),kind==='yukata'?0x292532:colorWhite,[side*.25,.27,.01],false);
+create(orb(.17,10),style.boots,[side*.25,.12,.13],true,[0,0,0],[1,.75,1.45]);
+create(orb(.16,10),skin,[side*.64,1.02,.06],false)}
+if(kind==='yukata'){
+// Black flower-pattern kimono: layered sweeping hem and wide sleeves.
+create(cyl(.46,.83,1.65,16),style.outfit,[0,.99,0]);
+create(cyl(.83,.84,.065,16),0x342933,[0,.17,0],false);
+create(cyl(.43,.50,.78,12),style.outfit,[0,1.86,0]);
+create(cube(.16,.95,.055),0xd4bdac,[.12,1.78,.45],false,[0,0,-.31]);
+create(cube(.16,.95,.055),0x73646f,[-.12,1.78,.45],false,[0,0,.31]);
+for(const side of [-1,1]){
+const sleeve=create(cube(.65,.95,.55),style.outfit,[side*.72,1.52,.04],true,[0,0,-side*.16]);
+create(cube(.68,.065,.56),0x47404d,[side*.72,1.08,.04],false);
+create(cube(.10,.88,.08),0x39303d,[side*1.045,1.51,.22],false)}
+// Deep plum obi with woven lines and oversized front bow.
+create(cyl(.56,.565,.34,16),style.trim,[0,1.18,.01]);
+create(cube(.79,.20,.09),0xa63a5d,[0,1.18,.53],false);
+for(let j=-2;j<=2;j++)create(cube(.027,.27,.03),0xe17899,[j*.105,1.19,.585],false);
+create(orb(.20,10),0xbb4062,[.13,1.17,.62],false,[0,0,0],[.75,.52,.38]);
+flower(-.28,.70,.72,.19,0x4e414a);
+flower(.29,.55,.70,.18,0x5d4352,.5);
+flower(-.66,1.46,.35,.16,0x55404d,.4);
+flower(.73,1.55,.35,.17,0x4a384c,.9);
+flower(.08,1.86,.49,.13,0x54404d,.7);
+flower(-.23,.31,.71,.13,0x483945,.2);
+}else{
+// Pleated sky-blue plaid skirt made from individual folds and woven grid.
+create(cyl(.42,.74,.69,14),style.skirt,[0,.65,0],true);
+for(let j=0;j<16;j++){const t=j*Math.PI*2/16;
+const stripe=create(cube(.065,.57,.018),j%2?0x638dab:0xb4d2e7,[Math.sin(t)*.66,.65,Math.cos(t)*.66],false,[0,t,0]);}
+for(const y of [.45,.67,.86])create(cyl(.708,.708,.012,32),0x466d91,[0,y,0],false);
+create(cyl(.435,.445,.16,12),kind==='school'?0xf4f5f5:0x1e273b,[0,.99,0]);
+if(kind==='school'){
+create(cyl(.39,.47,.85,12),style.outfit,[0,1.47,0]);
+for(const side of [-1,1]){
+create(cyl(.18,.17,.64,9),style.outfit,[side*.52,1.51,0],true,[0,0,side*.17]);
+create(cyl(.171,.17,.16,9),0xe1ebf4,[side*.56,1.16,0],false);}
+create(cube(.66,.11,.07),0xe0e2e7,[0,1.88,.32],false);
+create(cube(.16,.58,.08),style.trim,[0,1.53,.452],false,[0,0,0],[1,.95,1]);
+create(cube(.34,.055,.08),0xb6c3d6,[0,1.07,.44],false,[0,0,-.13]);
+}else{
+// Navy blazer over a dark sweater vest and white V collar.
+create(cyl(.415,.47,.92,12),0x26283a,[0,1.47,0]);
+for(const side of [-1,1]){
+create(cube(.36,.89,.38),style.outfit,[side*.305,1.51,.06]);
+create(cyl(.22,.20,.79,9),style.outfit,[side*.59,1.5,-.02],true,[0,0,side*.16]);
+create(cyl(.22,.22,.12,9),0x1b223a,[side*.68,1.10,-.02],false);
+create(cube(.21,.46,.05),0xd8dee9,[side*.18,1.75,.333],false,[0,0,-side*.39])}
+create(cube(.36,.52,.06),0x171d2e,[0,1.48,.46],false);
+create(cube(.12,.43,.10),style.trim,[0,1.64,.53],false);
+for(const y of [1.34,1.61])create(orb(.025,8),0xe4cb88,[.34,y,.266],false);
+create(cube(.23,.13,.04),0x27395f,[.29,1.35,.34],false);
+}
+}
+// Neck, head, blush, eyes with irises, lashes and layered blonde ombré hair.
+create(cyl(.157,.172,.27,10),skin,[0,1.95,.04],false);
+create(orb(.48,24),skin,[0,2.32,0],true,[0,0,0],[.90,1.06,.83]);
+for(const side of [-1,1]){
+// Manga eyes are slightly flattened, with a tiny white highlight.
+create(orb(.129,14),colorWhite,[side*.196,2.365,.405],false,[0,0,0],[.9,.65,.36]);
+create(orb(.092,14),style.eye,[side*.196,2.357,.445],false,[0,0,0],[.85,.97,.36]);
+create(orb(.048,10),0x291c36,[side*.196,2.354,.48],false,[0,0,0],[.78,1,.4]);
+create(orb(.029,8),colorWhite,[side*.214,2.395,.5],false);
+create(cube(.265,.018,.027),0x453044,[side*.19,2.451,.411],false,[0,0,side*.11]);
+create(orb(.077,9),0xf0a0ad,[side*.302,2.23,.32],false,[0,0,0],[1,.45,.2])}
+create(orb(.043,10),0xecbbaa,[0,2.293,.435],false,[0,0,0],[.7,.5,.32]);
+create(orb(.046,9),0xa46170,[0,2.183,.416],false,[0,0,0],[.85,.35,.2]);
+// Hair cap with individually shaped side-swept bangs and long strands.
+create(new THREE.SphereGeometry(.53,22,14,0,Math.PI*2,0,Math.PI*.56),style.hair,[0,2.55,-.01]);
+for(let j=0;j<7;j++){const x=(j-3)*.126;
+create(new THREE.ConeGeometry(.135,.46,7),style.hair,[x,2.54,.345],false,[.31,0,(j-3)*.11]);}
+for(const side of [-1,1]){
+const lock=create(cyl(.20,.12,.94,9),style.hair,[side*.49,1.965,-.12],true,[0,0,side*.09]);
+create(cyl(.12,.07,.49,9),style.tips,[side*.55,1.60,-.085],false,[0,0,side*.1]);
+create(cyl(.19,.08,1.10,9),style.hair,[side*.29,1.91,-.29],false,[side*.06,0,side*.06]);
+create(cyl(.10,.06,.34,8),style.tips,[side*.36,1.42,-.29],false)}
+for(let j=-2;j<=2;j++)create(cyl(.19,.08,.83,7),j%2?style.hair:style.tips,[j*.17,1.98,-.44],false,[0,0,j*.06]);
+if(kind==='yukata'){create(cube(.07,.40,.06),0xe8a877,[.43,2.24,.04],false,[0,0,-.25]);create(orb(.08,9),0xffe4b4,[.49,2.4,.065],false)}
+const rune=new THREE.Mesh(new THREE.TorusGeometry(.88,.045,7,48),new THREE.MeshBasicMaterial({color:(POWERS[o.power]||POWERS.purple).color,transparent:true,opacity:.6}));rune.rotation.x=-Math.PI/2;rune.position.y=.08;g.add(rune);g.userData.rune=rune;
+const weapon=create(cube(.16,.19,.72),style.accent,[.36,1.35,.71],true,[-.18,0,0]);
+const label=makeLabel(o.name);g.userData.label=label;g.userData.skin=o.skin;g.add(label.sprite);
+}
 scene.add(g);return g}
 function drawState(){if(!state)return;const active=new Set();for(const[enemy,arr]of [[false,state.players],[true,state.enemies]])arr.forEach((o,i)=>{const key=(enemy?'e':'p')+o.id;active.add(key);let m=models.get(key);if(m&&!enemy&&m.userData.skin!==o.skin){removeModel(m);models.delete(key);m=null}
 if(!m){m=makeModel(enemy,i,o);models.set(key,m);m.position.set(o.x,0,o.z)}
@@ -330,7 +479,10 @@ if(mode==='solo'||mode==='host'){tick(dt);sendClock+=dt;if(mode==='host'&&sendCl
 if(mode==='client'){sendClock+=dt;if(sendClock>.06){send(conn,{type:'input',...input()});sendClock=0}}
 drawState();hudClock+=dt;if(hudClock>.12){hud();hudClock=0}
 for(let i=lasers.length-1;i>=0;i--){const l=lasers[i];l.life-=dt;if(l.life<=0){scene.remove(l.obj);l.obj.geometry.dispose();l.obj.material.dispose();lasers.splice(i,1)}else l.obj.material.opacity=l.base*l.life/l.max}
-for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.life-=dt;if(p.life<=0){scene.remove(p.obj);p.obj.geometry.dispose();p.obj.material.dispose();particles.splice(i,1)}else{p.obj.material.opacity=Math.min(1,p.life/p.max);if(p.type==='ring')p.obj.scale.multiplyScalar(1+dt*3);else{p.obj.position.addScaledVector(p.v,dt);p.v.y-=12*dt}}}
+for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.life-=dt;if(p.life<=0){scene.remove(p.obj);p.obj.geometry.dispose();p.obj.material.dispose();particles.splice(i,1)}else{p.obj.material.opacity=Math.min(1,p.life/p.max);if(p.type==='ring')p.obj.scale.multiplyScalar(1+dt*3);
+else if(p.type==='flare')p.obj.scale.multiplyScalar(1+dt*2.4);
+else if(p.type==='seal')p.obj.rotation.z+=dt*.9;
+else if((p.type==='spark'||p.type==='petal')&&p.v){p.obj.position.addScaledVector(p.v,dt);p.v.y-= (p.type==='petal'?3.6:12)*dt;if(p.type==='petal')p.obj.rotation.y+=dt*4}}}
 if(shake>0){camera.position.x+=(Math.random()-.5)*shake*.5;shake=Math.max(0,shake-dt*1.8)}renderer.render(scene,camera)}requestAnimationFrame(frame);
 
 $('create').onclick=startHost;$('join').onclick=startJoin;$('solo').onclick=startSolo;$('leave').onclick=reset;$('back').onclick=reset;
