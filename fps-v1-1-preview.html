@@ -151,6 +151,28 @@ radial-gradient(ellipse 60% 70% at 85% 90%,#ff70af22,transparent 70%),#050719eb}
 @media(max-width:700px){#fpsRadar{bottom:54px;left:6px;padding:4px}#fpsRadar canvas{width:90px;height:90px}#fpsRadar span{font-size:8px}}
 @media(pointer:coarse){#fpsLockHint{display:none!important}#touch{z-index:8}}
 
+
+/* FPS v1.1 Boss Hunter exclusive reward visuals */
+#bossSkillHud{position:fixed;bottom:125px;right:15px;z-index:8;width:235px;padding:10px;border:2px solid #f3c879;background:linear-gradient(145deg,#302142ed,#19102aed);border-radius:12px;box-shadow:0 0 19px #e6a84933}
+#bossSkillHud.has-summons{bottom:312px}
+#bossSkillHud .boss-relic-title{text-align:center;letter-spacing:2px;font-size:11px;font-weight:900;color:#ffe49e;margin-bottom:7px}
+#useBossSkill{padding:9px 11px;width:100%;display:flex;align-items:center;justify-content:space-between;background:#44305b;border:1px solid #f4c97e;color:#fff;gap:8px}
+#useBossSkill>span:first-child{font-size:25px}
+#useBossSkill>span:nth-child(2){display:flex;flex-direction:column;align-items:flex-start;font-size:12px}
+#useBossSkill strong{color:#ffe0a9}
+#useBossSkill small{font-size:10px;color:#e5c9e9}
+#useBossSkill:disabled{opacity:.62}
+#bossSkillProgress{height:5px;margin:7px 0 5px;background:#2a173e;border-radius:9px;overflow:hidden}
+#bossSkillFill{height:100%;width:100%;background:linear-gradient(90deg,#b566ff,#f4d16b)}
+#cycleBossSkill{width:100%;font-size:10px;padding:6px;background:#3b244a;color:#edd6ff;border:1px solid #9269af}
+#upgrades.boss-reward{background:radial-gradient(ellipse at center,#42233cdd 0%,#080916f3 75%)}
+#upgrades.boss-reward section{border:3px solid #f7c477;box-shadow:0 0 100px #ffcf654a;background:linear-gradient(145deg,#352037,#151026)}
+#upgrades.boss-reward h2{color:#ffdf8e}
+.option.boss-option{border:2px solid #e8b85a;background:linear-gradient(160deg,#563549,#2d1b37,#16132f);box-shadow:inset 0 0 32px #ffcd6721}
+.option.boss-option:hover{border-color:#fff0a5;box-shadow:0 0 25px #f9c8766b}
+.boss-perk{color:#ffe4ac!important}
+#bossbar{border-color:#f4ad64;box-shadow:0 0 34px #ff813f66}
+@media(max-width:740px){#bossSkillHud{right:8px;bottom:212px;width:165px;padding:7px}#bossSkillHud.has-summons{bottom:395px}#bossSkillHud .boss-relic-title{font-size:9px}#useBossSkill{padding:6px;font-size:10px}#cycleBossSkill{font-size:9px}}
 </style><canvas id="c"></canvas><div id="menu"><section><small>FPS EDITION • BELSŐ NÉZETES CO-OP</small><h1>NEON<br>NEXUS</h1><p>Ugyanaz a NEON NEXUS, most belső nézetből! Egérrel körbenézhető 3D aréna, kard, lándzsa, plazmafegyver, hullámok és bossok. Maximum 6 játékos.</p>
 <div id="selector" aria-label="Anime karakter összeállítása">
 <h2>01 / COSPLAY SKIN</h2>
@@ -166,9 +188,15 @@ radial-gradient(ellipse 60% 70% at 85% 90%,#ff70af22,transparent 70%),#050719eb}
 <div id="fpsLockHint" class="hidden">KATTINTS A PÁLYÁRA AZ EGÉR RÖGZÍTÉSÉHEZ <small>Esc: egér felszabadítása • Q: képesség • R/T: váltás</small></div>
 <div id="fpsRadar" class="hidden"><canvas id="radarCanvas" width="144" height="144"></canvas><span>ARENA RADAR</span></div><div id="version-badge" aria-label="Játékverzió">◆ NEON NEXUS • FPS v1.1 • BOSS HUNTER</div>
 <div id="abilityHud" class="hidden"><button id="useAbility" title="Különleges képesség: Q"><span id="abilitySymbol">✦</span><span class="ability-meta"><strong id="abilityName">Képesség</strong><small id="abilityTimer">Q • KÉSZ</small></span><strong>Q</strong></button><div id="abilityBar"><div id="abilityFill"></div></div></div>
+<div id="bossSkillHud" class="hidden">
+<div class="boss-relic-title">🏆 BOSS EREKLYE</div>
+<button id="useBossSkill" title="F: különleges boss-képesség"><span id="bossSkillSymbol">☄️</span><span><strong id="bossSkillName">Égi Meteor</strong><small id="bossSkillCool">F • KÉSZ</small></span><b>F</b></button>
+<div id="bossSkillProgress"><div id="bossSkillFill"></div></div>
+<button id="cycleBossSkill">G • Boss-képesség váltás</button>
+</div>
 <div id="summonHud" class="hidden"><strong id="summonLabel">🐺 Farkas (4 mana)</strong><div id="manaTrack"><div id="manaFill"></div></div><small id="manaText">Mana: 12/12</small><button id="toggleSummon">R • Nyuszi / Farkas váltás</button><small id="summonCount">Idézettek: 0/2</small><button id="toggleWeapon">T • Lándzsa / kard</button></div>
 <div id="flashOverlay" class="hidden"><div id="flashPrompt"><h3>⚡ FEKETE VILLANÁS</h3><p>Nyomj újra Q-t a zöld zónában!</p><div id="flashTrack"><div id="flashZone"></div><div id="flashMarker"></div></div><button id="flashStop">Q • IDŐZÍTÉS</button></div></div>
-<div id="team" class="hidden"></div><div id="tips" class="hidden">WASD: MOZGÁS • EGÉR: KÖRBENÉZÉS • KATTINTÁS: TÁMADÁS • Q: KÉPESSÉG • R/T: VÁLTÁS • ESC: KURZOR</div><div id="announce"></div><div id="touch" class="hidden"><div><button data-k="w">▲</button><br><button data-k="a">◀</button><button data-k="s">▼</button><button data-k="d">▶</button></div><button id="fire">LŐ</button></div><div id="end" class="hidden"><section><h1>VÉGE</h1><p id="result"></p><button id="again" class="primary">ÚJRAINDÍTÁS</button><button id="back">MENÜ</button></section></div>
+<div id="team" class="hidden"></div><div id="tips" class="hidden">WASD: MOZGÁS • EGÉR: KÖRBENÉZÉS • KATTINTÁS: TÁMADÁS • Q: KÉPESSÉG • F: BOSS EREKLYE • G: VÁLTÁS • R/T • ESC</div><div id="announce"></div><div id="touch" class="hidden"><div><button data-k="w">▲</button><br><button data-k="a">◀</button><button data-k="s">▼</button><button data-k="d">▶</button></div><button id="fire">LŐ</button></div><div id="end" class="hidden"><section><h1>VÉGE</h1><p id="result"></p><button id="again" class="primary">ÚJRAINDÍTÁS</button><button id="back">MENÜ</button></section></div>
 <div id="perks" class="hidden"><h3>⚡ FEJLESZTÉSEID</h3><div id="perklist">Az első hullám után választhatsz.</div></div>
 <div id="bossbar" class="hidden">☠ TITÁN BOSS • <span id="bosshp">100%</span><div id="bosstrack"><div id="bossfill"></div></div></div>
 <div id="damageFlash"></div>
@@ -312,7 +340,7 @@ function removeModel(g){scene.remove(g);
 if(g.userData.externalModel){if(g.userData.weaponGroup)g.userData.weaponGroup.traverse(o=>{o.geometry?.dispose();o.material?.dispose()});for(const o of g.children){if(o.isSprite){o.material.map?.dispose();o.material.dispose()}else if(o.userData?.abilityRune){o.geometry?.dispose();o.material?.dispose()}}return}
 g.traverse(o=>{o.geometry?.dispose();if(o.material){for(const m of (Array.isArray(o.material)?o.material:[o.material])){m.map?.dispose();m.dispose()}}})}
 function clearEffects(){for(const e of [...lasers,...particles]){scene.remove(e.obj);e.obj.geometry?.dispose();e.obj.material?.dispose()}lasers.length=0;particles.length=0}
-function reset(){fpsReleaseMouse();fpsGunRig.visible=false;fpsViewType='';fpsLastPos=null;fpsTouchLook=null;if(conn)try{conn.close()}catch{};if(peer)try{peer.destroy()}catch{};conn=null;peer=null;clients.clear();state=null;mode='menu';room='';localId='';for(const m of models.values())removeModel(m);models.clear();clearEffects();$('menu').classList.remove('hidden');for(const x of ['hud','team','tips','touch','end','upgrades','perks','bossbar','abilityHud'])$(x).classList.add('hidden');$('create').disabled=false;$('join').disabled=false;$('status').textContent='';upgradeView='';coreFlash=0;castTap=0;flashActive=false;$('flashOverlay').classList.add('hidden');$('summonHud').classList.add('hidden');keys.clear();fire=false;fpsUi()}
+function reset(){fpsReleaseMouse();fpsGunRig.visible=false;fpsViewType='';fpsLastPos=null;fpsTouchLook=null;if(conn)try{conn.close()}catch{};if(peer)try{peer.destroy()}catch{};conn=null;peer=null;clients.clear();state=null;mode='menu';room='';localId='';for(const m of models.values())removeModel(m);models.clear();clearEffects();$('menu').classList.remove('hidden');for(const x of ['hud','team','tips','touch','end','upgrades','perks','bossbar','abilityHud','bossSkillHud'])$(x).classList.add('hidden');$('create').disabled=false;$('join').disabled=false;$('status').textContent='';upgradeView='';coreFlash=0;castTap=0;flashActive=false;$('flashOverlay').classList.add('hidden');$('summonHud').classList.add('hidden');keys.clear();fire=false;fpsUi()}
 
 function fail(t){reset();$('status').textContent=t}
 function send(c,o){if(c?.open)try{c.send(o)}catch{}}
@@ -889,14 +917,27 @@ for(const[k,m]of models)if(!active.has(k)){removeModel(m);models.delete(k)}
 
 function refreshUpgradeUI(){if(!state||!localId){$('upgrades').classList.add('hidden');upgradeView='';return}
 const me=state.players.find(p=>p.id===localId);if(state.phase!=='upgrade'||!me){$('upgrades').classList.add('hidden');upgradeView='';return}
-const key=state.breakId+':'+localId+':'+me.picked;if(upgradeView!==key){upgradeView=key;$('options').replaceChildren();$('upgradeTitle').textContent=me.picked?'FEJLESZTÉS KIVÁLASZTVA':'VÁLASSZ 1 FEJLESZTÉST!';
-$('upgradeHint').textContent=me.picked?'Várakozás a többi játékosra…':'Válassz egyet a három fejlesztés közül. A következő hullám minden játékos választása után indul.';
-if(!me.picked)me.choices.forEach((id,i)=>{const perk=UPGRADES[id];if(!perk)return;const b=document.createElement('button');b.className='option';const icon=document.createElement('div');icon.className='emblem';icon.textContent=perk.icon;const strong=document.createElement('strong');strong.textContent=perk.name;const info=document.createElement('small');info.textContent=perk.desc;const lvl=document.createElement('small');lvl.textContent='Jelenlegi szint: '+(me.perks[id]||0);b.append(icon,strong,info,lvl);b.onclick=()=>chooseUpgrade(i);$('options').append(b)})}
+const key=state.breakId+':'+localId+':'+me.picked;if(upgradeView!==key){upgradeView=key;$('options').replaceChildren();$('upgradeTitle').textContent=me.picked?'FEJLESZTÉS KIVÁLASZTVA':state.lastBossReward?'🏆 BOSS EREKLYE – VÁLASSZ!':'VÁLASSZ 1 FEJLESZTÉST!';
+$('upgrades').classList.toggle('boss-reward',!!state.lastBossReward);
+$('upgradeHint').textContent=me.picked?'Várakozás a többi játékosra…':(state.lastBossReward?'A legyőzött boss három különleges ereklyét hagyott hátra. Válassz EGY ritka képességet!':'Válassz egyet a három fejlesztés közül. A következő hullám minden játékos választása után indul.');
+if(!me.picked)me.choices.forEach((id,i)=>{const perk=getUpgrade(id);if(!perk)return;const b=document.createElement('button');b.className=state.lastBossReward?'option boss-option':'option';const icon=document.createElement('div');icon.className='emblem';icon.textContent=perk.icon;const strong=document.createElement('strong');strong.textContent=perk.name;const info=document.createElement('small');info.textContent=perk.desc;const lvl=document.createElement('small');lvl.textContent='Jelenlegi szint: '+(me.perks[id]||0);b.append(icon,strong,info,lvl);b.onclick=()=>chooseUpgrade(i);$('options').append(b)})}
 $('upgrades').classList.remove('hidden');fpsReleaseMouse()}
 function hud(){if(!state)return;$('wave').textContent=state.wave;$('health').textContent=Math.ceil(state.core)+' / '+state.coreMax;const me=state.players.find(p=>p.id===localId);$('hp').textContent=me?Math.ceil(me.hp):0;
 $('team').replaceChildren();for(const p of state.players){const line=document.createElement('div');line.textContent=(p.id===localId?'◆ ':'')+p.name+' — '+p.kills+' ✦'+(state.phase==='upgrade'?(p.picked?' ✓':' …'):'');$('team').append(line)}
-$('perklist').replaceChildren();if(me){const items=Object.entries(me.perks||{});if(!items.length)$('perklist').textContent='Még nincs fejlesztésed.';for(const [id,lvl]of items){if(!UPGRADES[id])continue;const d=document.createElement('div');d.className='perk';const name=document.createElement('div');name.textContent=UPGRADES[id].icon+' '+UPGRADES[id].name;const level=document.createElement('span');level.textContent='Lv.'+lvl;d.append(name,level);$('perklist').append(d)}}
-if(me){const activeShadow=me.power==='shadow';$('summonHud').classList.toggle('hidden',!activeShadow);
+$('perklist').replaceChildren();if(me){const items=Object.entries(me.perks||{});if(!items.length)$('perklist').textContent='Még nincs fejlesztésed.';for(const [id,lvl]of items){const perk=getUpgrade(id);if(!perk)continue;const d=document.createElement('div');d.className='perk';if(BOSS_UPGRADES[id])d.classList.add('boss-perk');const name=document.createElement('div');name.textContent=perk.icon+' '+perk.name;const level=document.createElement('span');level.textContent='Lv.'+lvl;d.append(name,level);$('perklist').append(d)}}
+if(me){
+const learned=Object.keys(BOSS_UPGRADES).filter(id=>BOSS_UPGRADES[id].active&&me.perks?.[id]);
+const activeRelic=learned.includes(me.bossActive)?me.bossActive:learned[0];
+$('bossSkillHud').classList.toggle('hidden',learned.length===0);
+if(activeRelic){const perk=BOSS_UPGRADES[activeRelic],remain=Math.max(0,me.bossCool||0);
+$('bossSkillSymbol').textContent=perk.icon;$('bossSkillName').textContent=perk.name;
+$('bossSkillCool').textContent=remain>0?remain.toFixed(1)+' mp újratöltés':'F • AKTIVÁLHATÓ';
+$('bossSkillFill').style.width=(100*(1-remain/Math.max(12,perk.cooldown-(me.perks[activeRelic]-1)*2.5)))+'%';
+$('useBossSkill').disabled=!!me.picked===false&&state.phase==='upgrade'||state.phase!=='fight'||me.hp<=0||remain>0;
+$('cycleBossSkill').style.display=learned.length>1?'':'none';
+}
+$('bossSkillHud').classList.toggle('has-summons',me.power==='shadow');
+const activeShadow=me.power==='shadow';$('summonHud').classList.toggle('hidden',!activeShadow);
 if(activeShadow){const kind=summonChoice,cost=kind==='wolf'?4:2,alive=(state.summons||[]).filter(p=>p.owner===me.id&&p.hp>0).length,limit=2+(me.perks.summonSlots||0)+2*(me.perks.bossLegion||0);
 $('summonLabel').textContent=(kind==='wolf'?'🐺 Farkas':'🐇 Nyuszi')+' ('+cost+' mana)';
 $('manaFill').style.width=(100*me.mana/me.maxMana)+'%';
@@ -907,6 +948,7 @@ const power=POWERS[me.power]||POWERS.purple,remain=Math.max(0,me.powerCool||0);
 $('abilitySymbol').textContent=power.icon;$('abilityName').textContent=power.name;
 $('abilityTimer').textContent=remain>0?remain.toFixed(1)+' mp újratöltés':(me.power==='flash'?'Q • IDŐZÍTŐ SÁV':me.power==='shadow'?'Q • IDÉZÉS':'Q • AKTIVÁLHATÓ');
 $('abilityFill').style.width=(100*(1-remain/power.cooldown))+'%';$('useAbility').disabled=state.phase!=='fight'||remain>0||me.hp<=0||(me.power==='shadow'&&(me.mana<(summonChoice==='wolf'?4:2)||(state.summons||[]).filter(x=>x.owner===me.id).length>=2+(me.perks.summonSlots||0)+2*(me.perks.bossLegion||0)))}
+if(!me)$('bossSkillHud').classList.add('hidden');
 const boss=state.enemies.find(e=>e.kind==='boss');$('bossbar').classList.toggle('hidden',!boss);if(boss){const v=Math.max(0,boss.hp/boss.maxHp*100);$('bossfill').style.width=v+'%';$('bosshp').textContent=Math.ceil(v)+'%'}
 refreshUpgradeUI();if(state.over){fpsReleaseMouse();$('upgrades').classList.add('hidden');$('end').classList.remove('hidden');$('result').textContent='Elért hullám: '+state.wave+' • Csapat pontszám: '+state.players.reduce((n,p)=>n+p.kills,0)}
 if(performance.now()>announcement)$('announce').textContent=''}
