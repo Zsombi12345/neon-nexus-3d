@@ -1,57 +1,51 @@
-# NEON NEXUS 3D — Anime Edition v3.0.0
+# NEON NEXUS 3D — Marin Edition v3.2.0
 
-A coop sci-fi 3D browser-based wave-survival game: defend the crystal against drones, upgrade your skills and survive a boss every 10 waves.
+3D sci-fi multiplayer wave survival. Defend a crystal against drones, choose upgrades after every wave and face a boss every tenth wave.
 
-**Play online:** https://zsombi12345.github.io/neon-nexus-3d/
+**Play:** https://zsombi12345.github.io/neon-nexus-3d/
 
-## Anime Edition v3 features
+## New in v3.2.0 — three detailed Marin-inspired skins
 
-### Pick your look BEFORE starting
-Four original, anime-styled cosplay outfits inspired by the fashion and cosplay atmosphere of **My Dress-Up Darling**:
-- Marin-inspired gyaru: blonde hair, school-style outfit and pink ribbon
-- Shizuku-inspired gothic cosplay: dark hair and violet-black fashion
-- Rizu-inspired anime idol: sky-blue hair and bright performance outfit
-- Marin-inspired streetwear: pastel pink clothes and light hair
+Choose a skin **before entering** your singleplayer or multiplayer game. Three original, procedural 3D costumes were constructed using the provided character references from *My Dress-Up Darling*:
 
-These are game-made 3D character designs, not copied artwork or official licensed assets. Everyone in the room can see the skin you pick. The browser remembers your selection.
+1. **Marin — iskolai egyenruha**: flowing blonde/pink hair, white shirt, dark blue tie, sky-blue plaid pleated skirt.
+2. **Marin — blézeres viselet**: navy blazer, white lapels, dark inner layers, red tie, blue-grey pleated skirt.
+3. **Marin — fekete jukata**: flower-patterned black yukata, deep magenta obi, sunset blonde and pink hair tips.
 
-### Pick a Jujutsu Kaisen-inspired cursed technique
-Pick one ability in the main menu; use it with **Q** in battle. Each ability has a cooldown:
-- **Purple Energy Break (9s):** powerful beam through multiple enemies
-- **Infinity Field (12s):** knock back and slow surrounding drones
-- **Shadow Summoning (10s):** spectral wolves target up to five nearby enemies
-- **Black Flash (8s):** heavy area-of-effect attack
-- **Reverse Energy (17s):** heal nearby teammates and repair the crystal
+The game uses custom Three.js shapes and toon shading with modeled bangs, hair strands, eyelids, eye highlights, outfit folds, buttons, ribbons and patterns. These are stylized original game meshes, not copied or extracted anime models.
 
-Effects are performed by the authoritative host and synchronized over WebRTC in multiplayer.
+The selected skin is visible to other multiplayer participants and remembered locally between visits.
 
-### Visuals
-- Anime-inspired toon-shaded characters and drones
-- Character-specific hair, outfits and accessories with hand-built Three.js geometry
-- Neon magical sigils and combat particles
-- Name and HP bar above every player
-- **Version v3.0.0** shown in the bottom-left corner
-- Abilities HUD showing cooldown and readiness
+## Better shooting
 
-## Controls
-- **WASD** or arrow keys: move
-- **Mouse**: aim
-- **Left click**: shoot
-- **Q** or tap the skill button: use selected special ability
-- **Mobile touch**: directional buttons, shoot button and ability button
+The **multishot spread was reduced** from 0.17 rad to 0.045 rad between adjacent beams. Extra beams stay much closer to your cursor, allowing more precise aiming without changing the unlock/upgrades system.
 
-## Wave upgrades and boss fights
-Pick one of three upgrades after each wave. In multiplayer, everyone chooses individually and the next wave starts when all players are ready. Every tenth wave has a strong titan boss with a dedicated health bar. Drone enemies have different colors, HP and movement speeds.
+## More spectacular JJK-inspired techniques
 
-## Multiplayer and hosting
-1. Select a skin and ability, then enter your name.
-2. Press **MULTIPLAYER SZOBA LÉTREHOZÁSA** to host.
-3. Invite friends with the six-character code or invitation link.
-4. Friends choose their skins/abilities before joining with **CSATLAKOZÁS**.
+Choose one technique before the game; use **Q** (or the ability button) in the arena:
 
-Up to six players may join a session. Multiplayer uses PeerJS/WebRTC and depends on peer connectivity and the host remaining online.
+| Ability | Effect | Cooldown |
+| --- | --- | --- |
+| Lila energiatörés | Piercing beam that hits enemies in a line | 9 s |
+| Végtelen mező | Pushes and slows nearby enemies | 12 s |
+| Árnyékidézés | Hits up to five nearby enemies with shadow energy | 10 s |
+| Fekete villanás | Heavy close-range area attack | 8 s |
+| Fordított energia | Heals teammates and repairs the crystal | 17 s |
 
-The static site is hosted via GitHub Pages from the `main` branch and `/ (root)`. `index.html` is the entry point. Three.js and PeerJS are loaded from CDNs, requiring an internet connection.
+Visual effects now include arc lightning, animated magic circles, layered glowing beams, energy spheres, particle petals and screen shake. Host-triggered spell effects synchronize in multiplayer.
 
-### Notes
-Game progress is not persisted between page reloads. Character menu preferences are saved locally in the browser. This is a playable prototype and not an official collaboration with any anime franchise.
+## How to play
+
+- **WASD** / arrows — move
+- **Mouse** — aim
+- **Left click** — shoot
+- **Q** — activate chosen special ability
+- **Mobile/touch** — directional controls, FIRE, ability button
+
+Create a room and share its six-character code (or use the invite button). Up to six players may join. The host runs the world simulation, and every player chooses one of three upgrades after each wave. A boss appears every 10th wave.
+
+## Hosting and limitations
+
+This site uses static HTML/CSS/JavaScript, Three.js and PeerJS. **GitHub Pages** serves `index.html` from the `main` branch's root. External CDNs require an internet connection. Multiplayer depends on peer-to-peer connectivity and on the host staying online.
+
+Gameplay progress is reset on reload; skin and technique preferences are saved locally. This is a fan-inspired prototype, not an official franchise game.
