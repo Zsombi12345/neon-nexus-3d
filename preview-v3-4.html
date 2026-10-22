@@ -142,9 +142,9 @@ radial-gradient(ellipse 60% 70% at 85% 90%,#ff70af22,transparent 70%),#050719eb}
 <input id="name" maxlength="14" placeholder="Játékosneved" value="Játékos"><button class="primary" id="create">MULTIPLAYER SZOBA LÉTREHOZÁSA</button><div class="row"><input id="room" maxlength="6" placeholder="SZOBAKÓD"><button id="join">CSATLAKOZÁS</button></div><button id="solo">EGYJÁTÉKOS DEMO</button><p id="status"></p></section></div>
 <div id="hud" class="hidden"><div><strong>NEON NEXUS</strong><br>SZOBA: <b id="code">SOLO</b></div><div>HULLÁM <b id="wave">1</b> • KRISTÁLY <b id="health">100%</b><br>ÉLETERŐ <b id="hp">100</b></div><div><button id="invite">MEGHÍVÁS</button><button id="leave">KILÉPÉS</button></div></div><div id="version-badge" aria-label="Játékverzió">◆ NEON NEXUS • v3.4.0 COMBAT EDITION</div>
 <div id="abilityHud" class="hidden"><button id="useAbility" title="Különleges képesség: Q"><span id="abilitySymbol">✦</span><span class="ability-meta"><strong id="abilityName">Képesség</strong><small id="abilityTimer">Q • KÉSZ</small></span><strong>Q</strong></button><div id="abilityBar"><div id="abilityFill"></div></div></div>
-<div id="summonHud" class="hidden"><strong id="summonLabel">🐺 Farkas (4 mana)</strong><div id="manaTrack"><div id="manaFill"></div></div><small id="manaText">Mana: 12/12</small><button id="toggleSummon">R • Nyuszi / Farkas váltás</button><small id="summonCount">Idézettek: 0/2</small></div>
+<div id="summonHud" class="hidden"><strong id="summonLabel">🐺 Farkas (4 mana)</strong><div id="manaTrack"><div id="manaFill"></div></div><small id="manaText">Mana: 12/12</small><button id="toggleSummon">R • Nyuszi / Farkas váltás</button><small id="summonCount">Idézettek: 0/2</small><button id="toggleWeapon">T • Lándzsa / kard</button></div>
 <div id="flashOverlay" class="hidden"><div id="flashPrompt"><h3>⚡ FEKETE VILLANÁS</h3><p>Nyomj újra Q-t a zöld zónában!</p><div id="flashTrack"><div id="flashZone"></div><div id="flashMarker"></div></div><button id="flashStop">Q • IDŐZÍTÉS</button></div></div>
-<div id="team" class="hidden"></div><div id="tips" class="hidden">WASD: MOZGÁS • EGÉR: CÉLZÁS • KATTINTÁS: LÖVÉS • Q: ÁTOKTECHNIKA • R: IDÉZETT VÁLTÁS</div><div id="announce"></div><div id="touch" class="hidden"><div><button data-k="w">▲</button><br><button data-k="a">◀</button><button data-k="s">▼</button><button data-k="d">▶</button></div><button id="fire">LŐ</button></div><div id="end" class="hidden"><section><h1>VÉGE</h1><p id="result"></p><button id="again" class="primary">ÚJRAINDÍTÁS</button><button id="back">MENÜ</button></section></div>
+<div id="team" class="hidden"></div><div id="tips" class="hidden">WASD: MOZGÁS • EGÉR: CÉLZÁS • KATTINTÁS: TÁMADÁS • Q: KÉPESSÉG • R: IDÉZETT • T: FEGYVER</div><div id="announce"></div><div id="touch" class="hidden"><div><button data-k="w">▲</button><br><button data-k="a">◀</button><button data-k="s">▼</button><button data-k="d">▶</button></div><button id="fire">LŐ</button></div><div id="end" class="hidden"><section><h1>VÉGE</h1><p id="result"></p><button id="again" class="primary">ÚJRAINDÍTÁS</button><button id="back">MENÜ</button></section></div>
 <div id="perks" class="hidden"><h3>⚡ FEJLESZTÉSEID</h3><div id="perklist">Az első hullám után választhatsz.</div></div>
 <div id="bossbar" class="hidden">☠ TITÁN BOSS • <span id="bosshp">100%</span><div id="bosstrack"><div id="bossfill"></div></div></div>
 <div id="damageFlash"></div>
@@ -247,7 +247,7 @@ function spawnEnemy(kind,angle){const t=ENEMY_TYPES[kind],factor=kind==='boss'?1
 
 function show(){ $('menu').classList.add('hidden');if(!state?.over)$('end').classList.add('hidden');for(const x of ['hud','team','tips','touch','perks','abilityHud'])$(x).classList.remove('hidden');$('code').textContent=room||'SOLO';$('invite').style.display=room?'':'none';$('again').style.display=mode==='client'?'none':''}
 function removeModel(g){scene.remove(g);
-if(g.userData.externalModel){for(const o of g.children){if(o.isSprite){o.material.map?.dispose();o.material.dispose()}else if(o.userData?.abilityRune){o.geometry?.dispose();o.material?.dispose()}}return}
+if(g.userData.externalModel){if(g.userData.weaponGroup)g.userData.weaponGroup.traverse(o=>{o.geometry?.dispose();o.material?.dispose()});for(const o of g.children){if(o.isSprite){o.material.map?.dispose();o.material.dispose()}else if(o.userData?.abilityRune){o.geometry?.dispose();o.material?.dispose()}}return}
 g.traverse(o=>{o.geometry?.dispose();if(o.material){for(const m of (Array.isArray(o.material)?o.material:[o.material])){m.map?.dispose();m.dispose()}}})}
 function clearEffects(){for(const e of [...lasers,...particles]){scene.remove(e.obj);e.obj.geometry?.dispose();e.obj.material?.dispose()}lasers.length=0;particles.length=0}
 function reset(){if(conn)try{conn.close()}catch{};if(peer)try{peer.destroy()}catch{};conn=null;peer=null;clients.clear();state=null;mode='menu';room='';localId='';for(const m of models.values())removeModel(m);models.clear();clearEffects();$('menu').classList.remove('hidden');for(const x of ['hud','team','tips','touch','end','upgrades','perks','bossbar','abilityHud'])$(x).classList.add('hidden');$('create').disabled=false;$('join').disabled=false;$('status').textContent='';upgradeView='';coreFlash=0;castTap=0;flashActive=false;$('flashOverlay').classList.add('hidden');$('summonHud').classList.add('hidden');keys.clear();fire=false}
@@ -392,6 +392,7 @@ const hit=attackTarget;const color=creature.kind==='wolf'?0xd19cff:0x93e9ff;
 burst(hit.x,hit.z,color,4,.55);damageEnemy(hit,creature.damage,owner)}
 }
 state.summons=state.summons.filter(p=>p.hp>0&&state.players.some(owner=>owner.id===p.owner))}
+function toggleShadowWeapon(){const p=state?.players?.find(p=>p.id===localId);if(!p||p.power!=='shadow')return;shadowWeaponChoice=shadowWeaponChoice==='spear'?'sword':'spear';if(mode!=='client')p.weapon=shadowWeaponChoice;hud()}
 function toggleSummonChoice(){const me=state?.players?.find(p=>p.id===localId);
 if(!me||me.power!=='shadow')return;summonChoice=summonChoice==='wolf'?'rabbit':'wolf';
 if(mode!=='client')me.summonType=summonChoice;hud()}
@@ -466,6 +467,33 @@ if(state.remaining===0&&state.enemies.length===0)enterUpgrade()}
 
 function makeLabel(name){const cvs=document.createElement('canvas');cvs.width=512;cvs.height=128;const tex=new THREE.CanvasTexture(cvs);const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,depthTest:false,transparent:true}));sprite.scale.set(3.3,.83,1);sprite.position.y=3.35;return{cvs,tex,sprite,last:''}}
 function updateLabel(label,p){const health=Math.ceil(p.hp),key=p.name+'|'+health+'|'+p.maxHp;if(label.last===key)return;label.last=key;const c=label.cvs.getContext('2d');c.clearRect(0,0,512,128);c.fillStyle='#041327e8';c.fillRect(14,4,484,118);c.strokeStyle='#46e9ff';c.lineWidth=3;c.strokeRect(14,4,484,118);c.font='bold 37px sans-serif';c.textAlign='center';c.fillStyle='#efffff';c.fillText(p.name,256,48);c.fillStyle='#612134';c.fillRect(40,69,432,31);c.fillStyle=health>p.maxHp*.35?'#44f8a7':'#ff5264';c.fillRect(40,69,432*Math.max(0,p.hp/p.maxHp),31);c.font='bold 24px sans-serif';c.fillStyle='#ffffff';c.fillText(health+' / '+p.maxHp,256,94);label.tex.needsUpdate=true}
+function attachShadowWeapon(g,p){
+if(!g||!g.userData)return;
+const kind=p.power==='shadow'?(p.weapon==='sword'?'sword':'spear'):null;
+if(g.userData.weaponType===kind)return;
+if(g.userData.weaponGroup){g.remove(g.userData.weaponGroup);g.userData.weaponGroup.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material)o.material.dispose()});g.userData.weaponGroup=null}
+g.userData.weaponType=kind;
+if(!kind)return;
+const staff=new THREE.Group(),shaft=new THREE.MeshBasicMaterial({color:0x493062}),silver=new THREE.MeshToonMaterial({color:0xe5d7fc,emissive:0x9774c4,emissiveIntensity:.26}),edge=new THREE.MeshBasicMaterial({color:0xa1e6ff}),gold=new THREE.MeshBasicMaterial({color:0xd5a871});
+function part(geo,mat,x,y,z){const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);staff.add(m);return m}
+if(kind==='spear'){
+part(new THREE.CylinderGeometry(.045,.054,2.35,9),shaft,0,.15,0);
+part(new THREE.ConeGeometry(.17,.62,7),silver,0,1.58,0);
+part(new THREE.OctahedronGeometry(.10),edge,0,1.89,0);
+for(const sign of [-1,1])part(new THREE.ConeGeometry(.062,.30,7),gold,sign*.12,1.26,0);
+part(new THREE.TorusGeometry(.11,.038,6,13),gold,0,1.24,0)
+}else{
+part(new THREE.CylinderGeometry(.047,.048,.62,9),shaft,0,-.30,0);
+part(new THREE.BoxGeometry(.49,.11,.17),gold,0,.08,0);
+part(new THREE.BoxGeometry(.12,1.43,.10),silver,0,.84,0);
+part(new THREE.ConeGeometry(.13,.48,5),silver,0,1.78,0);
+part(new THREE.BoxGeometry(.025,1.22,.06),edge,.07,.78,.035)
+}
+staff.position.set(.76,1.18,.45);
+staff.rotation.z=kind==='spear'?.34:-.19;
+staff.userData.restTilt=staff.rotation.z;
+g.add(staff);g.userData.weaponGroup=staff
+}
 function makeExternalCharacter(o){
 const file=loadedCharacters.get(o.skin);if(!file)return null;
 const root=new THREE.Group(),model=cloneSkeleton(file.scene),skin=SKINS[o.skin]||SKINS.sunny;
@@ -484,7 +512,7 @@ const label=makeLabel(o.name);root.add(label.sprite);
 label.sprite.position.y=o.skin==='idol'?3.55:3.68;
 const rune=new THREE.Mesh(new THREE.TorusGeometry(.88,.045,7,48),new THREE.MeshBasicMaterial({color:(POWERS[o.power]||POWERS.purple).color,transparent:true,opacity:.65}));
 rune.rotation.x=-Math.PI/2;rune.position.y=.08;rune.userData.abilityRune=true;root.add(rune);
-root.userData={externalModel:true,skin:o.skin,label,rune};
+root.userData={externalModel:true,skin:o.skin,label,rune};attachShadowWeapon(root,o);
 scene.add(root);return root
 }
 function makeModel(enemy,i,o){if(!enemy&&loadedCharacters.has(o.skin)){const hero=makeExternalCharacter(o);if(hero)return hero}const g=new THREE.Group(),kind=o.kind||'normal',t=ENEMY_TYPES[kind],color=enemy?t.color:colors[i%6];
@@ -505,7 +533,7 @@ part(new THREE.SphereGeometry(.35,10,8),black,sign*.47,.28,.14,1,.7,1.3)}
 part(new THREE.SphereGeometry(.12,10,8),nose,0,1.97,.67);
 const label=makeLabel(o.name);label.sprite.position.y=3.55;g.userData.label=label;g.userData.skin=o.skin;g.add(label.sprite);
 const rune=new THREE.Mesh(new THREE.TorusGeometry(.92,.045,7,48),new THREE.MeshBasicMaterial({color:(POWERS[o.power]||POWERS.purple).color,transparent:true,opacity:.6}));rune.rotation.x=-Math.PI/2;rune.position.y=.08;g.userData.rune=rune;g.add(rune);
-scene.add(g);return g}
+attachShadowWeapon(g,o);scene.add(g);return g}
 if(enemy){const r=t.radius;const shape=kind==='boss'?new THREE.DodecahedronGeometry(r,1):kind==='tank'?new THREE.DodecahedronGeometry(r):new THREE.IcosahedronGeometry(r,1);const body=new THREE.Mesh(shape,new THREE.MeshToonMaterial({color,emissive:color,emissiveIntensity:kind==='boss'?.55:.23}));body.position.y=r+.25;g.add(body);const outline=new THREE.Mesh(shape,new THREE.MeshBasicMaterial({color:0x1b0e36,side:THREE.BackSide}));outline.position.copy(body.position);outline.scale.setScalar(1.09);g.add(outline);const eye=new THREE.Mesh(new THREE.SphereGeometry(r*.35,10,8),mat(0xffffff,2));eye.position.set(0,r+.25,r*.83);g.add(eye);
 if(kind==='boss'){const halo=new THREE.Mesh(new THREE.TorusGeometry(2.7,.07,8,64),mat(0xff58bf,1.9));halo.position.y=2.5;halo.rotation.x=Math.PI/2.5;g.add(halo);g.userData.halo=halo;for(let j=0;j<7;j++){const a=j*Math.PI*2/7;const spike=new THREE.Mesh(new THREE.ConeGeometry(.42,1.65,4),mat(0xe178ff,1.6));spike.position.set(Math.cos(a)*1.9,2.5,Math.sin(a)*1.9);spike.rotation.z=Math.PI/2;g.add(spike)}const glow=new THREE.PointLight(0xa24fff,22,10);glow.position.y=2;g.add(glow)}
 else{const wing=new THREE.Mesh(new THREE.TorusGeometry(r*1.2,.065,6,16),mat(color,2));wing.position.y=r+.22;wing.rotation.x=Math.PI/2;g.add(wing);g.userData.halo=wing}}
@@ -610,7 +638,7 @@ const rune=new THREE.Mesh(new THREE.TorusGeometry(.88,.045,7,48),new THREE.MeshB
 const weapon=create(cube(.16,.19,.72),style.accent,[.36,1.35,.71],true,[-.18,0,0]);
 const label=makeLabel(o.name);g.userData.label=label;g.userData.skin=o.skin;g.add(label.sprite);
 }
-scene.add(g);return g}
+if(!enemy)attachShadowWeapon(g,o);scene.add(g);return g}
 function makeSummonModel(p){
 const g=new THREE.Group(),wolf=p.kind==='wolf',base=wolf?0x574188:0xe8eaff,glow=wolf?0xb889fa:0x8adfff,eyes=wolf?0xff8ce8:0x39457a;
 const mat1=new THREE.MeshToonMaterial({color:base,emissive:base,emissiveIntensity:.12});
@@ -634,7 +662,13 @@ function drawState(){if(!state)return;const active=new Set();for(const[enemy,arr
 if(!m){m=makeModel(enemy,i,o);models.set(key,m);m.position.set(o.x,0,o.z)}
 m.position.x+=(o.x-m.position.x)*.3;m.position.z+=(o.z-m.position.z)*.3;m.rotation.y=enemy?Math.atan2(-o.x,-o.z):o.angle||0;
 if(enemy){const kind=o.kind||'normal';m.position.y=Math.sin(performance.now()*.004+i)*.14;if(m.userData.halo)m.userData.halo.rotation.z+=.035;if(kind==='boss')m.scale.setScalar(1+Math.sin(performance.now()*.003)*.045)}
-else{m.position.y=0;updateLabel(m.userData.label,o);if(m.userData.rune){m.userData.rune.rotation.z+=.008;m.userData.rune.material.opacity=.45+Math.sin(performance.now()*.003)*.18}}m.visible=enemy||o.hp>0});
+else{m.position.y=0;updateLabel(m.userData.label,o);attachShadowWeapon(m,o);
+if(m.userData.weaponGroup){if(m.userData.lastSwing!==o.swing){m.userData.lastSwing=o.swing;m.userData.swingUntil=performance.now()+220}
+const active=(m.userData.swingUntil||0)>performance.now(),w=m.userData.weaponGroup;
+w.rotation.z=w.userData.restTilt+(active?Math.sin((1-(m.userData.swingUntil-performance.now())/220)*Math.PI)*.85:Math.sin(performance.now()*.003)*.06);
+w.rotation.x=active?Math.sin((1-(m.userData.swingUntil-performance.now())/220)*Math.PI)*.7:0}
+if(m.userData.rune){m.userData.rune.rotation.z+=.008;m.userData.rune.material.opacity=.45+Math.sin(performance.now()*.003)*.18}}
+m.visible=enemy||o.hp>0});
 for(const pet of state.summons||[]){const key='s'+pet.id;active.add(key);let m=models.get(key);
 if(!m){m=makeSummonModel(pet);m.position.set(pet.x,0,pet.z);models.set(key,m)}
 m.position.x+=(pet.x-m.position.x)*.36;m.position.z+=(pet.z-m.position.z)*.36;
@@ -659,7 +693,7 @@ $('summonLabel').textContent=(kind==='wolf'?'🐺 Farkas':'🐇 Nyuszi')+' ('+co
 $('manaFill').style.width=(100*me.mana/me.maxMana)+'%';
 const recovering=alive===0&&me.mana<me.maxMana;
 $('manaText').textContent='Mana: '+me.mana.toFixed(1)+' / '+me.maxMana+(alive>0?' • NEM TÖLTŐDIK':recovering?' • '+Math.ceil(120-(me.manaRecharge||0))+' mp a feltöltésig':' • TELE');
-$('summonCount').textContent='Idézettek: '+alive+' / '+limit}
+$('summonCount').textContent='Idézettek: '+alive+' / '+limit;$('toggleWeapon').textContent='T • '+(shadowWeaponChoice==='spear'?'Lándzsa':'Kard')+' (váltás)'}
 const power=POWERS[me.power]||POWERS.purple,remain=Math.max(0,me.powerCool||0);
 $('abilitySymbol').textContent=power.icon;$('abilityName').textContent=power.name;
 $('abilityTimer').textContent=remain>0?remain.toFixed(1)+' mp újratöltés':(me.power==='flash'?'Q • IDŐZÍTŐ SÁV':me.power==='shadow'?'Q • IDÉZÉS':'Q • AKTIVÁLHATÓ');
@@ -686,13 +720,14 @@ $('again').onclick=()=>{if(mode==='client')return;const people=state.players.map
 $('invite').onclick=async()=>{const url=new URL(location.href);url.searchParams.set('room',room);try{await navigator.clipboard.writeText(url.href);announce('MEGHÍVÓ KIMÁSOLVA')}catch{prompt('Meghívólink:',url.href)}};
 addEventListener('keydown',e=>{let k=e.key.toLowerCase();if(k==='q'&&mode!=='menu'){e.preventDefault();if(!e.repeat)handleAbilityTap();return}
 if(k==='r'&&mode!=='menu'){e.preventDefault();if(!e.repeat)toggleSummonChoice();return}
+if(k==='t'&&mode!=='menu'){e.preventDefault();if(!e.repeat)toggleShadowWeapon();return}
 if(['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright'].includes(k)&&mode!=='menu'){e.preventDefault();keys.add(k.replace('arrowup','w').replace('arrowdown','s').replace('arrowleft','a').replace('arrowright','d'))}});
 addEventListener('keyup',e=>keys.delete(e.key.toLowerCase().replace('arrowup','w').replace('arrowdown','s').replace('arrowleft','a').replace('arrowright','d')));
 $('c').onpointerdown=()=>fire=true;addEventListener('pointerup',()=>fire=false);addEventListener('blur',()=>{keys.clear();fire=false});
 $('c').onpointermove=e=>{const mouse=new THREE.Vector2(e.clientX/innerWidth*2-1,1-e.clientY/innerHeight*2),ray=new THREE.Raycaster();ray.setFromCamera(mouse,camera);const point=new THREE.Vector3();if(ray.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0,1,0),0),point)){aim.x=lim(point.x,-25,25);aim.z=lim(point.z,-25,25)}};
 for(const b of document.querySelectorAll('[data-k]')){const k=b.dataset.k;b.onpointerdown=e=>{e.preventDefault();keys.add(k);b.setPointerCapture(e.pointerId)};b.onpointerup=()=>keys.delete(k);b.onpointercancel=()=>keys.delete(k)}
 $('fire').onpointerdown=e=>{fire=true;$('fire').setPointerCapture(e.pointerId)};$('fire').onpointerup=()=>fire=false;
-$('useAbility').onclick=handleAbilityTap;$('flashStop').onclick=handleAbilityTap;$('toggleSummon').onclick=toggleSummonChoice;
+$('useAbility').onclick=handleAbilityTap;$('flashStop').onclick=handleAbilityTap;$('toggleSummon').onclick=toggleSummonChoice;$('toggleWeapon').onclick=toggleShadowWeapon;
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
 const q=new URLSearchParams(location.search).get('room');if(q&&/^[A-Z2-9]{6}$/i.test(q)){$('room').value=q.toUpperCase();$('status').textContent='Meghívót kaptál. Add meg a neved, majd csatlakozz!'}
 </script></html>
