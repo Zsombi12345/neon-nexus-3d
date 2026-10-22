@@ -328,7 +328,7 @@ const standard=Object.keys(UPGRADES).filter(k=>!['summonSlots','manaWell','summo
 const special=p?.power==='shadow'?['summonSlots','manaWell','summonFangs']:[],pool=standard.sort(()=>Math.random()-.5);
 if(special.length)return[special[Math.floor(Math.random()*special.length)],...pool.slice(0,2)].sort(()=>Math.random()-.5);
 return pool.slice(0,3)}
-function add(id,name,skin='sunny',power='purple'){if(state.players.some(p=>p.id===id))return;const waiting=state.phase==='upgrade';state.players.push({id,name:safe(name),skin:Object.hasOwn(SKINS,skin)?skin:'sunny',power:Object.hasOwn(POWERS,power)?power:'purple',powerCool:0,bossCool:0,bossActive:'',guardTimer:0,mana:12,maxMana:12,manaRecharge:0,manaRecoverStart:null,summonType:'wolf',weapon:'spear',swing:0,x:rnd(-5,5),z:rnd(-5,5),angle:0,hp:power==='flash'?185:115,maxHp:power==='flash'?185:115,kills:0,cool:0,revive:0,perks:{},choices:waiting?rollChoices({power},state.lastBossReward):[],picked:!waiting,input:{x:0,z:0,ax:0,az:0,fire:false,special:false,summonType:'wolf',weapon:'spear'}})}
+function add(id,name,skin='sunny',power='purple'){if(state.players.some(p=>p.id===id))return;const waiting=state.phase==='upgrade';state.players.push({id,name:safe(name),skin:Object.hasOwn(SKINS,skin)?skin:'sunny',power:Object.hasOwn(POWERS,power)?power:'purple',powerCool:0,bossCool:0,bossActive:'',guardTimer:0,mana:12,maxMana:12,manaRecharge:0,manaRecoverStart:null,summonType:'wolf',weapon:'spear',swing:0,attackSeq:0,x:rnd(-5,5),z:rnd(-5,5),angle:0,hp:power==='flash'?185:115,maxHp:power==='flash'?185:115,kills:0,cool:0,revive:0,perks:{},choices:waiting?rollChoices({power},state.lastBossReward):[],picked:!waiting,input:{x:0,z:0,ax:0,az:0,fire:false,special:false,summonType:'wolf',weapon:'spear'}})}
 function pack(){return{players:state.players.map(({input,cool,revive,...p})=>p),enemies:state.enemies,summons:state.summons,core:state.core,coreMax:state.coreMax,wave:state.wave,over:state.over,phase:state.phase,breakId:state.breakId,lastBossReward:state.lastBossReward,coreGuardTimer:state.coreGuardTimer}}
 function applyUpgrade(id,index){if(!state||state.phase!=='upgrade')return;
 const p=state.players.find(x=>x.id===id);
@@ -366,7 +366,7 @@ function removeModel(g){scene.remove(g);
 if(g.userData.externalModel){if(g.userData.weaponGroup)g.userData.weaponGroup.traverse(o=>{o.geometry?.dispose();o.material?.dispose()});for(const o of g.children){if(o.isSprite){o.material.map?.dispose();o.material.dispose()}else if(o.userData?.abilityRune){o.geometry?.dispose();o.material?.dispose()}}return}
 g.traverse(o=>{o.geometry?.dispose();if(o.material){for(const m of (Array.isArray(o.material)?o.material:[o.material])){m.map?.dispose();m.dispose()}}})}
 function clearEffects(){for(const e of [...lasers,...particles]){scene.remove(e.obj);e.obj.geometry?.dispose();e.obj.material?.dispose()}lasers.length=0;particles.length=0}
-function reset(){fpsReleaseMouse();fpsGunRig.visible=false;fpsViewType='';fpsLastPos=null;fpsTouchLook=null;if(conn)try{conn.close()}catch{};if(peer)try{peer.destroy()}catch{};conn=null;peer=null;clients.clear();state=null;mode='menu';room='';localId='';for(const m of models.values())removeModel(m);models.clear();clearEffects();$('menu').classList.remove('hidden');for(const x of ['hud','team','tips','touch','end','upgrades','perks','bossbar','abilityHud','bossSkillHud'])$(x).classList.add('hidden');$('create').disabled=false;$('join').disabled=false;$('status').textContent='';upgradeView='';coreFlash=0;castTap=0;flashActive=false;$('flashOverlay').classList.add('hidden');$('summonHud').classList.add('hidden');keys.clear();fire=false;fpsUi()}
+function reset(){fpsReleaseMouse();fpsGunRig.visible=false;fpsViewType='';fpsLastAttackSeq=null;fpsAttackStart=-9999;fpsLastPos=null;fpsTouchLook=null;if(conn)try{conn.close()}catch{};if(peer)try{peer.destroy()}catch{};conn=null;peer=null;clients.clear();state=null;mode='menu';room='';localId='';for(const m of models.values())removeModel(m);models.clear();clearEffects();$('menu').classList.remove('hidden');for(const x of ['hud','team','tips','touch','end','upgrades','perks','bossbar','abilityHud','bossSkillHud'])$(x).classList.add('hidden');$('create').disabled=false;$('join').disabled=false;$('status').textContent='';upgradeView='';coreFlash=0;castTap=0;flashActive=false;$('flashOverlay').classList.add('hidden');$('summonHud').classList.add('hidden');keys.clear();fire=false;fpsUi()}
 
 function fail(t){reset();$('status').textContent=t}
 function send(c,o){if(c?.open)try{c.send(o)}catch{}}
@@ -658,7 +658,7 @@ const spreadBonus=Math.min(5,p.perks.meleeSweep||0)*.125;
 if(dist<radius+ENEMY_TYPES[e.kind||'normal'].radius*.3&&facing>(shadow?.32:.2)-spreadBonus){
 hit.push({x:e.x,z:e.z});damageEnemy(e,damage,p)}
 }
-p.swing=(p.swing||0)+1;
+p.swing=(p.swing||0)+1;p.attackSeq=(p.attackSeq||0)+1;
 const fx={x:p.x,z:p.z,angle:p.angle,kind:shadow?'shadow':'flash',weapon:p.weapon,radius,targets:hit};
 meleeVisual(fx);if(mode==='host')broadcast({type:'melee',effect:fx})
 }
@@ -837,7 +837,7 @@ p.mana=Math.min(p.maxMana,p.manaRecoverStart+(p.maxMana-p.manaRecoverStart)*(p.m
 p.x=lim(p.x+i.x*8*Math.pow(1.14,p.perks.speed||0)*dt,-25,25);p.z=lim(p.z+i.z*8*Math.pow(1.14,p.perks.speed||0)*dt,-25,25);p.angle=Math.atan2(i.ax-p.x,i.az-p.z);if(p.power==='shadow'){p.summonType=i.summonType==='rabbit'?'rabbit':'wolf';p.weapon=i.weapon==='sword'?'sword':'spear'}p.cool=Math.max(0,p.cool-dt);
 if(i.special&&p.powerCool<=0&&state.phase==='fight')castPower(p);
 if(p.perks.regen)p.hp=Math.min(p.maxHp,p.hp+dt*p.perks.regen*1.4);
-if(i.fire&&p.cool===0){if(p.power==='shadow'||p.power==='flash'){p.cool=Math.max(.17,(p.power==='shadow'?.39:.31)*Math.pow(.84,p.perks.rapid||0)*Math.pow(.82,p.perks.bossOverdrive||0));performMelee(p)}else{p.cool=Math.max(.05,.22*Math.pow(.84,p.perks.rapid||0)*Math.pow(.82,p.perks.bossOverdrive||0));const shots=1+Math.min(3,p.perks.multi||0),damage=1+(p.perks.damage||0)+3*(p.perks.bossOverdrive||0),penetration=1+(p.perks.pierce||0),color=colors[state.players.indexOf(p)%6];
+if(i.fire&&p.cool===0){if(p.power==='shadow'||p.power==='flash'){p.cool=Math.max(.17,(p.power==='shadow'?.39:.31)*Math.pow(.84,p.perks.rapid||0)*Math.pow(.82,p.perks.bossOverdrive||0));performMelee(p)}else{p.cool=Math.max(.05,.22*Math.pow(.84,p.perks.rapid||0)*Math.pow(.82,p.perks.bossOverdrive||0));p.attackSeq=(p.attackSeq||0)+1;const shots=1+Math.min(3,p.perks.multi||0),damage=1+(p.perks.damage||0)+3*(p.perks.bossOverdrive||0),penetration=1+(p.perks.pierce||0),color=colors[state.players.indexOf(p)%6];
 for(let j=0;j<shots;j++){const angle=p.angle+(j-(shots-1)/2)*.045,dx=Math.sin(angle),dz=Math.cos(angle),hits=[];
 for(const e of state.enemies){const ex=e.x-p.x,ez=e.z-p.z,along=ex*dx+ez*dz,dist=Math.abs(ex*dz-ez*dx),radius=ENEMY_TYPES[e.kind||'normal'].radius;if(along>0&&along<23&&dist<radius+.3)hits.push({e,along})}
 hits.sort((a,b)=>a.along-b.along);const struck=hits.slice(0,penetration),last=struck.at(-1),to=last?{x:last.e.x,z:last.e.z}:{x:p.x+dx*23,z:p.z+dz*23},from={x:p.x,z:p.z};
@@ -1234,7 +1234,7 @@ if(k==='f'&&mode!=='menu'){e.preventDefault();if(!e.repeat)triggerBossSkill();re
 if(k==='g'&&mode!=='menu'){e.preventDefault();if(!e.repeat)cycleBossSkill();return}
 if(['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright'].includes(k)&&mode!=='menu'){e.preventDefault();keys.add(k.replace('arrowup','w').replace('arrowdown','s').replace('arrowleft','a').replace('arrowright','d'))}});
 addEventListener('keyup',e=>keys.delete(e.key.toLowerCase().replace('arrowup','w').replace('arrowdown','s').replace('arrowleft','a').replace('arrowright','d')));
-$('c').onpointerdown=e=>{if(mode==='menu')return;
+$('c').onpointerdown=e=>{if(mode==='menu'||state?.phase==='upgrade'||state?.over||flashActive)return;
 if(e.pointerType==='touch'){fpsTouchLook={id:e.pointerId,x:e.clientX,y:e.clientY};try{$('c').setPointerCapture(e.pointerId)}catch{}return}
 if(!fpsPointerActive()){fpsLockMouse();return}fire=true;fpsKick=.16};
 addEventListener('pointerup',()=>{fire=false;fpsTouchLook=null});
