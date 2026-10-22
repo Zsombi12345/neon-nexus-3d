@@ -300,7 +300,9 @@ const code=()=>Array.from(crypto.getRandomValues(new Uint8Array(6)),n=>'ABCDEFGH
 const rnd=(a,b)=>a+Math.random()*(b-a),lim=(v,a,b)=>Math.max(a,Math.min(b,v)),safe=s=>String(s||'Játékos').trim().slice(0,14).replace(/[<>]/g,'')||'Játékos';
 function init(){return{players:[],enemies:[],summons:[],nextSummon:0,core:125,coreMax:125,wave:0,remaining:0,timer:0,over:false,next:0,phase:'fight',breakId:0,bossDefeatedWave:0,lastBossReward:false,coreGuardTimer:0}}
 function rollChoices(p,bossReward=false){
-if(bossReward){return bossRelicsFor(p).sort(()=>Math.random()-.5).slice(0,3)}
+if(bossReward){const pool=bossRelicsFor(p),active=pool.filter(id=>BOSS_UPGRADES[id].active).sort(()=>Math.random()-.5);
+const guaranteedActive=active[0],others=pool.filter(id=>id!==guaranteedActive).sort(()=>Math.random()-.5);
+return[guaranteedActive,...others.slice(0,2)].sort(()=>Math.random()-.5)}
 const standard=Object.keys(UPGRADES).filter(k=>!['summonSlots','manaWell','summonFangs'].includes(k));
 const special=p?.power==='shadow'?['summonSlots','manaWell','summonFangs']:[];const pool=standard.sort(()=>Math.random()-.5);
 if(special.length)return[special[Math.floor(Math.random()*special.length)],...pool.slice(0,2)].sort(()=>Math.random()-.5);return pool.slice(0,3)}
