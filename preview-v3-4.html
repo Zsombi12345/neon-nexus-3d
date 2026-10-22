@@ -559,7 +559,21 @@ create(cyl(.137,.125,.87,10),skin,[side*.25,.56,.01],true,[side*.035,0,0]);
 create(cyl(.145,.14,.29,10),kind==='yukata'?0x292532:colorWhite,[side*.25,.27,.01],false);
 create(orb(.17,10),style.boots,[side*.25,.12,.13],true,[0,0,0],[1,.75,1.45]);
 create(orb(.16,10),skin,[side*.64,1.02,.06],false)}
-if(kind==='yukata'){
+if(kind==='makima'){
+// White workplace shirt, red tie, fitted dark trousers and long copper hair.
+for(const side of [-1,1]){
+create(cyl(.176,.152,.78,12),0x222633,[side*.255,.53,.06]);
+create(cyl(.183,.185,.21,12),0x26222b,[side*.255,.17,.13],false);
+create(cyl(.18,.165,.86,12),0xf3f0e7,[side*.53,1.41,.05],true,[0,0,side*.12]);
+create(cyl(.20,.205,.14,12),0xe5e2dc,[side*.58,1.02,.05],false)}
+create(cyl(.405,.43,.91,14),0xf5f2ed,[0,1.46,.015]);
+create(cyl(.42,.46,.11,12),0x262533,[0,.95,.02]);
+for(const side of [-1,1])create(cube(.22,.38,.055),0xffffff,[side*.17,1.84,.36],false,[0,0,-side*.4]);
+create(cube(.13,.58,.08),0xaf3547,[0,1.57,.436],false);
+const tip=create(new THREE.ConeGeometry(.083,.28,4),0x9a293c,[0,1.18,.435],false);tip.rotation.z=Math.PI;
+for(const y of [1.20,1.48,1.75])create(orb(.023,8),0xb4bbc5,[.17,y,.409],false);
+create(cube(.18,.08,.05),0xddd8c8,[0,1.95,.26],false);
+}else if(kind==='yukata'){
 // Black flower-pattern kimono: layered sweeping hem and wide sleeves.
 create(cyl(.46,.83,1.65,16),style.outfit,[0,.99,0]);
 create(cyl(.83,.84,.065,16),0x342933,[0,.17,0],false);
@@ -634,6 +648,15 @@ create(cyl(.19,.08,1.10,9),style.hair,[side*.29,1.91,-.29],false,[side*.06,0,sid
 create(cyl(.10,.06,.34,8),style.tips,[side*.36,1.42,-.29],false)}
 for(let j=-2;j<=2;j++)create(cyl(.19,.08,.83,7),j%2?style.hair:style.tips,[j*.17,1.98,-.44],false,[0,0,j*.06]);
 if(kind==='yukata'){create(cube(.07,.40,.06),0xe8a877,[.43,2.24,.04],false,[0,0,-.25]);create(orb(.08,9),0xffe4b4,[.49,2.4,.065],false)}
+if(kind==='makima'){
+for(const side of [-1,1]){
+create(new THREE.TorusGeometry(.085,.012,6,16),0xf9c875,[side*.196,2.357,.488],false);
+create(new THREE.TorusGeometry(.041,.009,6,14),0x764531,[side*.196,2.357,.51],false)}
+create(new THREE.CylinderGeometry(.13,.09,.82,10),style.hair,[-.35,1.83,-.53],true,[.2,0,-.16]);
+for(let j=0;j<7;j++){const ball=create(orb(.12,9),j%2?0xb16d46:0xc27a50,[-.38-j*.016,2.2-j*.12,-.55-j*.014],false);
+ball.scale.set(1,.57,.9)}
+create(orb(.11,9),0xa64848,[-.49,1.33,-.55],false);
+}
 const rune=new THREE.Mesh(new THREE.TorusGeometry(.88,.045,7,48),new THREE.MeshBasicMaterial({color:(POWERS[o.power]||POWERS.purple).color,transparent:true,opacity:.6}));rune.rotation.x=-Math.PI/2;rune.position.y=.08;g.add(rune);g.userData.rune=rune;
 const weapon=create(cube(.16,.19,.72),style.accent,[.36,1.35,.71],true,[-.18,0,0]);
 const label=makeLabel(o.name);g.userData.label=label;g.userData.skin=o.skin;g.add(label.sprite);
