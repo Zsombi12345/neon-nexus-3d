@@ -1,4 +1,4 @@
-<!doctype html><html lang="hu"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NEON NEXUS 3D — FPS Boss Hunter Edition v1.1</title><style>
+<!doctype html><html lang="hu"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NEON NEXUS 3D — FPS Animated Arsenal Edition v1.2</title><style>
 *{box-sizing:border-box}body{margin:0;background:#050a1b;color:#e7fbff;font:15px system-ui;overflow:hidden}canvas{display:block}button,input{font:inherit;border:1px solid #4fdcf7;border-radius:9px;background:#0c203b;color:white;padding:12px}button{cursor:pointer}button:hover{background:#14436a}.primary{background:#3be3f5;color:#031020;font-weight:800}#menu,#end{position:fixed;inset:0;background:#02091de8;display:grid;place-items:center}section{width:min(460px,94vw);padding:32px;border:1px solid #43ddf78a;border-radius:20px;background:#09152e;box-shadow:0 0 80px #008ff62b;text-align:center}h1{font-size:52px;line-height:.95;color:#65edff;text-shadow:0 0 30px #15b4ff}p{color:#9ebcd2}input{width:100%;margin:6px 0 12px}section button{width:100%;margin:5px 0}.row{display:flex;gap:8px}.row input{flex:1;min-width:0}.row button{width:auto}.hidden{display:none!important}#hud{position:fixed;top:15px;left:15px;right:15px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}#hud>div{padding:12px 16px;background:#071b36dd;border:1px solid #4fe6f866;border-radius:12px;pointer-events:auto}#hud b{color:#62f6ff}#hud button{padding:5px 9px}#team{position:fixed;left:15px;top:100px;padding:12px;background:#071b36dd;border-radius:12px;min-width:165px}#tips{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);padding:10px 20px;background:#071b36dd;border-radius:10px;white-space:nowrap}#announce{position:fixed;top:28%;left:50%;transform:translateX(-50%);font-size:32px;font-weight:900;text-shadow:0 0 20px cyan;pointer-events:none}#touch{position:fixed;bottom:20px;left:15px;right:15px;display:none;justify-content:space-between;pointer-events:none}#touch button{pointer-events:auto}#fire{border-radius:50%;width:80px;height:80px}@media(pointer:coarse){#touch:not(.hidden){display:flex}#tips{display:none}#team{top:auto;bottom:145px}}@media(max-width:600px){#hud{font-size:11px}#hud>div{padding:7px}h1{font-size:40px}}
 
 #perks{position:fixed;right:15px;top:105px;width:230px;max-height:55vh;overflow:auto;border:1px solid #5adff666;background:#07182de8;border-radius:12px;padding:13px;pointer-events:none}
@@ -173,6 +173,22 @@ radial-gradient(ellipse 60% 70% at 85% 90%,#ff70af22,transparent 70%),#050719eb}
 .boss-perk{color:#ffe4ac!important}
 #bossbar{border-color:#f4ad64;box-shadow:0 0 34px #ff813f66}
 @media(max-width:740px){#bossSkillHud{right:8px;bottom:212px;width:165px;padding:7px}#bossSkillHud.has-summons{bottom:395px}#bossSkillHud .boss-relic-title{font-size:9px}#useBossSkill{padding:6px;font-size:10px}#cycleBossSkill{font-size:9px}}
+
+/* FPS Animated Arsenal: original, built-in character portraits */
+#selector .pick[data-skin="nova"]{--accent-glow:#b66aff;border-color:#7044a4}
+#selector .pick[data-skin="astra"]{--accent-glow:#66ecff;border-color:#8cbbdf}
+#selector .pick[data-skin="nova"] .nova-preview{background:radial-gradient(ellipse at 35% 20%,#b88cff,#3d246b 70%,#16132c)}
+#selector .pick[data-skin="astra"] .astra-preview{background:radial-gradient(ellipse at 35% 20%,#eafffe,#75b5d5 60%,#242d51)}
+.cosplay-portrait.nova-preview,.cosplay-portrait.astra-preview{display:block;position:relative;overflow:hidden}
+.cosplay-portrait .custom-suit{position:absolute;left:14px;right:14px;top:56px;height:52px;background:linear-gradient(90deg,#222036,#604090 40%,#252441);clip-path:polygon(30% 0,72% 0,100% 48%,100% 100%,0 100%,0 40%)}
+.cosplay-portrait .custom-visor{position:absolute;left:21px;top:15px;width:50px;height:49px;border-radius:25px 25px 15px 15px;background:linear-gradient(145deg,#130f29 40%,#413265);border:3px solid #7351a7;box-shadow:inset 0 -10px #1d143c,0 0 8px #a873f777}
+.cosplay-portrait .custom-visor:after{content:"";position:absolute;left:4px;right:4px;top:22px;height:9px;border-radius:14px;background:#82ecff;box-shadow:0 0 14px #81f8ff}
+.cosplay-portrait .custom-core{position:absolute;top:74px;left:40px;width:13px;height:14px;transform:rotate(45deg);background:#92efff;box-shadow:0 0 12px #88e9ff}
+.cosplay-portrait.astra-preview .custom-suit{background:linear-gradient(90deg,#687d9e,#eef8ff 45%,#849ab8)}
+.cosplay-portrait.astra-preview .custom-visor{background:linear-gradient(140deg,#f9f9f5,#a8deed);border-color:#e9bc5a;box-shadow:inset 0 -9px #a1d4ec,0 0 12px #ffe4a755}
+.cosplay-portrait.astra-preview .custom-visor:after{background:#47bded;box-shadow:0 0 13px #2fcfff}
+.cosplay-portrait.astra-preview .custom-core{background:#ffc66c;box-shadow:0 0 14px #ffe17b}
+
 </style><canvas id="c"></canvas><div id="menu"><section><small>FPS EDITION • BELSŐ NÉZETES CO-OP</small><h1>NEON<br>NEXUS</h1><p>Ugyanaz a NEON NEXUS, most belső nézetből! Egérrel körbenézhető 3D aréna, kard, lándzsa, plazmafegyver, hullámok és bossok. Maximum 6 játékos.</p>
 <div id="selector" aria-label="Anime karakter összeállítása">
 <h2>01 / COSPLAY SKIN</h2>
@@ -186,7 +202,7 @@ radial-gradient(ellipse 60% 70% at 85% 90%,#ff70af22,transparent 70%),#050719eb}
 <div class="fps-entry"><span>🎯 Egér: körbenézés</span><span>⌨ WASD: mozgás</span><span>🖱 Kattintás: támadás</span><span>Esc: kurzor</span></div><input id="name" maxlength="14" placeholder="Játékosneved" value="Játékos"><button class="primary" id="create">FPS MULTIPLAYER SZOBA</button><div class="row"><input id="room" maxlength="6" placeholder="SZOBAKÓD"><button id="join">CSATLAKOZÁS</button></div><button id="solo">EGYJÁTÉKOS FPS JÁTÉK</button><p id="status"></p><p class="fps-original-link"><a href="./index.html">← Vissza az eredeti, külső nézetes játékhoz</a></p></section></div>
 <div id="hud" class="hidden"><div><strong>NEON NEXUS</strong><br>SZOBA: <b id="code">SOLO</b></div><div>HULLÁM <b id="wave">1</b> • KRISTÁLY <b id="health">100%</b><br>ÉLETERŐ <b id="hp">100</b></div><div><button id="invite">MEGHÍVÁS</button><button id="leave">KILÉPÉS</button></div></div><div id="fpsCrosshair" class="hidden" aria-hidden="true"><span class="cross-h"></span><span class="cross-v"></span><span class="cross-dot"></span></div>
 <div id="fpsLockHint" class="hidden">KATTINTS A PÁLYÁRA AZ EGÉR RÖGZÍTÉSÉHEZ <small>Esc: egér felszabadítása • Q: képesség • R/T: váltás</small></div>
-<div id="fpsRadar" class="hidden"><canvas id="radarCanvas" width="144" height="144"></canvas><span>ARENA RADAR</span></div><div id="version-badge" aria-label="Játékverzió">◆ NEON NEXUS • FPS v1.1 • BOSS HUNTER</div>
+<div id="fpsRadar" class="hidden"><canvas id="radarCanvas" width="144" height="144"></canvas><span>ARENA RADAR</span></div><div id="version-badge" aria-label="Játékverzió">◆ NEON NEXUS • FPS v1.2 • ANIMATED ARSENAL</div>
 <div id="abilityHud" class="hidden"><button id="useAbility" title="Különleges képesség: Q"><span id="abilitySymbol">✦</span><span class="ability-meta"><strong id="abilityName">Képesség</strong><small id="abilityTimer">Q • KÉSZ</small></span><strong>Q</strong></button><div id="abilityBar"><div id="abilityFill"></div></div></div>
 <div id="bossSkillHud" class="hidden">
 <div class="boss-relic-title">🏆 BOSS EREKLYE</div>
@@ -228,16 +244,16 @@ star.position.set(Math.cos(theta)*rad,.22,Math.sin(theta)*rad);scene.add(star)}
 const loadedCharacters=new Map();
 const missingCharacters=new Set();
 const gltfLoader=new GLTFLoader();
-function loadedStatus(){const el=$('assetStatus');if(!el)return;const count=loadedCharacters.size;
-el.textContent=count===3?'✓ Mindhárom valódi 3D skin betöltve':count+'/3 GLB modell betöltve'+(missingCharacters.size?' ⚠ A hiányzó modelleket fel kell tölteni a GitHub models/ mappájába.':' • Betöltés…');
-el.style.color=missingCharacters.size?'#ffb08d':'#a9f4d6'}
+function loadedStatus(){const el=$('assetStatus');if(el){el.textContent='✓ Nova Reaper, Astra Sentinel és Po — minden 3D skin beépítve';el.style.color='#9fffd8'}}
 const models=new Map(),lasers=[],particles=[],colors=[0x52eaff,0xb988ff,0x7affc1,0xffcb71,0xff78a6,0x8eabff];
 let coreFlash=0,upgradeView='',shake=0,summonChoice='wolf',shadowWeaponChoice='spear',flashActive=false,flashStart=0;
 const UPGRADES={
 rapid:{icon:'⚡',name:'Plazma gyorsító',desc:'16%-kal gyorsabb lövés minden szinten.'},
 damage:{icon:'💥',name:'Erősebb lövedék',desc:'+1 sebzés minden találatra.'},
 speed:{icon:'👟',name:'Turbó hajtómű',desc:'+14% mozgási sebesség.'},
-multi:{icon:'🎯',name:'Többszörös lövés',desc:'Még egy, a célkereszthez szorosabban tartó sugár (max. 4).'},
+multi:{icon:'🎯',name:'Többszörös lövés',desc:'Csak távolsági: még egy, a célkereszthez közel tartó sugár (max. 4).'},
+meleeReach:{icon:'⚔️',name:'Hosszabb ütés és csapás',desc:'Csak közelharcosnak: +0,75 egység hatótáv minden szinten (max. 4).'},
+meleeSweep:{icon:'🌪️',name:'Szélesebb támadóív',desc:'Csak közelharcosnak: egyre nagyobb szögben talál a kard, lándzsa és ököl.'},
 heal:{icon:'❤️',name:'Páncélfejlesztés',desc:'+25 maximális életerő, azonnali gyógyulással.'},
 regen:{icon:'✨',name:'Nanobot regeneráció',desc:'Folyamatosan visszatöltő életerő.'},
 pierce:{icon:'🔱',name:'Átütő plazma',desc:'A lövés további ellenfeleken is áthatol.'},
@@ -263,9 +279,9 @@ tank:{color:0xffb44e,speed:1.90,hp:6,damage:8,period:1.55,radius:.95},
 boss:{color:0xb760ff,speed:2.12,hp:185,damage:24,period:1.0,radius:2.15}
 };
 const SKINS={
-sunny:{name:'Marin Kitagawa',desc:'My Dress-Up Darling • feltöltött 3D modell',kind:'school',hair:0xf1c783,tips:0xf49bb3,skin:0xffdfca,outfit:0xf6f8fb,skirt:0x8eaeca,trim:0x395677,accent:0x668aa8,eye:0x9f4d69,boots:0x392f3a,model:'models/marin.glb',flipX:true},
-goth:{name:'Makima',desc:'Chainsaw Man • feltöltött 3D modell',kind:'makima',hair:0xb97042,tips:0x9b5a37,skin:0xffd8c1,outfit:0xf5f3ee,skirt:0x222735,trim:0xa83444,accent:0x273142,eye:0xcf9545,boots:0x24232e,model:'models/makima.glb'},
-idol:{name:'Po',desc:'Kung Fu Panda • feltöltött 3D modell',kind:'panda',hair:0x29262c,tips:0x1b1a21,skin:0xffffff,outfit:0x303030,skirt:0xf3bd69,trim:0xe1ae43,accent:0xffffff,eye:0x292929,boots:0x29262c,model:'models/po.glb',flipX:true}
+sunny:{name:'Nova Reaper',desc:'Saját cyber-nindzsa • lila energiapáncél, maszk és neonköpeny',kind:'nova',hair:0x211c3f,tips:0xb56cff,skin:0xcdb8d2,outfit:0x16192e,skirt:0x202540,trim:0xb665ff,accent:0x77e6ff,eye:0x7df0fc,boots:0x11172d},
+goth:{name:'Astra Sentinel',desc:'Saját fényőrző • fehér-arany páncél, fénykoszorú és kristály',kind:'astra',hair:0xe6d8ef,tips:0x58e7ff,skin:0xe8cebf,outfit:0xdfe8f7,skirt:0x435676,trim:0xf1b866,accent:0x59dfff,eye:0x72d6ff,boots:0x2f3a59},
+idol:{name:'Po',desc:'Kung Fu Panda • az eddig megszeretett 3D pandás kinézet',kind:'panda',hair:0x29262c,tips:0x1b1a21,skin:0xffffff,outfit:0x303030,skirt:0xf3bd69,trim:0xe1ae43,accent:0xffffff,eye:0x292929,boots:0x29262c}
 };
 const POWERS={
 purple:{name:'Lila energiatörés',desc:'Erős, egyenes energiacsapás, több drónt eltalál.',icon:'🟣',cooldown:9,color:0xb069ff},
@@ -274,9 +290,7 @@ shadow:{name:'Árnyékidézés',desc:'Q: idézés • R: farkas/nyuszi • T: ka
 flash:{name:'Fekete villanás',desc:'170 életerő • bal klikk: ökölharc • Q kétszer: rövid távú, időzített találat.',icon:'⚡',cooldown:8,color:0xfa8dff},
 reverse:{name:'Fordított energia',desc:'Közepes (9,5 egység) hatótávon gyógyítja a csapatot és a közeli kristályt.',icon:'💚',cooldown:17,color:0x64ffcb}
 };
-for(const [key,skin] of Object.entries(SKINS)){
-gltfLoader.load(skin.model,asset=>{loadedCharacters.set(key,asset);missingCharacters.delete(key);loadedStatus()},undefined,err=>{missingCharacters.add(key);loadedStatus();console.warn('3D modell hiányzik vagy hibás:',skin.model,err?.message||err)})
-}
+/* All FPS skins are built into the game: Nova, Astra, and unchanged Po. No GLB dependency. */
 
 const savedChoice=(key,fallback,options)=>{try{const v=localStorage.getItem('neon-nexus-'+key);return Object.hasOwn(options,v)?v:fallback}catch{return fallback}};
 let selectedSkin=savedChoice('skin','sunny',SKINS),selectedPower=savedChoice('power','purple',POWERS),castTap=0;
@@ -287,14 +301,19 @@ for(const [key,skin] of Object.entries(SKINS)){
 const button=document.createElement('button');button.type='button';button.className='pick'+(selectedSkin===key?' selected':'');button.setAttribute('aria-pressed',String(selectedSkin===key));button.dataset.skin=skin.kind;
 const portrait=document.createElement('span');portrait.className='cosplay-portrait';portrait.style.setProperty('--hair',hex(skin.hair));portrait.style.setProperty('--skin',hex(skin.skin));portrait.style.setProperty('--outfit',hex(skin.outfit));portrait.style.setProperty('--trim',hex(skin.trim));portrait.style.setProperty('--tips',hex(skin.tips));portrait.style.setProperty('--skirt',hex(skin.skirt));
 for(const cls of ['hair-back','neck','face','fringe','eyes','hair-tips','outfit','tie','ribbon','skirt']){const elem=document.createElement('i');elem.className=cls;portrait.append(elem)}
-const name=document.createElement('strong');name.textContent=skin.name;const desc=document.createElement('small');desc.textContent=skin.desc;if(key==='idol'){portrait.replaceChildren();portrait.className='cosplay-portrait panda-preview';portrait.textContent='🐼'}button.append(portrait,name,desc);
+const name=document.createElement('strong');name.textContent=skin.name;const desc=document.createElement('small');desc.textContent=skin.desc;if(key==='idol'){portrait.replaceChildren();portrait.className='cosplay-portrait panda-preview';portrait.textContent='🐼'}
+else{portrait.replaceChildren();portrait.className='cosplay-portrait '+(key==='sunny'?'nova-preview':'astra-preview');
+const mask=document.createElement('span');mask.className='custom-visor';
+const suit=document.createElement('span');suit.className='custom-suit';
+const heart=document.createElement('span');heart.className='custom-core';portrait.append(suit,mask,heart)}
+button.append(portrait,name,desc);
 button.onclick=()=>{selectedSkin=key;try{localStorage.setItem('neon-nexus-skin',key)}catch{}renderCharacterChoices()};skinRoot.append(button)}
 for(const [key,power] of Object.entries(POWERS)){
 const button=document.createElement('button');button.type='button';button.className='pick'+(selectedPower===key?' selected':'');button.setAttribute('aria-pressed',String(selectedPower===key));
 const icon=document.createElement('span');icon.className='spell-icon';icon.textContent=power.icon;const title=document.createElement('strong');title.textContent=power.name;const desc=document.createElement('small');desc.textContent=power.desc;const cd=document.createElement('span');cd.className='spell-cd';cd.textContent=power.cooldown+' mp újratöltés';
 button.append(icon,title,desc,cd);button.onclick=()=>{selectedPower=key;try{localStorage.setItem('neon-nexus-power',key)}catch{}renderCharacterChoices()};powerRoot.append(button)}
 }
-renderCharacterChoices();
+renderCharacterChoices();loadedStatus();
 let mode='menu',peer,conn,clients=new Map(),state,room='',localId='',myName='',last=performance.now(),sendClock=0,hudClock=0,fire=false,aim={x:0,z:0},keys=new Set(),announcement=0;
 const code=()=>Array.from(crypto.getRandomValues(new Uint8Array(6)),n=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[n%32]).join('');
 const rnd=(a,b)=>a+Math.random()*(b-a),lim=(v,a,b)=>Math.max(a,Math.min(b,v)),safe=s=>String(s||'Játékos').trim().slice(0,14).replace(/[<>]/g,'')||'Játékos';
@@ -303,9 +322,12 @@ function rollChoices(p,bossReward=false){
 if(bossReward){const pool=bossRelicsFor(p),active=pool.filter(id=>BOSS_UPGRADES[id].active).sort(()=>Math.random()-.5);
 const guaranteedActive=active[0],others=pool.filter(id=>id!==guaranteedActive).sort(()=>Math.random()-.5);
 return[guaranteedActive,...others.slice(0,2)].sort(()=>Math.random()-.5)}
-const standard=Object.keys(UPGRADES).filter(k=>!['summonSlots','manaWell','summonFangs'].includes(k));
-const special=p?.power==='shadow'?['summonSlots','manaWell','summonFangs']:[];const pool=standard.sort(()=>Math.random()-.5);
-if(special.length)return[special[Math.floor(Math.random()*special.length)],...pool.slice(0,2)].sort(()=>Math.random()-.5);return pool.slice(0,3)}
+const melee=p?.power==='shadow'||p?.power==='flash';
+const standard=Object.keys(UPGRADES).filter(k=>!['summonSlots','manaWell','summonFangs'].includes(k)
+&&(melee?!['multi','pierce'].includes(k):!['meleeReach','meleeSweep'].includes(k)));
+const special=p?.power==='shadow'?['summonSlots','manaWell','summonFangs']:[],pool=standard.sort(()=>Math.random()-.5);
+if(special.length)return[special[Math.floor(Math.random()*special.length)],...pool.slice(0,2)].sort(()=>Math.random()-.5);
+return pool.slice(0,3)}
 function add(id,name,skin='sunny',power='purple'){if(state.players.some(p=>p.id===id))return;const waiting=state.phase==='upgrade';state.players.push({id,name:safe(name),skin:Object.hasOwn(SKINS,skin)?skin:'sunny',power:Object.hasOwn(POWERS,power)?power:'purple',powerCool:0,bossCool:0,bossActive:'',guardTimer:0,mana:12,maxMana:12,manaRecharge:0,manaRecoverStart:null,summonType:'wolf',weapon:'spear',swing:0,x:rnd(-5,5),z:rnd(-5,5),angle:0,hp:power==='flash'?185:115,maxHp:power==='flash'?185:115,kills:0,cool:0,revive:0,perks:{},choices:waiting?rollChoices({power},state.lastBossReward):[],picked:!waiting,input:{x:0,z:0,ax:0,az:0,fire:false,special:false,summonType:'wolf',weapon:'spear'}})}
 function pack(){return{players:state.players.map(({input,cool,revive,...p})=>p),enemies:state.enemies,summons:state.summons,core:state.core,coreMax:state.coreMax,wave:state.wave,over:state.over,phase:state.phase,breakId:state.breakId,lastBossReward:state.lastBossReward,coreGuardTimer:state.coreGuardTimer}}
 function applyUpgrade(id,index){if(!state||state.phase!=='upgrade')return;
@@ -317,6 +339,8 @@ p.perks[key]=(p.perks[key]||0)+1;p.picked=true;p.choices=[];
 if(key==='heal'){p.maxHp+=25;p.hp=Math.min(p.maxHp,p.hp+45)}
 if(key==='repair'){state.coreMax+=8;state.core=Math.min(state.coreMax,state.core+24)}
 if(key==='multi')p.perks[key]=Math.min(3,p.perks[key]);
+if(key==='meleeReach')p.perks[key]=Math.min(4,p.perks[key]);
+if(key==='meleeSweep')p.perks[key]=Math.min(5,p.perks[key]);
 if(key==='manaWell'){p.maxMana+=4;if(p.manaRecoverStart!==null)p.manaRecoverStart=Math.min(p.manaRecoverStart,p.mana)}
 if(key==='summonSlots')p.perks[key]=Math.min(8,p.perks[key]);
 if(key==='bossLegion'){p.maxMana+=4;if(p.manaRecoverStart!==null)p.manaRecoverStart=Math.min(p.manaRecoverStart,p.mana)}
@@ -470,24 +494,25 @@ fxLightning(x,z,tx,tz,j%3?color:0xffffff,6,.4)}}
 function meleeVisual(fx){
 if(!fx)return;
 const {x,z,angle,kind}=fx,color=kind==='shadow'?(fx.weapon==='sword'?0xc7c3ff:0xbd81ff):0x293bce;
-const dx=Math.sin(angle),dz=Math.cos(angle),radius=kind==='shadow'?(fx.weapon==='sword'?3.2:4.35):2.75;
+const dx=Math.sin(angle),dz=Math.cos(angle),radius=fx.radius||((kind==='shadow'?(fx.weapon==='sword'?3.2:4.35):2.75));
 fxSeal(x+dx*radius*.52,z+dz*radius*.52,color,radius*.7,.27);
 const pts=[];for(let i=0;i<=12;i++){const a=angle-1.15+(2.3*i/12);pts.push({x:x+Math.sin(a)*radius,y:1.32+Math.sin(i/12*Math.PI)*.4,z:z+Math.cos(a)*radius})}
 fxArc(pts,kind==='shadow'?0xe6bfff:0x4d72f7,.24);
 for(const pt of fx.targets||[]){burst(pt.x,pt.z,kind==='shadow'?0xb186ff:0x364ce2,6,.65)}
 }
 function performMelee(p){
-const shadow=p.power==='shadow',radius=shadow?(p.weapon==='sword'?3.3:4.55):2.65;
+const shadow=p.power==='shadow',radius=(shadow?(p.weapon==='sword'?3.3:4.55):2.65)+Math.min(4,p.perks.meleeReach||0)*.75;
 const damage=(shadow?(p.weapon==='sword'?5:4.25):3)+(p.perks.damage||0)+(p.perks.bossOverdrive||0)*3;
 const dirX=Math.sin(p.angle),dirZ=Math.cos(p.angle),hit=[];
 for(const e of [...state.enemies]){
 const dx=e.x-p.x,dz=e.z-p.z,dist=Math.hypot(dx,dz);
 const facing=dist<.001?1:(dx*dirX+dz*dirZ)/dist;
-if(dist<radius+ENEMY_TYPES[e.kind||'normal'].radius*.3&&facing>(shadow?.32:.2)){
+const spreadBonus=Math.min(5,p.perks.meleeSweep||0)*.125;
+if(dist<radius+ENEMY_TYPES[e.kind||'normal'].radius*.3&&facing>(shadow?.32:.2)-spreadBonus){
 hit.push({x:e.x,z:e.z});damageEnemy(e,damage,p)}
 }
 p.swing=(p.swing||0)+1;
-const fx={x:p.x,z:p.z,angle:p.angle,kind:shadow?'shadow':'flash',weapon:p.weapon,targets:hit};
+const fx={x:p.x,z:p.z,angle:p.angle,kind:shadow?'shadow':'flash',weapon:p.weapon,radius,targets:hit};
 meleeVisual(fx);if(mode==='host')broadcast({type:'melee',effect:fx})
 }
 function powerVisual(effect){
