@@ -324,13 +324,15 @@ peer.on('connection',c=>{let joined=false;c.on('data',m=>{if(!m||mode!=='host'||
 if(m.type==='hello'&&!joined){if(state.players.length>=6){send(c,{type:'reject',message:'A szoba megtelt.'});setTimeout(()=>c.close(),150);return}joined=true;clients.set(c.peer,c);add(c.peer,m.name,m.skin,m.power);send(c,{type:'welcome',id:c.peer,room});send(c,{type:'state',data:pack()})}
 if(m.type==='upgrade'&&joined&&m.breakId===state.breakId){applyUpgrade(c.peer,m.index)}
 if(m.type==='flash'&&joined){const p=state.players.find(p=>p.id===c.peer);if(p?.power==='flash')castPower(p,!!m.perfect)}
+if(m.type==='bossSelect'&&joined){const p=state.players.find(p=>p.id===c.peer);if(p&&BOSS_UPGRADES[m.skill]?.active&&p.perks[m.skill])p.bossActive=m.skill}
+if(m.type==='bossUltimate'&&joined){const p=state.players.find(p=>p.id===c.peer);if(p)castBossUltimate(p)}
 if(m.type==='input'&&joined){const p=state.players.find(p=>p.id===c.peer);if(p)p.input={x:lim(+m.x||0,-1,1),z:lim(+m.z||0,-1,1),ax:lim(+m.ax||0,-60,60),az:lim(+m.az||0,-60,60),fire:!!m.fire,special:!!m.special,summonType:m.summonType==='rabbit'?'rabbit':'wolf',weapon:m.weapon==='sword'?'sword':'spear'}}});
 c.on('close',()=>{clients.delete(c.peer);if(state){state.players=state.players.filter(p=>p.id!==c.peer);state.summons=state.summons.filter(p=>p.owner!==c.peer)}})});
 peer.on('error',e=>fail('Nem sikerült megnyitni: '+e.type))}
 function startJoin(){fpsYaw=0;fpsPitch=-.035;const code=$('room').value.trim().toUpperCase();if(!/^[A-Z2-9]{6}$/.test(code)){$('status').textContent='Adj meg 6 karakteres szobakódot.';return}
 reset();mode='client';room=code;myName=safe($('name').value);$('join').disabled=true;$('status').textContent='Csatlakozás…';peer=new Peer();
 peer.on('open',()=>{conn=peer.connect('nnx3dfps-'+room.toLowerCase(),{reliable:true});conn.on('open',()=>send(conn,{type:'hello',name:myName,skin:selectedSkin,power:selectedPower}));
-conn.on('data',m=>{if(m.type==='reject')fail(m.message);if(m.type==='welcome'){localId=m.id;show()}if(m.type==='state'){state=m.data;if(localId)show()}if(m.type==='laser')laser(m.a,m.b,m.color,m.hit);if(m.type==='corehit')coreImpact(m.x,m.z,m.boss);if(m.type==='powerfx')powerVisual(m.effect);if(m.type==='melee')meleeVisual(m.effect)});
+conn.on('data',m=>{if(m.type==='reject')fail(m.message);if(m.type==='welcome'){localId=m.id;show()}if(m.type==='state'){state=m.data;if(localId)show()}if(m.type==='laser')laser(m.a,m.b,m.color,m.hit);if(m.type==='corehit')coreImpact(m.x,m.z,m.boss);if(m.type==='powerfx')powerVisual(m.effect);if(m.type==='melee')meleeVisual(m.effect);if(m.type==='bossattack')visualBossAttack(m.effect);if(m.type==='bossultimate')visualBossUltimate(m.effect)});
 conn.on('close',()=>{if(mode==='client')fail('A házigazda kilépett.')})});peer.on('error',e=>fail(e.type==='peer-unavailable'?'Nem található aktív szoba.':'Hálózati hiba: '+e.type))}
 
 /* First-person input and camera remain client-side; combat/waves still run on the host. */
@@ -407,10 +409,13 @@ function laser(a,b,color,hit=false){const from=new THREE.Vector3(a.x,1.35,a.z),t
 for(const [r,opacity]of [[.13,.25],[.045,.95]]){const obj=new THREE.Mesh(new THREE.CylinderGeometry(r,r,length,8,1),new THREE.MeshBasicMaterial({color:r<.05?0xffffff:color,transparent:true,opacity,depthWrite:false,blending:THREE.AdditiveBlending}));obj.position.copy(from).addScaledVector(delta,.5);obj.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),direction);scene.add(obj);lasers.push({obj,life:r<.05?.14:.21,max:r<.05?.14:.21,base:opacity})}
 burst(a.x,a.z,color,3,.45);if(hit){burst(b.x,b.z,color,7,.55);ring(b.x,b.z,color,.35)}}
 
-function damageEnemy(e,damage,owner){if(!state.enemies.includes(e))return;
-e.hp-=damage;
+function damageEnemy(e,damage,owner){if(!state.enemies.includes(e)||!owner)return;
+const actual=Math.min(Math.max(.01,damage),Math.max(0,e.hp));e.hp-=damage;
+if(owner.perks?.bossVampire&&owner.hp>0)owner.hp=Math.min(owner.maxHp,owner.hp+actual*.22*(owner.perks.bossVampire||0));
 if(e.hp<=0){state.enemies=state.enemies.filter(x=>x!==e);owner.kills++;
-if(e.kind==='boss'){ring(e.x,e.z,0xcf65ff,4);burst(e.x,e.z,0xff8bdf,40,1.8);announce('🏆 BOSS LEGYŐZVE!')}
+if(e.kind==='boss'){state.bossDefeatedWave=state.wave;
+ring(e.x,e.z,0xcf65ff,4);burst(e.x,e.z,0xff8bdf,42,1.8);
+announce('🏆 TITÁN LEGYŐZVE! KÜLÖNLEGES KÉPESSÉG JÁR A HULLÁM VÉGÉN!')}
 else burst(e.x,e.z,ENEMY_TYPES[e.kind||'normal'].color,8,.7)}}
 // Cinematic but bounded spell visuals; every primitive is cleaned up by frame().
 function fxItem(obj,life=.45,type='glow',v=null){if(particles.length>345){obj.geometry?.dispose();obj.material?.dispose();return}
@@ -555,6 +560,51 @@ powerVisual(fx);if(mode==='host')broadcast({type:'powerfx',effect:fx});
 if(p.id===localId)announce(type==='flash'?(flashPerfect?'🔴 FEKETE VILLANÁS!':'🔵 GYENGE TALÁLAT'):(power.name.toUpperCase()+' ✦'));
 return true}
 function announce(s){$('announce').textContent=s;announcement=performance.now()+1900}
+function visualBossAttack(effect){if(!effect)return;const {x,z,phase}=effect;
+if(phase==='warn'){fxSeal(x,z,0xff3d82,6.4,1.35);ring(x,z,0xff4a7b,6.2);fxSphere(x,z,0x9831ae,1.55,.65);return}
+fxStorm(x,z,0xff477d,6.0);burst(x,z,0xff78af,28,1.4);shake=Math.max(shake,.8)}
+function bossShockwave(e){if(!state||!state.enemies.includes(e))return;const range=6.4;
+const effect={x:e.x,z:e.z,phase:'impact'};visualBossAttack(effect);
+if(mode==='host')broadcast({type:'bossattack',effect});
+for(const p of state.players){if(p.hp>0&&Math.hypot(p.x-e.x,p.z-e.z)<=range){
+const guard=p.guardTimer>0?.32:1;p.hp=Math.max(0,p.hp-(19+Math.floor(state.wave/5)*2)*guard)}}
+for(const pet of state.summons){if(pet.hp>0&&Math.hypot(pet.x-e.x,pet.z-e.z)<=range)pet.hp=Math.max(0,pet.hp-21)}
+if(Math.hypot(e.x,e.z)<=range+2.2){state.core=Math.max(0,state.core-16*(state.coreGuardTimer>0?.28:1));
+coreImpact(e.x,e.z,true);if(mode==='host')broadcast({type:'corehit',x:e.x,z:e.z,boss:true})}}
+function tickBossAbilities(e,dt){if(e.kind!=='boss'||e.hp<=0)return;
+e.frozen=Math.max(0,(e.frozen||0)-dt);
+if(e.frozen>0)return;
+if(e.shockWindup>0){e.shockWindup-=dt;if(e.shockWindup<=0){e.shockWindup=0;bossShockwave(e)}}
+else{e.shockTimer-=dt;if(e.shockTimer<=0){e.shockTimer=7.2;
+e.shockWindup=1.15;const effect={x:e.x,z:e.z,phase:'warn'};visualBossAttack(effect);
+if(mode==='host')broadcast({type:'bossattack',effect})}}
+e.reinforceTimer-=dt;
+if(e.reinforceTimer<=0&&e.reinforced<6&&state.enemies.length<28){
+e.reinforceTimer=10;e.reinforced+=2;
+for(let j=0;j<2;j++){const angle=j*Math.PI+Math.random()*1.2;
+spawnEnemy(j?'runner':'tank',angle);
+const spawned=state.enemies[state.enemies.length-1];
+spawned.x=lim(e.x+Math.cos(angle)*3,-24,24);
+spawned.z=lim(e.z+Math.sin(angle)*3,-24,24)}
+announce('☠ A BOSS ERŐSÍTÉST HÍVOTT!')}}
+function visualBossUltimate(fx){if(!fx)return;
+const {x,z,kind}=fx;
+if(kind==='bossMeteor'){fxStorm(x,z,0xff8d32,6.1);fxSphere(x,z,0xff752f,3,.55);fxPetals(x,z,0xffc36a,27);shake=Math.max(shake,.55)}
+if(kind==='bossFreeze'){fxSeal(x,z,0x86d9ff,9,.95);fxSphere(x,z,0x8ce9ff,3.8,.52);for(const radius of [3,5,8])ring(x,z,0xc3f9ff,radius);fxPetals(x,z,0xa5edff,35)}
+if(kind==='bossAegis'){fxSeal(x,z,0x9dffbf,8,.9);fxSphere(x,z,0x5cffac,4,.67);fxPetals(x,z,0xc3ffe5,28);fxSeal(0,0,0x9dffbf,3.1,.8)}}
+function castBossUltimate(p){if(!state||state.phase!=='fight'||p.hp<=0||p.bossCool>0)return false;
+const skill=p.bossActive;if(!BOSS_UPGRADES[skill]?.active||!(p.perks?.[skill]>0))return false;
+p.bossCool=Math.max(12,BOSS_UPGRADES[skill].cooldown-(p.perks[skill]-1)*2.5);
+const x=p.x,z=p.z,lv=p.perks[skill],fx={kind:skill,x,z,targets:[]};
+if(skill==='bossMeteor'){const dx=Math.sin(p.angle),dz=Math.cos(p.angle),at={x:lim(x+dx*8,-24,24),z:lim(z+dz*8,-24,24)};
+fx.x=at.x;fx.z=at.z;
+for(const e of [...state.enemies])if(Math.hypot(e.x-at.x,e.z-at.z)<=5.3+ENEMY_TYPES[e.kind||'normal'].radius*.4)damageEnemy(e,15+(lv-1)*5,p)}
+if(skill==='bossFreeze'){for(const e of state.enemies)if(Math.hypot(e.x-x,e.z-z)<8.5)e.frozen=Math.max(e.frozen||0,e.kind==='boss'?2.4:5.5+(lv-1)*.75)}
+if(skill==='bossAegis'){const seconds=7+(lv-1)*1.5;
+for(const ally of state.players){if(Math.hypot(ally.x-x,ally.z-z)<14){ally.guardTimer=Math.max(ally.guardTimer||0,seconds);ally.hp=Math.min(ally.maxHp,ally.hp+18+lv*6);fx.targets.push({x:ally.x,z:ally.z})}}
+state.coreGuardTimer=Math.max(state.coreGuardTimer,seconds);state.core=Math.min(state.coreMax,state.core+15+lv*7)}
+visualBossUltimate(fx);if(mode==='host')broadcast({type:'bossultimate',effect:fx});
+if(p.id===localId)announce('🌟 BOSS EREKLYE: '+BOSS_UPGRADES[skill].name.toUpperCase());return true}
 function tick(dt){if(!state||state.over)return;
 if(state.wave===0)beginWave();
 if(state.phase==='upgrade'){if(state.players.length&&state.players.every(p=>p.picked))beginWave();return}
