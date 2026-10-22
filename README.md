@@ -1,51 +1,52 @@
-# NEON NEXUS 3D — Marin Edition v3.2.0
+# NEON NEXUS 3D — Heroes Edition v3.3.0
 
-3D sci-fi multiplayer wave survival. Defend a crystal against drones, choose upgrades after every wave and face a boss every tenth wave.
+**Játék:** https://zsombi12345.github.io/neon-nexus-3d/
 
-**Play:** https://zsombi12345.github.io/neon-nexus-3d/
+3D, legfeljebb 6 fős kooperatív kristályvédős böngészős játék. Minden hullám után 3 fejlesztés közül lehet választani. **Minden 10. hullámon boss** jelenik meg.
 
-## New in v3.2.0 — three detailed Marin-inspired skins
+## Karakterek — az eredeti, feltöltött 3D modellekkel
 
-Choose a skin **before entering** your singleplayer or multiplayer game. Three original, procedural 3D costumes were constructed using the provided character references from *My Dress-Up Darling*:
+A belépés előtt választható 3 karakter:
+- **Marin Kitagawa**, *My Dress-Up Darling* — `models/marin.glb`
+- **Makima**, *Chainsaw Man* — `models/makima.glb`
+- **Po**, *Kung Fu Panda* — `models/po.glb`
 
-1. **Marin — iskolai egyenruha**: flowing blonde/pink hair, white shirt, dark blue tie, sky-blue plaid pleated skirt.
-2. **Marin — blézeres viselet**: navy blazer, white lapels, dark inner layers, red tie, blue-grey pleated skirt.
-3. **Marin — fekete jukata**: flower-patterned black yukata, deep magenta obi, sunset blonde and pink hair tips.
+A játékkód már tudja betölteni mindhárom GLB-t, és a választás a többi játékosnak is látható. **A modellfájlokat külön fel kell tölteni a GitHubra**: töltsd le a ChatGPT mellékelt ZIP-csomagját, csomagold ki, majd a `models` mappába töltsd fel a három `.glb`-t az **Add file → Upload files** segítségével. Amíg hiányoznak, a játék átmeneti rajzfilmszerű karaktereket mutat. Az állapotról a belépési menü tájékoztat.
 
-The game uses custom Three.js shapes and toon shading with modeled bangs, hair strands, eyelids, eye highlights, outfit folds, buttons, ribbons and patterns. These are stylized original game meshes, not copied or extracted anime models.
+## Képességek
 
-The selected skin is visible to other multiplayer participants and remembered locally between visits.
+- **Lila energiatörés** — egyenes, átütő energiacsapás.
+- **Végtelen mező** — a közeli ellenfeleket ellöki és erősen lassítja; a hatás alatt **folyamatosan sebez**.
+- **Árnyékidézés** — harcoló társakat idéz. `R`-rel válthatsz **farkas** (4 mana) és **nyuszi** (2 mana) között, `Q`-val idézel. Az idézettek addig harcolnak, amíg van életerejük. A farkas erősebb és több HP-val rendelkezik; a nyuszi olcsóbb és gyorsabb. Mana regenerálódik, alap idézési limit 2.
+- **Fekete villanás** — amikor feltöltött, `Q`-ra megjelenik egy fel-le mozgó időzítősáv. Újra `Q` a kis zöld sávon: **piros-fekete, 15 sebzés**. Mellényomás: **kék-fekete, 3 sebzés**, azaz ötször gyengébb.
+- **Fordított energia** — gyógyítja a csapatot és a kristályt.
 
-## Better shooting
+Ha Árnyékidézést választasz, hullámok végén kaphatsz speciális fejlesztéseket: **Falka vezető** (+1 idézési hely), **Mana forrás** (+4 maximális mana és gyorsabb regeneráció), **Falka erő** (+HP és sebzés az idézetteknek).
 
-The **multishot spread was reduced** from 0.17 rad to 0.045 rad between adjacent beams. Extra beams stay much closer to your cursor, allowing more precise aiming without changing the unlock/upgrades system.
+Az összes képesség és az idézettek állapota multiplayerben a házigazda felől szinkronizálódik. Az extra lövések az egér céljához szorosabban igazodnak.
 
-## More spectacular JJK-inspired techniques
+## Irányítás
 
-Choose one technique before the game; use **Q** (or the ability button) in the arena:
+- **WASD** — mozgás
+- **Egér + bal kattintás** — célzás és plazmalövés
+- **Q** — képesség; Fekete villanásnál első és második nyomás az időzítéshez
+- **R** — farkas és nyuszi közti váltás (Árnyékidézés esetén)
+- Érintőképernyőn külön gombok: lövés, képesség, idézettváltás
 
-| Ability | Effect | Cooldown |
-| --- | --- | --- |
-| Lila energiatörés | Piercing beam that hits enemies in a line | 9 s |
-| Végtelen mező | Pushes and slows nearby enemies | 12 s |
-| Árnyékidézés | Hits up to five nearby enemies with shadow energy | 10 s |
-| Fekete villanás | Heavy close-range area attack | 8 s |
-| Fordított energia | Heals teammates and repairs the crystal | 17 s |
+## Többjátékos mód
 
-Visual effects now include arc lightning, animated magic circles, layered glowing beams, energy spheres, particle petals and screen shake. Host-triggered spell effects synchronize in multiplayer.
+Hozz létre egy szobát a menüben, oszd meg a 6 karakteres kódot vagy a meghívólinket, majd a többiek csatlakozhatnak. Maximum 6 játékos. Az egyes fejlesztéseket minden játékos maga választhatja. A házigazdának játékban kell maradnia.
 
-## How to play
+## Technika
 
-- **WASD** / arrows — move
-- **Mouse** — aim
-- **Left click** — shoot
-- **Q** — activate chosen special ability
-- **Mobile/touch** — directional controls, FIRE, ability button
+Statikus GitHub Pages weboldal, Three.js, GLTFLoader, PeerJS és WebRTC. A játékhoz internet kell; a kapcsolat nem minden tűzfal mögött garantált. Az előrehaladás nem mentődik a böngésző bezárása után. A skin és képesség választását a böngésző helyileg megőrzi.
 
-Create a room and share its six-character code (or use the invite button). Up to six players may join. The host runs the world simulation, and every player chooses one of three upgrades after each wave. A boss appears every 10th wave.
+## Modellkészítők és licencek
 
-## Hosting and limitations
+A három feltöltött Sketchfab modell az eredeti alkotóké, és csak a megfelelő felhasználási feltételekkel használható:
 
-This site uses static HTML/CSS/JavaScript, Three.js and PeerJS. **GitHub Pages** serves `index.html` from the `main` branch's root. External CDNs require an internet connection. Multiplayer depends on peer-to-peer connectivity and on the host staying online.
+- **Marin**: Lappy — [eredeti](https://sketchfab.com/3d-models/marin-kitagawa-from-dress-up-darling-ef75d04c0a42413692a5b59f938428b7), **CC BY 4.0**
+- **Makima**: xinren — [eredeti](https://sketchfab.com/3d-models/chainsawman-makima-a0fdfa91fee143898a80958362ba052c), **CC BY-NC 4.0 – csak nem kereskedelmi felhasználásra**. Monetizáláshoz külön engedély kell.
+- **Po**: Kaveesha — [eredeti](https://sketchfab.com/3d-models/kung-fu-panda-po-rigged-af8808931d50415db22d2cfda4e7c69c), **CC BY 4.0**
 
-Gameplay progress is reset on reload; skin and technique preferences are saved locally. This is a fan-inspired prototype, not an official franchise game.
+Részletes licencinformációk a `models/README.md` fájlban. Ez rajongói prototípus, nem hivatalos anime-/filmjáték.
