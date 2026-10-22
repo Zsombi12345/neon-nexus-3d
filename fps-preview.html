@@ -271,32 +271,98 @@ function beginWave(){state.phase='fight';state.wave++;state.remaining=Math.min(8
 function enterUpgrade(){state.phase='upgrade';state.breakId++;for(const p of state.players){p.choices=rollChoices(p);p.picked=false;p.input.fire=false}announce('✓ '+state.wave+'. HULLÁM TELJESÍTVE!');if(mode==='host')broadcast({type:'state',data:pack()})}
 function spawnEnemy(kind,angle){const t=ENEMY_TYPES[kind],factor=kind==='boss'?1+Math.max(0,state.wave-10)*.07:1+Math.floor(state.wave/7)*.45;const hp=Math.max(1,Math.round(t.hp*factor));state.enemies.push({id:++state.next,kind,x:Math.cos(angle)*24,z:Math.sin(angle)*24,hp,maxHp:hp,cool:0})}
 
-function show(){ $('menu').classList.add('hidden');if(!state?.over)$('end').classList.add('hidden');for(const x of ['hud','team','tips','touch','perks','abilityHud'])$(x).classList.remove('hidden');$('code').textContent=room||'SOLO';$('invite').style.display=room?'':'none';$('again').style.display=mode==='client'?'none':''}
+function show(){ $('menu').classList.add('hidden');if(!state?.over)$('end').classList.add('hidden');for(const x of ['hud','team','tips','touch','perks','abilityHud'])$(x).classList.remove('hidden');fpsUi();$('code').textContent=room||'SOLO';$('invite').style.display=room?'':'none';$('again').style.display=mode==='client'?'none':''}
 function removeModel(g){scene.remove(g);
 if(g.userData.externalModel){if(g.userData.weaponGroup)g.userData.weaponGroup.traverse(o=>{o.geometry?.dispose();o.material?.dispose()});for(const o of g.children){if(o.isSprite){o.material.map?.dispose();o.material.dispose()}else if(o.userData?.abilityRune){o.geometry?.dispose();o.material?.dispose()}}return}
 g.traverse(o=>{o.geometry?.dispose();if(o.material){for(const m of (Array.isArray(o.material)?o.material:[o.material])){m.map?.dispose();m.dispose()}}})}
 function clearEffects(){for(const e of [...lasers,...particles]){scene.remove(e.obj);e.obj.geometry?.dispose();e.obj.material?.dispose()}lasers.length=0;particles.length=0}
-function reset(){if(conn)try{conn.close()}catch{};if(peer)try{peer.destroy()}catch{};conn=null;peer=null;clients.clear();state=null;mode='menu';room='';localId='';for(const m of models.values())removeModel(m);models.clear();clearEffects();$('menu').classList.remove('hidden');for(const x of ['hud','team','tips','touch','end','upgrades','perks','bossbar','abilityHud'])$(x).classList.add('hidden');$('create').disabled=false;$('join').disabled=false;$('status').textContent='';upgradeView='';coreFlash=0;castTap=0;flashActive=false;$('flashOverlay').classList.add('hidden');$('summonHud').classList.add('hidden');keys.clear();fire=false}
+function reset(){fpsReleaseMouse();fpsGunRig.visible=false;fpsViewType='';fpsLastPos=null;if(conn)try{conn.close()}catch{};if(peer)try{peer.destroy()}catch{};conn=null;peer=null;clients.clear();state=null;mode='menu';room='';localId='';for(const m of models.values())removeModel(m);models.clear();clearEffects();$('menu').classList.remove('hidden');for(const x of ['hud','team','tips','touch','end','upgrades','perks','bossbar','abilityHud'])$(x).classList.add('hidden');$('create').disabled=false;$('join').disabled=false;$('status').textContent='';upgradeView='';coreFlash=0;castTap=0;flashActive=false;$('flashOverlay').classList.add('hidden');$('summonHud').classList.add('hidden');keys.clear();fire=false;fpsUi()}
 
 function fail(t){reset();$('status').textContent=t}
 function send(c,o){if(c?.open)try{c.send(o)}catch{}}
 function broadcast(o){for(const c of clients.values())send(c,o)}
-function startSolo(){reset();mode='solo';localId='solo';state=init();add(localId,$('name').value,selectedSkin,selectedPower);show()}
-function startHost(){reset();if(typeof Peer!=='function'){fail('A hálózati könyvtár nem töltődött be.');return}mode='host';room=code();localId='host';myName=safe($('name').value);$('create').disabled=true;$('status').textContent='Szoba létrehozása…';peer=new Peer('nnx3dfps-'+room.toLowerCase());
+function startSolo(){reset();mode='solo';localId='solo';fpsYaw=0;fpsPitch=-.035;state=init();add(localId,$('name').value,selectedSkin,selectedPower);show();fpsUpdateCamera(.5,performance.now())}
+function startHost(){reset();fpsYaw=0;fpsPitch=-.035;if(typeof Peer!=='function'){fail('A hálózati könyvtár nem töltődött be.');return}mode='host';room=code();localId='host';myName=safe($('name').value);$('create').disabled=true;$('status').textContent='Szoba létrehozása…';peer=new Peer('nnx3dfps-'+room.toLowerCase());
 peer.on('open',()=>{state=init();add(localId,myName,selectedSkin,selectedPower);show()});
 peer.on('connection',c=>{let joined=false;c.on('data',m=>{if(!m||mode!=='host'||!state)return;
 if(m.type==='hello'&&!joined){if(state.players.length>=6){send(c,{type:'reject',message:'A szoba megtelt.'});setTimeout(()=>c.close(),150);return}joined=true;clients.set(c.peer,c);add(c.peer,m.name,m.skin,m.power);send(c,{type:'welcome',id:c.peer,room});send(c,{type:'state',data:pack()})}
 if(m.type==='upgrade'&&joined&&m.breakId===state.breakId){applyUpgrade(c.peer,m.index)}
 if(m.type==='flash'&&joined){const p=state.players.find(p=>p.id===c.peer);if(p?.power==='flash')castPower(p,!!m.perfect)}
-if(m.type==='input'&&joined){const p=state.players.find(p=>p.id===c.peer);if(p)p.input={x:lim(+m.x||0,-1,1),z:lim(+m.z||0,-1,1),ax:lim(+m.ax||0,-25,25),az:lim(+m.az||0,-25,25),fire:!!m.fire,special:!!m.special,summonType:m.summonType==='rabbit'?'rabbit':'wolf',weapon:m.weapon==='sword'?'sword':'spear'}}});
+if(m.type==='input'&&joined){const p=state.players.find(p=>p.id===c.peer);if(p)p.input={x:lim(+m.x||0,-1,1),z:lim(+m.z||0,-1,1),ax:lim(+m.ax||0,-60,60),az:lim(+m.az||0,-60,60),fire:!!m.fire,special:!!m.special,summonType:m.summonType==='rabbit'?'rabbit':'wolf',weapon:m.weapon==='sword'?'sword':'spear'}}});
 c.on('close',()=>{clients.delete(c.peer);if(state){state.players=state.players.filter(p=>p.id!==c.peer);state.summons=state.summons.filter(p=>p.owner!==c.peer)}})});
 peer.on('error',e=>fail('Nem sikerült megnyitni: '+e.type))}
-function startJoin(){const code=$('room').value.trim().toUpperCase();if(!/^[A-Z2-9]{6}$/.test(code)){$('status').textContent='Adj meg 6 karakteres szobakódot.';return}
+function startJoin(){fpsYaw=0;fpsPitch=-.035;const code=$('room').value.trim().toUpperCase();if(!/^[A-Z2-9]{6}$/.test(code)){$('status').textContent='Adj meg 6 karakteres szobakódot.';return}
 reset();mode='client';room=code;myName=safe($('name').value);$('join').disabled=true;$('status').textContent='Csatlakozás…';peer=new Peer();
 peer.on('open',()=>{conn=peer.connect('nnx3dfps-'+room.toLowerCase(),{reliable:true});conn.on('open',()=>send(conn,{type:'hello',name:myName,skin:selectedSkin,power:selectedPower}));
 conn.on('data',m=>{if(m.type==='reject')fail(m.message);if(m.type==='welcome'){localId=m.id;show()}if(m.type==='state'){state=m.data;if(localId)show()}if(m.type==='laser')laser(m.a,m.b,m.color,m.hit);if(m.type==='corehit')coreImpact(m.x,m.z,m.boss);if(m.type==='powerfx')powerVisual(m.effect);if(m.type==='melee')meleeVisual(m.effect)});
 conn.on('close',()=>{if(mode==='client')fail('A házigazda kilépett.')})});peer.on('error',e=>fail(e.type==='peer-unavailable'?'Nem található aktív szoba.':'Hálózati hiba: '+e.type))}
-function input(){let x=+keys.has('d')-+keys.has('a'),z=+keys.has('s')-+keys.has('w');let d=Math.hypot(x,z)||1;return{x:x/d,z:z/d,ax:aim.x,az:aim.z,fire,special:castTap>0,summonType:summonChoice,weapon:shadowWeaponChoice}}
+
+/* First-person input and camera remain client-side; combat/waves still run on the host. */
+let fpsYaw=0,fpsPitch=-.035,fpsKick=0,fpsViewType='',fpsTouchLook=null,fpsLastPos=null;
+const fpsGunRig=new THREE.Group();camera.add(fpsGunRig);
+function fpsIsTouch(){return matchMedia('(pointer:coarse)').matches}
+function fpsPointerActive(){return document.pointerLockElement===$('c')}
+function fpsReleaseMouse(){if(fpsPointerActive())document.exitPointerLock?.()}
+function fpsLockMouse(){if(fpsIsTouch()||mode==='menu'||!state||state.phase==='upgrade'||state.over||flashActive||fpsPointerActive())return;
+try{const promise=$('c').requestPointerLock?.();promise?.catch?.(()=>{})}catch{}}
+function fpsUi(){const playing=mode!=='menu'&&!!state,modal=state?.phase==='upgrade'||state?.over||flashActive;
+$('fpsCrosshair').classList.toggle('hidden',!playing||!!modal);
+$('fpsLockHint').classList.toggle('hidden',!playing||!!modal||fpsPointerActive()||fpsIsTouch());
+$('fpsRadar').classList.toggle('hidden',!playing);
+const me=state?.players?.find(p=>p.id===localId);$('fpsCrosshair').classList.toggle('aim-melee',!!me&&(me.power==='flash'||me.power==='shadow'))}
+addEventListener('pointerlockchange',fpsUi);
+addEventListener('mousemove',e=>{if(!fpsPointerActive()||mode==='menu'||state?.phase==='upgrade'||flashActive)return;
+fpsYaw+=e.movementX*.00235;fpsPitch=lim(fpsPitch-e.movementY*.0021,-1.15,1.1)});
+function fpsMakeWeapon(me){
+const type=me?.power==='shadow'?(me.weapon==='sword'?'sword':'spear'):me?.power==='flash'?'fists':'rifle';
+if(type===fpsViewType)return;fpsViewType=type;
+while(fpsGunRig.children.length){const n=fpsGunRig.children[0];fpsGunRig.remove(n);n.traverse(x=>{x.geometry?.dispose();x.material?.dispose()})}
+const matF=(col,shine=.6)=>new THREE.MeshStandardMaterial({color:col,emissive:col,emissiveIntensity:shine,metalness:.4,roughness:.32,depthTest:false});
+const base=matF(0x23375e,.3),bright=matF(0xeaf5ff,.36),cyan=matF(0x62e9ff,1.5),pink=matF(0xff77c0,.9),purple=matF(0xb67cfa,1.2);
+const add=(geo,material,pos,angles)=>{const obj=new THREE.Mesh(geo,material);obj.position.set(...pos);if(angles)obj.rotation.set(...angles);obj.renderOrder=600;fpsGunRig.add(obj)};
+const box=(x,y,z)=>new THREE.BoxGeometry(x,y,z);
+if(type==='rifle'){
+add(box(.20,.17,.69),base,[.09,-.1,-.29]);add(box(.17,.16,.36),bright,[.08,-.04,-.54]);
+add(box(.09,.09,.28),cyan,[.08,-.03,-.78]);add(box(.12,.28,.12),base,[.1,-.22,-.06],[.2,0,0]);
+add(new THREE.TorusGeometry(.10,.02,8,18),purple,[.07,.03,-.43],[Math.PI/2,0,0]);add(box(.30,.06,.27),pink,[.04,.04,-.20])
+}else if(type==='fists'){for(const sign of [-1,1]){
+add(new THREE.SphereGeometry(.18,12,10),sign>0?pink:cyan,[sign*.25,-.16,-.38]);
+add(box(.23,.27,.25),base,[sign*.25,-.31,-.22]);
+add(new THREE.TorusGeometry(.14,.023,7,20),purple,[sign*.25,-.25,-.27],[0,0,Math.PI/2])}}
+else{
+add(box(.09,.13,.45),base,[.07,-.18,-.12]);add(box(.22,.07,.13),pink,[.07,-.07,-.19]);
+if(type==='sword'){add(box(.10,.10,.95),cyan,[.07,-.05,-.72]);add(new THREE.ConeGeometry(.085,.32,6),bright,[.07,-.05,-1.35],[Math.PI/2,0,0])}
+else{add(box(.065,.08,1.2),base,[.07,-.08,-.73]);add(new THREE.ConeGeometry(.13,.48,6),cyan,[.07,-.08,-1.49],[Math.PI/2,0,0])}}
+}
+function fpsUpdateCamera(dt,t){const me=state?.players?.find(p=>p.id===localId);if(!me){fpsGunRig.visible=false;return}
+const cam=new THREE.Vector3(me.x,1.77+Math.sin(t*.011)*.009,me.z);
+camera.position.lerp(cam,Math.min(1,dt*20));
+const level=Math.cos(fpsPitch);
+camera.lookAt(camera.position.x+Math.sin(fpsYaw)*level,camera.position.y+Math.sin(fpsPitch),camera.position.z+Math.cos(fpsYaw)*level);
+fpsMakeWeapon(me);fpsKick=Math.max(0,fpsKick-dt*3.6);
+const movement=fpsLastPos?Math.hypot(me.x-fpsLastPos.x,me.z-fpsLastPos.z):0;
+const bob=Math.min(.055,movement*.5),phase=t*.010;
+fpsGunRig.position.set(.34+Math.sin(phase)*bob,-.30+Math.cos(phase*2)*bob*.65,-.74+fpsKick*.65);
+fpsGunRig.rotation.set(-fpsKick*.9,Math.sin(phase)*bob*.6,Math.sin(phase*.7)*bob*.35);
+fpsGunRig.visible=me.hp>0;fpsLastPos={x:me.x,z:me.z}
+}
+function fpsDrawRadar(){if(!state)return;const ctx=$('radarCanvas').getContext('2d'),me=state.players.find(p=>p.id===localId);if(!ctx||!me)return;
+const c=72,r=62,scale=r/27;ctx.clearRect(0,0,144,144);
+ctx.fillStyle='#090b24ec';ctx.beginPath();ctx.arc(c,c,r+4,0,Math.PI*2);ctx.fill();
+ctx.strokeStyle='#5c7da866';ctx.lineWidth=1;for(const n of [.33,.66,1]){ctx.beginPath();ctx.arc(c,c,r*n,0,Math.PI*2);ctx.stroke()}
+ctx.beginPath();ctx.moveTo(c,8);ctx.lineTo(c,136);ctx.moveTo(8,c);ctx.lineTo(136,c);ctx.stroke();
+function mark(p,color,size){const x=c+(p.x-me.x)*scale,y=c+(p.z-me.z)*scale;if(Math.hypot(x-c,y-c)>r-2)return;ctx.fillStyle=color;ctx.beginPath();ctx.arc(x,y,size,0,Math.PI*2);ctx.fill()}
+mark({x:0,z:0},'#75f7ff',5);
+for(const e of state.enemies)mark(e,e.kind==='boss'?'#fbc966':'#fc7598',e.kind==='boss'?5:2.5);
+for(const e of state.summons||[])mark(e,'#b39cff',2.5);
+for(const p of state.players)if(p.id!==localId&&p.hp>0)mark(p,'#a2ffcd',3);
+const dx=Math.sin(fpsYaw),dy=Math.cos(fpsYaw),sx=Math.cos(fpsYaw),sy=-Math.sin(fpsYaw);
+ctx.fillStyle='#eaffff';ctx.beginPath();ctx.moveTo(c+dx*10,c+dy*10);ctx.lineTo(c+sx*5-dx*4,c+sy*5-dy*4);ctx.lineTo(c-sx*5-dx*4,c-sy*5-dy*4);ctx.closePath();ctx.fill();
+}
+function input(){const f=Number(keys.has('w'))-Number(keys.has('s')),a=Number(keys.has('d'))-Number(keys.has('a'));
+let x=f*Math.sin(fpsYaw)+a*Math.cos(fpsYaw),z=f*Math.cos(fpsYaw)-a*Math.sin(fpsYaw);
+const d=Math.hypot(x,z)||1,p=state?.players?.find(p=>p.id===localId)||{x:0,z:0};
+return{x:x/d,z:z/d,ax:p.x+Math.sin(fpsYaw)*20,az:p.z+Math.cos(fpsYaw)*20,fire,special:castTap>0,summonType:summonChoice,weapon:shadowWeaponChoice}}
 function chooseUpgrade(n){if(!state||state.phase!=='upgrade'||!localId)return;if(mode==='client'){send(conn,{type:'upgrade',breakId:state.breakId,index:n});$('upgradeHint').textContent='Választás elküldve a házigazdának…';for(const b of $('options').querySelectorAll('button'))b.disabled=true}else applyUpgrade(localId,n)}
 function burst(x,z,color,count=8,scale=1){if(particles.length>220)return;for(let j=0;j<count;j++){const o=new THREE.Mesh(new THREE.SphereGeometry(rnd(.045,.14)*scale,6,5),new THREE.MeshBasicMaterial({color,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false}));o.position.set(x+rnd(-.5,.5),rnd(.5,2.6),z+rnd(-.5,.5));scene.add(o);particles.push({obj:o,v:new THREE.Vector3(rnd(-5,5)*scale,rnd(1,5)*scale,rnd(-5,5)*scale),life:rnd(.28,.65),max:.65,type:'spark'})}}
 function ring(x,z,color,size=1){const geo=new THREE.RingGeometry(.82,1,40);const obj=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color,side:THREE.DoubleSide,transparent:true,opacity:.9,blending:THREE.AdditiveBlending,depthWrite:false}));obj.rotation.x=-Math.PI/2;obj.position.set(x,.16,z);obj.scale.setScalar(size);scene.add(obj);particles.push({obj,life:.5,max:.5,type:'ring'})}
@@ -429,7 +495,7 @@ if(mode==='client')send(conn,{type:'flash',perfect});
 else{const p=state?.players?.find(p=>p.id===localId);if(p?.power==='flash')castPower(p,perfect)}}
 function handleAbilityTap(){if(!state||!localId||state.phase!=='fight')return;
 const p=state.players.find(p=>p.id===localId);if(!p||p.hp<=0)return;
-if(p.power==='flash'){if(flashActive){finishFlash();return}if(p.powerCool>0)return;flashActive=true;flashStart=performance.now();$('flashOverlay').classList.remove('hidden');return}
+if(p.power==='flash'){if(flashActive){finishFlash();return}if(p.powerCool>0)return;flashActive=true;flashStart=performance.now();fpsReleaseMouse();$('flashOverlay').classList.remove('hidden');return}
 castTap=.27}
 function castPower(p,flashPerfect){if(!state||state.phase!=='fight'||p.hp<=0||p.powerCool>0)return false;
 const type=Object.hasOwn(POWERS,p.power)?p.power:'purple',power=POWERS[type],x=p.x,z=p.z,fx={type,x,z,targets:[]};
@@ -717,7 +783,7 @@ const active=(m.userData.swingUntil||0)>performance.now(),w=m.userData.weaponGro
 w.rotation.z=w.userData.restTilt+(active?Math.sin((1-(m.userData.swingUntil-performance.now())/220)*Math.PI)*.85:Math.sin(performance.now()*.003)*.06);
 w.rotation.x=active?Math.sin((1-(m.userData.swingUntil-performance.now())/220)*Math.PI)*.7:0}
 if(m.userData.rune){m.userData.rune.rotation.z+=.008;m.userData.rune.material.opacity=.45+Math.sin(performance.now()*.003)*.18}}
-m.visible=enemy||o.hp>0});
+m.visible=(enemy||o.hp>0)&&(enemy||o.id!==localId)});
 for(const pet of state.summons||[]){const key='s'+pet.id;active.add(key);let m=models.get(key);
 if(!m){m=makeSummonModel(pet);m.position.set(pet.x,0,pet.z);models.set(key,m)}
 m.position.x+=(pet.x-m.position.x)*.36;m.position.z+=(pet.z-m.position.z)*.36;
@@ -725,14 +791,14 @@ m.position.y=Math.sin(performance.now()*.005+pet.id)*.08;
 const proportion=Math.max(.02,Math.min(1,pet.hp/pet.maxHp));m.userData.hp.scale.x=proportion;m.userData.hp.position.x=-(1-proportion)*.58;
 m.userData.aura.rotation.z+=.04}
 for(const[k,m]of models)if(!active.has(k)){removeModel(m);models.delete(k)}
-const me=state.players.find(p=>p.id===localId);if(me){camera.position.x+=(me.x-camera.position.x)*.045;camera.position.z+=(me.z+28-camera.position.z)*.045;camera.lookAt(camera.position.x,0,camera.position.z-28)}}
+/* First-person camera updated after the world transforms. */}
 
 function refreshUpgradeUI(){if(!state||!localId){$('upgrades').classList.add('hidden');upgradeView='';return}
 const me=state.players.find(p=>p.id===localId);if(state.phase!=='upgrade'||!me){$('upgrades').classList.add('hidden');upgradeView='';return}
 const key=state.breakId+':'+localId+':'+me.picked;if(upgradeView!==key){upgradeView=key;$('options').replaceChildren();$('upgradeTitle').textContent=me.picked?'FEJLESZTÉS KIVÁLASZTVA':'VÁLASSZ 1 FEJLESZTÉST!';
 $('upgradeHint').textContent=me.picked?'Várakozás a többi játékosra…':'Válassz egyet a három fejlesztés közül. A következő hullám minden játékos választása után indul.';
 if(!me.picked)me.choices.forEach((id,i)=>{const perk=UPGRADES[id];if(!perk)return;const b=document.createElement('button');b.className='option';const icon=document.createElement('div');icon.className='emblem';icon.textContent=perk.icon;const strong=document.createElement('strong');strong.textContent=perk.name;const info=document.createElement('small');info.textContent=perk.desc;const lvl=document.createElement('small');lvl.textContent='Jelenlegi szint: '+(me.perks[id]||0);b.append(icon,strong,info,lvl);b.onclick=()=>chooseUpgrade(i);$('options').append(b)})}
-$('upgrades').classList.remove('hidden')}
+$('upgrades').classList.remove('hidden');fpsReleaseMouse()}
 function hud(){if(!state)return;$('wave').textContent=state.wave;$('health').textContent=Math.ceil(state.core)+' / '+state.coreMax;const me=state.players.find(p=>p.id===localId);$('hp').textContent=me?Math.ceil(me.hp):0;
 $('team').replaceChildren();for(const p of state.players){const line=document.createElement('div');line.textContent=(p.id===localId?'◆ ':'')+p.name+' — '+p.kills+' ✦'+(state.phase==='upgrade'?(p.picked?' ✓':' …'):'');$('team').append(line)}
 $('perklist').replaceChildren();if(me){const items=Object.entries(me.perks||{});if(!items.length)$('perklist').textContent='Még nincs fejlesztésed.';for(const [id,lvl]of items){if(!UPGRADES[id])continue;const d=document.createElement('div');d.className='perk';const name=document.createElement('div');name.textContent=UPGRADES[id].icon+' '+UPGRADES[id].name;const level=document.createElement('span');level.textContent='Lv.'+lvl;d.append(name,level);$('perklist').append(d)}}
@@ -748,7 +814,7 @@ $('abilitySymbol').textContent=power.icon;$('abilityName').textContent=power.nam
 $('abilityTimer').textContent=remain>0?remain.toFixed(1)+' mp újratöltés':(me.power==='flash'?'Q • IDŐZÍTŐ SÁV':me.power==='shadow'?'Q • IDÉZÉS':'Q • AKTIVÁLHATÓ');
 $('abilityFill').style.width=(100*(1-remain/power.cooldown))+'%';$('useAbility').disabled=state.phase!=='fight'||remain>0||me.hp<=0||(me.power==='shadow'&&(me.mana<(summonChoice==='wolf'?4:2)||(state.summons||[]).filter(x=>x.owner===me.id).length>=2+(me.perks.summonSlots||0)))}
 const boss=state.enemies.find(e=>e.kind==='boss');$('bossbar').classList.toggle('hidden',!boss);if(boss){const v=Math.max(0,boss.hp/boss.maxHp*100);$('bossfill').style.width=v+'%';$('bosshp').textContent=Math.ceil(v)+'%'}
-refreshUpgradeUI();if(state.over){$('upgrades').classList.add('hidden');$('end').classList.remove('hidden');$('result').textContent='Elért hullám: '+state.wave+' • Csapat pontszám: '+state.players.reduce((n,p)=>n+p.kills,0)}
+refreshUpgradeUI();if(state.over){fpsReleaseMouse();$('upgrades').classList.add('hidden');$('end').classList.remove('hidden');$('result').textContent='Elért hullám: '+state.wave+' • Csapat pontszám: '+state.players.reduce((n,p)=>n+p.kills,0)}
 if(performance.now()>announcement)$('announce').textContent=''}
 
 function frame(t){requestAnimationFrame(frame);const dt=Math.min((t-last)/1000,.06);last=t;castTap=Math.max(0,castTap-dt);crystal.rotation.y+=dt;crystal.position.y=2.4+Math.sin(t*.002)*.3;coreFlash=Math.max(0,coreFlash-dt*1.7);
@@ -756,16 +822,16 @@ crystal.material.emissive.setHex(coreFlash>.1?0xff315c:0x43eeff);crystal.materia
 if(mode==='solo'||mode==='host'){tick(dt);sendClock+=dt;if(mode==='host'&&sendClock>.085){broadcast({type:'state',data:pack()});sendClock=0}}
 if(flashActive){$('flashMarker').style.bottom=(Math.min(1,Math.max(0,flashValue(t)))*100)+'%';if(t-flashStart>5800)finishFlash(true)}
 if(mode==='client'){sendClock+=dt;if(sendClock>.06){send(conn,{type:'input',...input()});sendClock=0}}
-drawState();hudClock+=dt;if(hudClock>.12){hud();hudClock=0}
+drawState();fpsUpdateCamera(dt,t);hudClock+=dt;if(hudClock>.12){hud();fpsDrawRadar();fpsUi();hudClock=0}
 for(let i=lasers.length-1;i>=0;i--){const l=lasers[i];l.life-=dt;if(l.life<=0){scene.remove(l.obj);l.obj.geometry.dispose();l.obj.material.dispose();lasers.splice(i,1)}else l.obj.material.opacity=l.base*l.life/l.max}
 for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.life-=dt;if(p.life<=0){scene.remove(p.obj);p.obj.geometry.dispose();p.obj.material.dispose();particles.splice(i,1)}else{p.obj.material.opacity=Math.min(1,p.life/p.max);if(p.type==='ring')p.obj.scale.multiplyScalar(1+dt*3);
 else if(p.type==='flare')p.obj.scale.multiplyScalar(1+dt*2.4);
 else if(p.type==='seal')p.obj.rotation.z+=dt*.9;
 else if((p.type==='spark'||p.type==='petal')&&p.v){p.obj.position.addScaledVector(p.v,dt);p.v.y-= (p.type==='petal'?3.6:12)*dt;if(p.type==='petal')p.obj.rotation.y+=dt*4}}}
-if(shake>0){camera.position.x+=(Math.random()-.5)*shake*.5;shake=Math.max(0,shake-dt*1.8)}renderer.render(scene,camera)}requestAnimationFrame(frame);
+if(shake>0){camera.position.x+=(Math.random()-.5)*shake*.5;camera.position.y+=(Math.random()-.5)*shake*.10;shake=Math.max(0,shake-dt*1.8)}renderer.render(scene,camera)}requestAnimationFrame(frame);
 
 $('create').onclick=startHost;$('join').onclick=startJoin;$('solo').onclick=startSolo;$('leave').onclick=reset;$('back').onclick=reset;
-$('again').onclick=()=>{if(mode==='client')return;const people=state.players.map(p=>({id:p.id,name:p.name,skin:p.skin,power:p.power}));state=init();people.forEach(p=>add(p.id,p.name,p.skin,p.power));$('end').classList.add('hidden');$('upgrades').classList.add('hidden');upgradeView=''};
+$('again').onclick=()=>{if(mode==='client')return;fpsYaw=0;fpsPitch=-.035;const people=state.players.map(p=>({id:p.id,name:p.name,skin:p.skin,power:p.power}));state=init();people.forEach(p=>add(p.id,p.name,p.skin,p.power));$('end').classList.add('hidden');$('upgrades').classList.add('hidden');upgradeView=''};
 $('invite').onclick=async()=>{const url=new URL(location.href);url.searchParams.set('room',room);try{await navigator.clipboard.writeText(url.href);announce('MEGHÍVÓ KIMÁSOLVA')}catch{prompt('Meghívólink:',url.href)}};
 addEventListener('keydown',e=>{let k=e.key.toLowerCase();if(k==='q'&&mode!=='menu'){e.preventDefault();if(!e.repeat)handleAbilityTap();return}
 if(k==='r'&&mode!=='menu'){e.preventDefault();if(!e.repeat)toggleSummonChoice();return}
