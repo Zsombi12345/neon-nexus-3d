@@ -1,4 +1,4 @@
-<!doctype html><html lang="hu"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NEON NEXUS 3D — FPS Boss Hunter Edition v1.1</title><style>
+<!doctype html><html lang="hu"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NEON NEXUS 3D — FPS Animated Arsenal Edition v1.2</title><style>
 *{box-sizing:border-box}body{margin:0;background:#050a1b;color:#e7fbff;font:15px system-ui;overflow:hidden}canvas{display:block}button,input{font:inherit;border:1px solid #4fdcf7;border-radius:9px;background:#0c203b;color:white;padding:12px}button{cursor:pointer}button:hover{background:#14436a}.primary{background:#3be3f5;color:#031020;font-weight:800}#menu,#end{position:fixed;inset:0;background:#02091de8;display:grid;place-items:center}section{width:min(460px,94vw);padding:32px;border:1px solid #43ddf78a;border-radius:20px;background:#09152e;box-shadow:0 0 80px #008ff62b;text-align:center}h1{font-size:52px;line-height:.95;color:#65edff;text-shadow:0 0 30px #15b4ff}p{color:#9ebcd2}input{width:100%;margin:6px 0 12px}section button{width:100%;margin:5px 0}.row{display:flex;gap:8px}.row input{flex:1;min-width:0}.row button{width:auto}.hidden{display:none!important}#hud{position:fixed;top:15px;left:15px;right:15px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}#hud>div{padding:12px 16px;background:#071b36dd;border:1px solid #4fe6f866;border-radius:12px;pointer-events:auto}#hud b{color:#62f6ff}#hud button{padding:5px 9px}#team{position:fixed;left:15px;top:100px;padding:12px;background:#071b36dd;border-radius:12px;min-width:165px}#tips{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);padding:10px 20px;background:#071b36dd;border-radius:10px;white-space:nowrap}#announce{position:fixed;top:28%;left:50%;transform:translateX(-50%);font-size:32px;font-weight:900;text-shadow:0 0 20px cyan;pointer-events:none}#touch{position:fixed;bottom:20px;left:15px;right:15px;display:none;justify-content:space-between;pointer-events:none}#touch button{pointer-events:auto}#fire{border-radius:50%;width:80px;height:80px}@media(pointer:coarse){#touch:not(.hidden){display:flex}#tips{display:none}#team{top:auto;bottom:145px}}@media(max-width:600px){#hud{font-size:11px}#hud>div{padding:7px}h1{font-size:40px}}
 
 #perks{position:fixed;right:15px;top:105px;width:230px;max-height:55vh;overflow:auto;border:1px solid #5adff666;background:#07182de8;border-radius:12px;padding:13px;pointer-events:none}
@@ -173,6 +173,22 @@ radial-gradient(ellipse 60% 70% at 85% 90%,#ff70af22,transparent 70%),#050719eb}
 .boss-perk{color:#ffe4ac!important}
 #bossbar{border-color:#f4ad64;box-shadow:0 0 34px #ff813f66}
 @media(max-width:740px){#bossSkillHud{right:8px;bottom:212px;width:165px;padding:7px}#bossSkillHud.has-summons{bottom:395px}#bossSkillHud .boss-relic-title{font-size:9px}#useBossSkill{padding:6px;font-size:10px}#cycleBossSkill{font-size:9px}}
+
+/* FPS Animated Arsenal: original, built-in character portraits */
+#selector .pick[data-skin="nova"]{--accent-glow:#b66aff;border-color:#7044a4}
+#selector .pick[data-skin="astra"]{--accent-glow:#66ecff;border-color:#8cbbdf}
+#selector .pick[data-skin="nova"] .nova-preview{background:radial-gradient(ellipse at 35% 20%,#b88cff,#3d246b 70%,#16132c)}
+#selector .pick[data-skin="astra"] .astra-preview{background:radial-gradient(ellipse at 35% 20%,#eafffe,#75b5d5 60%,#242d51)}
+.cosplay-portrait.nova-preview,.cosplay-portrait.astra-preview{display:block;position:relative;overflow:hidden}
+.cosplay-portrait .custom-suit{position:absolute;left:14px;right:14px;top:56px;height:52px;background:linear-gradient(90deg,#222036,#604090 40%,#252441);clip-path:polygon(30% 0,72% 0,100% 48%,100% 100%,0 100%,0 40%)}
+.cosplay-portrait .custom-visor{position:absolute;left:21px;top:15px;width:50px;height:49px;border-radius:25px 25px 15px 15px;background:linear-gradient(145deg,#130f29 40%,#413265);border:3px solid #7351a7;box-shadow:inset 0 -10px #1d143c,0 0 8px #a873f777}
+.cosplay-portrait .custom-visor:after{content:"";position:absolute;left:4px;right:4px;top:22px;height:9px;border-radius:14px;background:#82ecff;box-shadow:0 0 14px #81f8ff}
+.cosplay-portrait .custom-core{position:absolute;top:74px;left:40px;width:13px;height:14px;transform:rotate(45deg);background:#92efff;box-shadow:0 0 12px #88e9ff}
+.cosplay-portrait.astra-preview .custom-suit{background:linear-gradient(90deg,#687d9e,#eef8ff 45%,#849ab8)}
+.cosplay-portrait.astra-preview .custom-visor{background:linear-gradient(140deg,#f9f9f5,#a8deed);border-color:#e9bc5a;box-shadow:inset 0 -9px #a1d4ec,0 0 12px #ffe4a755}
+.cosplay-portrait.astra-preview .custom-visor:after{background:#47bded;box-shadow:0 0 13px #2fcfff}
+.cosplay-portrait.astra-preview .custom-core{background:#ffc66c;box-shadow:0 0 14px #ffe17b}
+
 </style><canvas id="c"></canvas><div id="menu"><section><small>FPS EDITION • BELSŐ NÉZETES CO-OP</small><h1>NEON<br>NEXUS</h1><p>Ugyanaz a NEON NEXUS, most belső nézetből! Egérrel körbenézhető 3D aréna, kard, lándzsa, plazmafegyver, hullámok és bossok. Maximum 6 játékos.</p>
 <div id="selector" aria-label="Anime karakter összeállítása">
 <h2>01 / COSPLAY SKIN</h2>
@@ -186,7 +202,7 @@ radial-gradient(ellipse 60% 70% at 85% 90%,#ff70af22,transparent 70%),#050719eb}
 <div class="fps-entry"><span>🎯 Egér: körbenézés</span><span>⌨ WASD: mozgás</span><span>🖱 Kattintás: támadás</span><span>Esc: kurzor</span></div><input id="name" maxlength="14" placeholder="Játékosneved" value="Játékos"><button class="primary" id="create">FPS MULTIPLAYER SZOBA</button><div class="row"><input id="room" maxlength="6" placeholder="SZOBAKÓD"><button id="join">CSATLAKOZÁS</button></div><button id="solo">EGYJÁTÉKOS FPS JÁTÉK</button><p id="status"></p><p class="fps-original-link"><a href="./index.html">← Vissza az eredeti, külső nézetes játékhoz</a></p></section></div>
 <div id="hud" class="hidden"><div><strong>NEON NEXUS</strong><br>SZOBA: <b id="code">SOLO</b></div><div>HULLÁM <b id="wave">1</b> • KRISTÁLY <b id="health">100%</b><br>ÉLETERŐ <b id="hp">100</b></div><div><button id="invite">MEGHÍVÁS</button><button id="leave">KILÉPÉS</button></div></div><div id="fpsCrosshair" class="hidden" aria-hidden="true"><span class="cross-h"></span><span class="cross-v"></span><span class="cross-dot"></span></div>
 <div id="fpsLockHint" class="hidden">KATTINTS A PÁLYÁRA AZ EGÉR RÖGZÍTÉSÉHEZ <small>Esc: egér felszabadítása • Q: képesség • R/T: váltás</small></div>
-<div id="fpsRadar" class="hidden"><canvas id="radarCanvas" width="144" height="144"></canvas><span>ARENA RADAR</span></div><div id="version-badge" aria-label="Játékverzió">◆ NEON NEXUS • FPS v1.1 • BOSS HUNTER</div>
+<div id="fpsRadar" class="hidden"><canvas id="radarCanvas" width="144" height="144"></canvas><span>ARENA RADAR</span></div><div id="version-badge" aria-label="Játékverzió">◆ NEON NEXUS • FPS v1.2 • ANIMATED ARSENAL</div>
 <div id="abilityHud" class="hidden"><button id="useAbility" title="Különleges képesség: Q"><span id="abilitySymbol">✦</span><span class="ability-meta"><strong id="abilityName">Képesség</strong><small id="abilityTimer">Q • KÉSZ</small></span><strong>Q</strong></button><div id="abilityBar"><div id="abilityFill"></div></div></div>
 <div id="bossSkillHud" class="hidden">
 <div class="boss-relic-title">🏆 BOSS EREKLYE</div>
@@ -228,16 +244,16 @@ star.position.set(Math.cos(theta)*rad,.22,Math.sin(theta)*rad);scene.add(star)}
 const loadedCharacters=new Map();
 const missingCharacters=new Set();
 const gltfLoader=new GLTFLoader();
-function loadedStatus(){const el=$('assetStatus');if(!el)return;const count=loadedCharacters.size;
-el.textContent=count===3?'✓ Mindhárom valódi 3D skin betöltve':count+'/3 GLB modell betöltve'+(missingCharacters.size?' ⚠ A hiányzó modelleket fel kell tölteni a GitHub models/ mappájába.':' • Betöltés…');
-el.style.color=missingCharacters.size?'#ffb08d':'#a9f4d6'}
+function loadedStatus(){const el=$('assetStatus');if(el){el.textContent='✓ Nova Reaper, Astra Sentinel és Po — minden 3D skin beépítve';el.style.color='#9fffd8'}}
 const models=new Map(),lasers=[],particles=[],colors=[0x52eaff,0xb988ff,0x7affc1,0xffcb71,0xff78a6,0x8eabff];
 let coreFlash=0,upgradeView='',shake=0,summonChoice='wolf',shadowWeaponChoice='spear',flashActive=false,flashStart=0;
 const UPGRADES={
 rapid:{icon:'⚡',name:'Plazma gyorsító',desc:'16%-kal gyorsabb lövés minden szinten.'},
 damage:{icon:'💥',name:'Erősebb lövedék',desc:'+1 sebzés minden találatra.'},
 speed:{icon:'👟',name:'Turbó hajtómű',desc:'+14% mozgási sebesség.'},
-multi:{icon:'🎯',name:'Többszörös lövés',desc:'Még egy, a célkereszthez szorosabban tartó sugár (max. 4).'},
+multi:{icon:'🎯',name:'Többszörös lövés',desc:'Csak távolsági: még egy, a célkereszthez közel tartó sugár (max. 4).'},
+meleeReach:{icon:'⚔️',name:'Hosszabb ütés és csapás',desc:'Csak közelharcosnak: +0,75 egység hatótáv minden szinten (max. 4).'},
+meleeSweep:{icon:'🌪️',name:'Szélesebb támadóív',desc:'Csak közelharcosnak: egyre nagyobb szögben talál a kard, lándzsa és ököl.'},
 heal:{icon:'❤️',name:'Páncélfejlesztés',desc:'+25 maximális életerő, azonnali gyógyulással.'},
 regen:{icon:'✨',name:'Nanobot regeneráció',desc:'Folyamatosan visszatöltő életerő.'},
 pierce:{icon:'🔱',name:'Átütő plazma',desc:'A lövés további ellenfeleken is áthatol.'},
@@ -263,9 +279,9 @@ tank:{color:0xffb44e,speed:1.90,hp:6,damage:8,period:1.55,radius:.95},
 boss:{color:0xb760ff,speed:2.12,hp:185,damage:24,period:1.0,radius:2.15}
 };
 const SKINS={
-sunny:{name:'Marin Kitagawa',desc:'My Dress-Up Darling • feltöltött 3D modell',kind:'school',hair:0xf1c783,tips:0xf49bb3,skin:0xffdfca,outfit:0xf6f8fb,skirt:0x8eaeca,trim:0x395677,accent:0x668aa8,eye:0x9f4d69,boots:0x392f3a,model:'models/marin.glb',flipX:true},
-goth:{name:'Makima',desc:'Chainsaw Man • feltöltött 3D modell',kind:'makima',hair:0xb97042,tips:0x9b5a37,skin:0xffd8c1,outfit:0xf5f3ee,skirt:0x222735,trim:0xa83444,accent:0x273142,eye:0xcf9545,boots:0x24232e,model:'models/makima.glb'},
-idol:{name:'Po',desc:'Kung Fu Panda • feltöltött 3D modell',kind:'panda',hair:0x29262c,tips:0x1b1a21,skin:0xffffff,outfit:0x303030,skirt:0xf3bd69,trim:0xe1ae43,accent:0xffffff,eye:0x292929,boots:0x29262c,model:'models/po.glb',flipX:true}
+sunny:{name:'Nova Reaper',desc:'Saját cyber-nindzsa • lila energiapáncél, maszk és neonköpeny',kind:'nova',hair:0x211c3f,tips:0xb56cff,skin:0xcdb8d2,outfit:0x16192e,skirt:0x202540,trim:0xb665ff,accent:0x77e6ff,eye:0x7df0fc,boots:0x11172d},
+goth:{name:'Astra Sentinel',desc:'Saját fényőrző • fehér-arany páncél, fénykoszorú és kristály',kind:'astra',hair:0xe6d8ef,tips:0x58e7ff,skin:0xe8cebf,outfit:0xdfe8f7,skirt:0x435676,trim:0xf1b866,accent:0x59dfff,eye:0x72d6ff,boots:0x2f3a59},
+idol:{name:'Po',desc:'Kung Fu Panda • az eddig megszeretett 3D pandás kinézet',kind:'panda',hair:0x29262c,tips:0x1b1a21,skin:0xffffff,outfit:0x303030,skirt:0xf3bd69,trim:0xe1ae43,accent:0xffffff,eye:0x292929,boots:0x29262c}
 };
 const POWERS={
 purple:{name:'Lila energiatörés',desc:'Erős, egyenes energiacsapás, több drónt eltalál.',icon:'🟣',cooldown:9,color:0xb069ff},
@@ -274,9 +290,7 @@ shadow:{name:'Árnyékidézés',desc:'Q: idézés • R: farkas/nyuszi • T: ka
 flash:{name:'Fekete villanás',desc:'170 életerő • bal klikk: ökölharc • Q kétszer: rövid távú, időzített találat.',icon:'⚡',cooldown:8,color:0xfa8dff},
 reverse:{name:'Fordított energia',desc:'Közepes (9,5 egység) hatótávon gyógyítja a csapatot és a közeli kristályt.',icon:'💚',cooldown:17,color:0x64ffcb}
 };
-for(const [key,skin] of Object.entries(SKINS)){
-gltfLoader.load(skin.model,asset=>{loadedCharacters.set(key,asset);missingCharacters.delete(key);loadedStatus()},undefined,err=>{missingCharacters.add(key);loadedStatus();console.warn('3D modell hiányzik vagy hibás:',skin.model,err?.message||err)})
-}
+/* All FPS skins are built into the game: Nova, Astra, and unchanged Po. No GLB dependency. */
 
 const savedChoice=(key,fallback,options)=>{try{const v=localStorage.getItem('neon-nexus-'+key);return Object.hasOwn(options,v)?v:fallback}catch{return fallback}};
 let selectedSkin=savedChoice('skin','sunny',SKINS),selectedPower=savedChoice('power','purple',POWERS),castTap=0;
@@ -287,14 +301,19 @@ for(const [key,skin] of Object.entries(SKINS)){
 const button=document.createElement('button');button.type='button';button.className='pick'+(selectedSkin===key?' selected':'');button.setAttribute('aria-pressed',String(selectedSkin===key));button.dataset.skin=skin.kind;
 const portrait=document.createElement('span');portrait.className='cosplay-portrait';portrait.style.setProperty('--hair',hex(skin.hair));portrait.style.setProperty('--skin',hex(skin.skin));portrait.style.setProperty('--outfit',hex(skin.outfit));portrait.style.setProperty('--trim',hex(skin.trim));portrait.style.setProperty('--tips',hex(skin.tips));portrait.style.setProperty('--skirt',hex(skin.skirt));
 for(const cls of ['hair-back','neck','face','fringe','eyes','hair-tips','outfit','tie','ribbon','skirt']){const elem=document.createElement('i');elem.className=cls;portrait.append(elem)}
-const name=document.createElement('strong');name.textContent=skin.name;const desc=document.createElement('small');desc.textContent=skin.desc;if(key==='idol'){portrait.replaceChildren();portrait.className='cosplay-portrait panda-preview';portrait.textContent='🐼'}button.append(portrait,name,desc);
+const name=document.createElement('strong');name.textContent=skin.name;const desc=document.createElement('small');desc.textContent=skin.desc;if(key==='idol'){portrait.replaceChildren();portrait.className='cosplay-portrait panda-preview';portrait.textContent='🐼'}
+else{portrait.replaceChildren();portrait.className='cosplay-portrait '+(key==='sunny'?'nova-preview':'astra-preview');
+const mask=document.createElement('span');mask.className='custom-visor';
+const suit=document.createElement('span');suit.className='custom-suit';
+const heart=document.createElement('span');heart.className='custom-core';portrait.append(suit,mask,heart)}
+button.append(portrait,name,desc);
 button.onclick=()=>{selectedSkin=key;try{localStorage.setItem('neon-nexus-skin',key)}catch{}renderCharacterChoices()};skinRoot.append(button)}
 for(const [key,power] of Object.entries(POWERS)){
 const button=document.createElement('button');button.type='button';button.className='pick'+(selectedPower===key?' selected':'');button.setAttribute('aria-pressed',String(selectedPower===key));
 const icon=document.createElement('span');icon.className='spell-icon';icon.textContent=power.icon;const title=document.createElement('strong');title.textContent=power.name;const desc=document.createElement('small');desc.textContent=power.desc;const cd=document.createElement('span');cd.className='spell-cd';cd.textContent=power.cooldown+' mp újratöltés';
 button.append(icon,title,desc,cd);button.onclick=()=>{selectedPower=key;try{localStorage.setItem('neon-nexus-power',key)}catch{}renderCharacterChoices()};powerRoot.append(button)}
 }
-renderCharacterChoices();
+renderCharacterChoices();loadedStatus();
 let mode='menu',peer,conn,clients=new Map(),state,room='',localId='',myName='',last=performance.now(),sendClock=0,hudClock=0,fire=false,aim={x:0,z:0},keys=new Set(),announcement=0;
 const code=()=>Array.from(crypto.getRandomValues(new Uint8Array(6)),n=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[n%32]).join('');
 const rnd=(a,b)=>a+Math.random()*(b-a),lim=(v,a,b)=>Math.max(a,Math.min(b,v)),safe=s=>String(s||'Játékos').trim().slice(0,14).replace(/[<>]/g,'')||'Játékos';
@@ -303,10 +322,13 @@ function rollChoices(p,bossReward=false){
 if(bossReward){const pool=bossRelicsFor(p),active=pool.filter(id=>BOSS_UPGRADES[id].active).sort(()=>Math.random()-.5);
 const guaranteedActive=active[0],others=pool.filter(id=>id!==guaranteedActive).sort(()=>Math.random()-.5);
 return[guaranteedActive,...others.slice(0,2)].sort(()=>Math.random()-.5)}
-const standard=Object.keys(UPGRADES).filter(k=>!['summonSlots','manaWell','summonFangs'].includes(k));
-const special=p?.power==='shadow'?['summonSlots','manaWell','summonFangs']:[];const pool=standard.sort(()=>Math.random()-.5);
-if(special.length)return[special[Math.floor(Math.random()*special.length)],...pool.slice(0,2)].sort(()=>Math.random()-.5);return pool.slice(0,3)}
-function add(id,name,skin='sunny',power='purple'){if(state.players.some(p=>p.id===id))return;const waiting=state.phase==='upgrade';state.players.push({id,name:safe(name),skin:Object.hasOwn(SKINS,skin)?skin:'sunny',power:Object.hasOwn(POWERS,power)?power:'purple',powerCool:0,bossCool:0,bossActive:'',guardTimer:0,mana:12,maxMana:12,manaRecharge:0,manaRecoverStart:null,summonType:'wolf',weapon:'spear',swing:0,x:rnd(-5,5),z:rnd(-5,5),angle:0,hp:power==='flash'?185:115,maxHp:power==='flash'?185:115,kills:0,cool:0,revive:0,perks:{},choices:waiting?rollChoices({power},state.lastBossReward):[],picked:!waiting,input:{x:0,z:0,ax:0,az:0,fire:false,special:false,summonType:'wolf',weapon:'spear'}})}
+const melee=p?.power==='shadow'||p?.power==='flash';
+const standard=Object.keys(UPGRADES).filter(k=>!['summonSlots','manaWell','summonFangs'].includes(k)
+&&(melee?!['multi','pierce'].includes(k):!['meleeReach','meleeSweep'].includes(k)));
+const special=p?.power==='shadow'?['summonSlots','manaWell','summonFangs']:[],pool=standard.sort(()=>Math.random()-.5);
+if(special.length)return[special[Math.floor(Math.random()*special.length)],...pool.slice(0,2)].sort(()=>Math.random()-.5);
+return pool.slice(0,3)}
+function add(id,name,skin='sunny',power='purple'){if(state.players.some(p=>p.id===id))return;const waiting=state.phase==='upgrade';state.players.push({id,name:safe(name),skin:Object.hasOwn(SKINS,skin)?skin:'sunny',power:Object.hasOwn(POWERS,power)?power:'purple',powerCool:0,bossCool:0,bossActive:'',guardTimer:0,mana:12,maxMana:12,manaRecharge:0,manaRecoverStart:null,summonType:'wolf',weapon:'spear',swing:0,attackSeq:0,x:rnd(-5,5),z:rnd(-5,5),angle:0,hp:power==='flash'?185:115,maxHp:power==='flash'?185:115,kills:0,cool:0,revive:0,perks:{},choices:waiting?rollChoices({power},state.lastBossReward):[],picked:!waiting,input:{x:0,z:0,ax:0,az:0,fire:false,special:false,summonType:'wolf',weapon:'spear'}})}
 function pack(){return{players:state.players.map(({input,cool,revive,...p})=>p),enemies:state.enemies,summons:state.summons,core:state.core,coreMax:state.coreMax,wave:state.wave,over:state.over,phase:state.phase,breakId:state.breakId,lastBossReward:state.lastBossReward,coreGuardTimer:state.coreGuardTimer}}
 function applyUpgrade(id,index){if(!state||state.phase!=='upgrade')return;
 const p=state.players.find(x=>x.id===id);
@@ -317,6 +339,8 @@ p.perks[key]=(p.perks[key]||0)+1;p.picked=true;p.choices=[];
 if(key==='heal'){p.maxHp+=25;p.hp=Math.min(p.maxHp,p.hp+45)}
 if(key==='repair'){state.coreMax+=8;state.core=Math.min(state.coreMax,state.core+24)}
 if(key==='multi')p.perks[key]=Math.min(3,p.perks[key]);
+if(key==='meleeReach')p.perks[key]=Math.min(4,p.perks[key]);
+if(key==='meleeSweep')p.perks[key]=Math.min(5,p.perks[key]);
 if(key==='manaWell'){p.maxMana+=4;if(p.manaRecoverStart!==null)p.manaRecoverStart=Math.min(p.manaRecoverStart,p.mana)}
 if(key==='summonSlots')p.perks[key]=Math.min(8,p.perks[key]);
 if(key==='bossLegion'){p.maxMana+=4;if(p.manaRecoverStart!==null)p.manaRecoverStart=Math.min(p.manaRecoverStart,p.mana)}
@@ -342,7 +366,7 @@ function removeModel(g){scene.remove(g);
 if(g.userData.externalModel){if(g.userData.weaponGroup)g.userData.weaponGroup.traverse(o=>{o.geometry?.dispose();o.material?.dispose()});for(const o of g.children){if(o.isSprite){o.material.map?.dispose();o.material.dispose()}else if(o.userData?.abilityRune){o.geometry?.dispose();o.material?.dispose()}}return}
 g.traverse(o=>{o.geometry?.dispose();if(o.material){for(const m of (Array.isArray(o.material)?o.material:[o.material])){m.map?.dispose();m.dispose()}}})}
 function clearEffects(){for(const e of [...lasers,...particles]){scene.remove(e.obj);e.obj.geometry?.dispose();e.obj.material?.dispose()}lasers.length=0;particles.length=0}
-function reset(){fpsReleaseMouse();fpsGunRig.visible=false;fpsViewType='';fpsLastPos=null;fpsTouchLook=null;if(conn)try{conn.close()}catch{};if(peer)try{peer.destroy()}catch{};conn=null;peer=null;clients.clear();state=null;mode='menu';room='';localId='';for(const m of models.values())removeModel(m);models.clear();clearEffects();$('menu').classList.remove('hidden');for(const x of ['hud','team','tips','touch','end','upgrades','perks','bossbar','abilityHud','bossSkillHud'])$(x).classList.add('hidden');$('create').disabled=false;$('join').disabled=false;$('status').textContent='';upgradeView='';coreFlash=0;castTap=0;flashActive=false;$('flashOverlay').classList.add('hidden');$('summonHud').classList.add('hidden');keys.clear();fire=false;fpsUi()}
+function reset(){fpsReleaseMouse();fpsGunRig.visible=false;fpsViewType='';fpsLastAttackSeq=null;fpsAttackStart=-9999;fpsLastPos=null;fpsTouchLook=null;if(conn)try{conn.close()}catch{};if(peer)try{peer.destroy()}catch{};conn=null;peer=null;clients.clear();state=null;mode='menu';room='';localId='';for(const m of models.values())removeModel(m);models.clear();clearEffects();$('menu').classList.remove('hidden');for(const x of ['hud','team','tips','touch','end','upgrades','perks','bossbar','abilityHud','bossSkillHud'])$(x).classList.add('hidden');$('create').disabled=false;$('join').disabled=false;$('status').textContent='';upgradeView='';coreFlash=0;castTap=0;flashActive=false;$('flashOverlay').classList.add('hidden');$('summonHud').classList.add('hidden');keys.clear();fire=false;fpsUi()}
 
 function fail(t){reset();$('status').textContent=t}
 function send(c,o){if(c?.open)try{c.send(o)}catch{}}
@@ -381,38 +405,185 @@ const me=state?.players?.find(p=>p.id===localId);$('fpsCrosshair').classList.tog
 addEventListener('pointerlockchange',fpsUi);
 addEventListener('mousemove',e=>{if(!fpsPointerActive()||mode==='menu'||state?.phase==='upgrade'||flashActive)return;
 fpsYaw-=e.movementX*.00235;fpsPitch=lim(fpsPitch-e.movementY*.0021,-1.15,1.1)});
+
+/* v1.2 articulated first-person arsenal. Uses server-confirmed attack counters. */
+let fpsWeaponParts={},fpsLastAttackSeq=null,fpsAttackStart=-9999,fpsAttackNumber=0,fpsAttackDuration=.4;
+function fpsMeleePose(progress,steps){
+if(progress<=steps[0][0])return steps[0][1];
+for(let j=1;j<steps.length;j++){const [t,v]=steps[j],prev=steps[j-1];
+if(progress<=t){const phase=(progress-prev[0])/Math.max(.001,t-prev[0]),smooth=phase*phase*(3-2*phase);return prev[1]+(v-prev[1])*smooth}}
+return steps[steps.length-1][1]}
 function fpsMakeWeapon(me){
 const type=me?.power==='shadow'?(me.weapon==='sword'?'sword':'spear'):me?.power==='flash'?'fists':'rifle';
-if(type===fpsViewType)return;fpsViewType=type;
-while(fpsGunRig.children.length){const n=fpsGunRig.children[0];fpsGunRig.remove(n);n.traverse(x=>{x.geometry?.dispose();x.material?.dispose()})}
-const matF=(col,shine=.6)=>new THREE.MeshStandardMaterial({color:col,emissive:col,emissiveIntensity:shine,metalness:.4,roughness:.32,depthTest:false});
-const base=matF(0x23375e,.3),bright=matF(0xeaf5ff,.36),cyan=matF(0x62e9ff,1.5),pink=matF(0xff77c0,.9),purple=matF(0xb67cfa,1.2);
-const add=(geo,material,pos,angles)=>{const obj=new THREE.Mesh(geo,material);obj.position.set(...pos);if(angles)obj.rotation.set(...angles);obj.renderOrder=600;fpsGunRig.add(obj)};
-const box=(x,y,z)=>new THREE.BoxGeometry(x,y,z);
+if(type===fpsViewType)return;
+fpsViewType=type;fpsWeaponParts={type};
+while(fpsGunRig.children.length){const old=fpsGunRig.children[0];fpsGunRig.remove(old);
+old.traverse(x=>{x.geometry?.dispose();if(x.material){for(const m of Array.isArray(x.material)?x.material:[x.material])m.dispose()}})}
+const model=new THREE.Group();fpsGunRig.add(model);fpsWeaponParts.model=model;
+const makeMat=(color,shine=.3,metal=.65)=>new THREE.MeshStandardMaterial({color,emissive:color,emissiveIntensity:shine,roughness:.27,metalness:metal,depthTest:false,depthWrite:false});
+const body=makeMat(0x202643,.16),obsidian=makeMat(0x070d1b,.12),steel=makeMat(0xb2c9df,.22),silver=makeMat(0xddebf7,.24);
+const cyan=makeMat(0x53e9ff,1.65,.2),magenta=makeMat(0xe56cff,1.5,.2),gold=makeMat(0xf6c16c,.62),violet=makeMat(0x53458b,.34);
+function cube(parent,w,h,d,color,x,y,z,rx=0,ry=0,rz=0){
+const mesh=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),color);
+mesh.position.set(x,y,z);mesh.rotation.set(rx,ry,rz);mesh.renderOrder=600;parent.add(mesh);return mesh}
+function cylinder(parent,a,b,h,color,x,y,z,rx=0,ry=0,rz=0){
+const mesh=new THREE.Mesh(new THREE.CylinderGeometry(a,b,h,12),color);
+mesh.position.set(x,y,z);mesh.rotation.set(rx,ry,rz);mesh.renderOrder=600;parent.add(mesh);return mesh}
+function gem(parent,r,color,x,y,z,sc=[1,1,1]){const mesh=new THREE.Mesh(new THREE.OctahedronGeometry(r),color);
+mesh.position.set(x,y,z);mesh.scale.set(...sc);mesh.renderOrder=600;parent.add(mesh);return mesh}
+function torus(parent,r,tube,color,x,y,z,rx=0,ry=0,rz=0){const mesh=new THREE.Mesh(new THREE.TorusGeometry(r,tube,7,28),color);
+mesh.position.set(x,y,z);mesh.rotation.set(rx,ry,rz);mesh.renderOrder=600;parent.add(mesh);return mesh}
 if(type==='rifle'){
-add(box(.20,.17,.69),base,[.09,-.1,-.29]);add(box(.17,.16,.36),bright,[.08,-.04,-.54]);
-add(box(.09,.09,.28),cyan,[.08,-.03,-.78]);add(box(.12,.28,.12),base,[.1,-.22,-.06],[.2,0,0]);
-add(new THREE.TorusGeometry(.10,.02,8,18),purple,[.07,.03,-.43],[Math.PI/2,0,0]);add(box(.30,.06,.27),pink,[.04,.04,-.20])
-}else if(type==='fists'){for(const sign of [-1,1]){
-add(new THREE.SphereGeometry(.18,12,10),sign>0?pink:cyan,[sign*.25,-.16,-.38]);
-add(box(.23,.27,.25),base,[sign*.25,-.31,-.22]);
-add(new THREE.TorusGeometry(.14,.023,7,20),purple,[sign*.25,-.25,-.27],[0,0,Math.PI/2])}}
-else{
-add(box(.09,.13,.45),base,[.07,-.18,-.12]);add(box(.22,.07,.13),pink,[.07,-.07,-.19]);
-if(type==='sword'){add(box(.10,.10,.95),cyan,[.07,-.05,-.72]);add(new THREE.ConeGeometry(.085,.32,6),bright,[.07,-.05,-1.35],[Math.PI/2,0,0])}
-else{add(box(.065,.08,1.2),base,[.07,-.08,-.73]);add(new THREE.ConeGeometry(.13,.48,6),cyan,[.07,-.08,-1.49],[Math.PI/2,0,0])}}
+// Photon AR: tapered armour, carbon grip, power cell, dual barrel and optical optic.
+const chassis=new THREE.Group();model.add(chassis);
+cube(chassis,.38,.31,1.06,body,0,-.035,-.34);
+cube(chassis,.31,.19,.87,steel,0,.14,-.29);
+cube(chassis,.46,.12,.69,obsidian,0,.23,-.25);
+cube(chassis,.25,.11,.75,magenta,0,.26,-.33);
+cube(chassis,.27,.36,.50,body,0,-.24,.05,.2);
+cube(chassis,.21,.31,.21,obsidian,.02,-.30,.27,-.25);
+cube(chassis,.21,.20,.52,violet,0,-.015,.33);
+for(const side of [-1,1]){
+cube(chassis,.07,.27,.78,steel,side*.215,0,-.49);
+cube(chassis,.075,.10,.75,cyan,side*.264,.06,-.51);
+cube(chassis,.13,.22,.18,body,side*.19,-.12,-.86);
+cube(chassis,.10,.14,.15,gold,side*.15,.09,.09);
+gem(chassis,.078,magenta,side*.25,.17,-.09,[.6,1.4,.58])}
+cylinder(chassis,.095,.095,.9,obsidian,0,-.04,-.92,Math.PI/2);
+cylinder(chassis,.067,.067,.75,cyan,0,-.04,-.93,Math.PI/2);
+cylinder(chassis,.155,.125,.16,steel,0,-.04,-1.39,Math.PI/2);
+torus(chassis,.13,.035,cyan,0,-.04,-1.52);
+torus(chassis,.20,.027,magenta,0,-.04,-1.21);
+for(const z of [-.83,-1.05,-1.25])torus(chassis,.115,.014,steel,0,-.04,z);
+cube(chassis,.21,.08,.47,obsidian,0,.33,-.37);
+cube(chassis,.07,.10,.17,cyan,0,.405,-.53);
+cube(chassis,.11,.09,.12,magenta,0,.42,-.22);
+cube(chassis,.28,.28,.16,obsidian,0,-.32,-.11);
+cylinder(chassis,.19,.19,.38,body,0,-.25,-.46,Math.PI/2);
+gem(chassis,.20,cyan,0,-.25,-.46,[1.1,.85,1.0]);
+torus(chassis,.23,.018,gold,0,-.25,-.46,Math.PI/2);
+const bolt=cube(chassis,.35,.06,.13,silver,0,.26,.03);
+const flashMaterial=new THREE.MeshBasicMaterial({color:0x86faff,transparent:true,opacity:0,depthTest:false,depthWrite:false,blending:THREE.AdditiveBlending,side:THREE.DoubleSide});
+const flare=new THREE.Mesh(new THREE.OctahedronGeometry(.33),flashMaterial);flare.position.set(0,-.04,-1.65);flare.visible=false;flare.renderOrder=640;chassis.add(flare);
+const corona=new THREE.Mesh(new THREE.TorusGeometry(.25,.028,8,32),flashMaterial);corona.position.copy(flare.position);corona.visible=false;corona.renderOrder=650;chassis.add(corona);
+fpsWeaponParts.bolt=bolt;fpsWeaponParts.flare=flare;fpsWeaponParts.corona=corona;fpsWeaponParts.flashMaterial=flashMaterial;
+}else if(type==='fists'){
+// Two separately rigged forearms and articulated energy gauntlets.
+const arms=[];
+for(const side of [-1,1]){
+const arm=new THREE.Group();model.add(arm);
+arm.position.set(side*.34,-.03,-.08);
+cube(arm,.27,.26,.54,body,0,-.17,.23,-.12);
+cube(arm,.30,.30,.40,side===1?violet:steel,0,-.03,-.14);
+cube(arm,.33,.18,.25,obsidian,0,-.065,-.33);
+cube(arm,.33,.13,.07,gold,0,.15,-.14);
+for(let k=-1;k<=1;k++)cube(arm,.094,.10,.13,k===0?cyan:magenta,k*.11,.10,-.37);
+gem(arm,.12,side===1?magenta:cyan,0,-.05,-.39,[1.05,.67,.65]);
+for(const a of [-1,1])cube(arm,.048,.22,.39,steel,a*.185,-.09,-.04);
+arms.push(arm);
 }
-function fpsUpdateCamera(dt,t){const me=state?.players?.find(p=>p.id===localId);if(!me){fpsGunRig.visible=false;return}
-const cam=new THREE.Vector3(me.x,1.77+Math.sin(t*.011)*.009,me.z);
-camera.position.lerp(cam,Math.min(1,dt*20));
-const level=Math.cos(fpsPitch);
-camera.lookAt(camera.position.x+Math.sin(fpsYaw)*level,camera.position.y+Math.sin(fpsPitch),camera.position.z+Math.cos(fpsYaw)*level);
-fpsMakeWeapon(me);fpsKick=Math.max(0,fpsKick-dt*3.6);
+fpsWeaponParts.arms=arms;
+}else if(type==='sword'||type==='spear'){
+// High-detail rune blade or royal spear, both visibly held at 3D angle.
+const handle=new THREE.Group();model.add(handle);
+cube(handle,.13,.13,.60,obsidian,0,-.12,.05);
+for(let k=0;k<5;k++)cube(handle,.14,.012,.04,gold,0,-.065,.33-k*.12,0,0,k%2?.3:-.3);
+gem(handle,.12,magenta,0,-.12,.40);
+cube(handle,.10,.16,.13,violet,0,-.11,-.34);
+cube(handle,.63,.10,.19,gold,0,-.11,-.41);
+for(const side of [-1,1]){
+gem(handle,.18,magenta,side*.39,-.11,-.42,[.7,.54,1.2]);
+cube(handle,.11,.19,.15,steel,side*.23,-.11,-.36,0,0,side*.45)}
+if(type==='sword'){
+// Forged broad blade: bevelled silver shoulders, blue plasma fuller and crystalline tip.
+cube(handle,.24,.09,1.26,steel,0,-.08,-1.12);
+cube(handle,.145,.095,1.22,cyan,0,-.08,-1.17);
+cube(handle,.048,.115,1.28,silver,0,-.08,-1.18);
+for(const side of [-1,1]){
+cube(handle,.032,.072,1.10,magenta,side*.123,-.08,-1.14);
+gem(handle,.14,steel,side*.08,-.08,-1.74,[.65,.6,1.1])}
+const point=new THREE.Mesh(new THREE.ConeGeometry(.119,.39,4),steel);point.rotation.x=-Math.PI/2;point.position.set(0,-.08,-1.88);point.renderOrder=601;handle.add(point);
+gem(handle,.19,magenta,0,-.04,-.5);
+}else if(type==='spear'){
+cube(handle,.115,.10,1.72,body,0,-.12,-1.16);
+cylinder(handle,.09,.10,1.8,steel,0,-.12,-1.18,Math.PI/2);
+for(let z of [-.65,-1.14,-1.62])torus(handle,.15,.022,magenta,0,-.12,z);
+for(const side of [-1,1]){
+gem(handle,.27,gold,side*.22,-.11,-1.90,[.7,.8,1.25]);
+cube(handle,.055,.12,.5,cyan,side*.10,-.11,-1.91)}
+const tip=new THREE.Mesh(new THREE.ConeGeometry(.17,.64,6),cyan);
+tip.rotation.x=-Math.PI/2;tip.position.set(0,-.12,-2.28);tip.renderOrder=602;handle.add(tip);
+gem(handle,.23,magenta,0,-.12,-1.80,[1,1,1.6]);
+}
+const slashMat=new THREE.MeshBasicMaterial({color:type==='sword'?0x7ceaff:0xc892ff,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthTest:false,depthWrite:false,side:THREE.DoubleSide});
+const trail=new THREE.Mesh(new THREE.TorusGeometry(type==='sword'?1.12:.82,.047,7,34,Math.PI*1.44),slashMat);
+trail.rotation.set(.28,0,-.8);trail.position.set(-.12,.13,-1.02);trail.visible=false;trail.renderOrder=630;model.add(trail);
+fpsWeaponParts.trail=trail;
+}
+}
+function fpsUpdateCamera(dt,t){
+const me=state?.players?.find(p=>p.id===localId);
+if(!me){fpsGunRig.visible=false;fpsLastAttackSeq=null;return}
+const target=new THREE.Vector3(me.x,1.77+Math.sin(t*.011)*.009,me.z);
+camera.position.lerp(target,Math.min(1,dt*20));
+const up=Math.cos(fpsPitch);
+camera.lookAt(camera.position.x+Math.sin(fpsYaw)*up,camera.position.y+Math.sin(fpsPitch),camera.position.z+Math.cos(fpsYaw)*up);
+fpsMakeWeapon(me);
+const attackSeq=me.attackSeq||0;
+if(fpsLastAttackSeq===null){fpsLastAttackSeq=attackSeq}
+else if(attackSeq!==fpsLastAttackSeq){
+fpsLastAttackSeq=attackSeq;fpsAttackStart=t;fpsAttackNumber=attackSeq;
+fpsAttackDuration=fpsViewType==='fists'?.34:fpsViewType==='sword'?.49:fpsViewType==='spear'?.39:.19;
+fpsKick=.18;
+}
+const progress=Math.max(0,Math.min(1,(t-fpsAttackStart)/(fpsAttackDuration*1000)));
+const active=t>=fpsAttackStart&&(t-fpsAttackStart)<fpsAttackDuration*1000;
+const pose=active?fpsMeleePose(progress,[[0,0],[.17,-.26],[.43,1],[.63,.58],[1,0]]):0;
+const motion=fpsWeaponParts.model;
 const movement=fpsLastPos?Math.hypot(me.x-fpsLastPos.x,me.z-fpsLastPos.z):0;
-const bob=Math.min(.055,movement*.5),phase=t*.010;
-fpsGunRig.position.set(.34+Math.sin(phase)*bob,-.30+Math.cos(phase*2)*bob*.65,-.74+fpsKick*.65);
-fpsGunRig.rotation.set(-fpsKick*.9,Math.sin(phase)*bob*.6,Math.sin(phase*.7)*bob*.35);
-fpsGunRig.visible=me.hp>0;fpsLastPos={x:me.x,z:me.z}
+const walking=Math.min(1,movement*5),bob=.034*walking,phase=t*.012;
+fpsGunRig.position.set(.34+Math.sin(phase)*bob,-.30+Math.abs(Math.cos(phase))*bob*.45,-.74);
+fpsGunRig.rotation.set(0,0,Math.sin(phase*.75)*walking*.018);
+if(motion){
+motion.position.set(0,0,0);motion.rotation.set(0,0,0);
+if(fpsViewType==='fists'){
+const lead=fpsAttackNumber%2===0?0:1,arms=fpsWeaponParts.arms||[];
+for(let k=0;k<arms.length;k++){const arm=arms[k],front=active&&k===lead;
+arm.position.set((k===0?-.34:.34)+(front?-.085*pose*(k===0?-1:1):0),-.03+(front?.20*Math.max(0,pose):.01*Math.sin(phase)), -.08+(front?-.91*pose:.06*Math.max(0,pose)));
+arm.rotation.set(front?-.36*pose:0,front?(k===0?-.22:.22)*pose:0,front?(k===0?.15:-.15)*pose:0);
+}
+if(active)motion.rotation.z=(lead===0?-.09:.09)*Math.max(0,pose);
+}else if(fpsViewType==='sword'){
+const arc=fpsMeleePose(progress,[[0,.09],[.18,.95],[.49,-1.18],[.75,-.5],[1,0]]);
+motion.rotation.z=active?arc:Math.sin(phase*.3)*.012;
+motion.rotation.y=active?.24*pose:0;
+motion.rotation.x=active?-.24*Math.max(0,pose):0;
+motion.position.set(active?-.18*pose:0,active?.10*pose:0,active?-.27*pose:0);
+}else if(fpsViewType==='spear'){
+motion.position.set(active?-.02*pose:0,active?.035*pose:0,active?-.92*pose:0);
+motion.rotation.set(active?-.11*pose:0,0,active?-.10*pose:0);
+}else{
+const kick=active?Math.max(0,pose):0;
+motion.position.set(0,.05*kick,.23*kick);
+motion.rotation.x=.14*kick;
+if(fpsWeaponParts.bolt)fpsWeaponParts.bolt.position.z=.03+.19*kick;
+if(fpsWeaponParts.flare&&fpsWeaponParts.corona){
+const shine=active&&progress<.47;
+fpsWeaponParts.flare.visible=shine;fpsWeaponParts.corona.visible=shine;
+fpsWeaponParts.flashMaterial.opacity=shine?Math.max(.05,1-progress/.48):0;
+fpsWeaponParts.flare.scale.setScalar(1+Math.max(0,pose)*.9);
+}
+}
+}
+if(fpsWeaponParts.trail){
+const flare=active&&progress>.22&&progress<.78;
+fpsWeaponParts.trail.visible=flare;
+fpsWeaponParts.trail.material.opacity=flare?Math.min(.8,Math.sin((progress-.22)/.56*Math.PI)*.85):0;
+fpsWeaponParts.trail.rotation.z=(fpsViewType==='sword'?-.75:-.40)+(active?progress*2.15:0);
+fpsWeaponParts.trail.scale.setScalar(1+Math.max(0,pose)*.2);
+}
+fpsGunRig.visible=me.hp>0;
+fpsLastPos={x:me.x,z:me.z};
 }
 function fpsDrawRadar(){if(!state)return;const ctx=$('radarCanvas').getContext('2d'),me=state.players.find(p=>p.id===localId);if(!ctx||!me)return;
 const c=72,r=62,scale=r/27;ctx.clearRect(0,0,144,144);
@@ -470,24 +641,25 @@ fxLightning(x,z,tx,tz,j%3?color:0xffffff,6,.4)}}
 function meleeVisual(fx){
 if(!fx)return;
 const {x,z,angle,kind}=fx,color=kind==='shadow'?(fx.weapon==='sword'?0xc7c3ff:0xbd81ff):0x293bce;
-const dx=Math.sin(angle),dz=Math.cos(angle),radius=kind==='shadow'?(fx.weapon==='sword'?3.2:4.35):2.75;
+const dx=Math.sin(angle),dz=Math.cos(angle),radius=fx.radius||((kind==='shadow'?(fx.weapon==='sword'?3.2:4.35):2.75));
 fxSeal(x+dx*radius*.52,z+dz*radius*.52,color,radius*.7,.27);
 const pts=[];for(let i=0;i<=12;i++){const a=angle-1.15+(2.3*i/12);pts.push({x:x+Math.sin(a)*radius,y:1.32+Math.sin(i/12*Math.PI)*.4,z:z+Math.cos(a)*radius})}
 fxArc(pts,kind==='shadow'?0xe6bfff:0x4d72f7,.24);
 for(const pt of fx.targets||[]){burst(pt.x,pt.z,kind==='shadow'?0xb186ff:0x364ce2,6,.65)}
 }
 function performMelee(p){
-const shadow=p.power==='shadow',radius=shadow?(p.weapon==='sword'?3.3:4.55):2.65;
+const shadow=p.power==='shadow',radius=(shadow?(p.weapon==='sword'?3.3:4.55):2.65)+Math.min(4,p.perks.meleeReach||0)*.75;
 const damage=(shadow?(p.weapon==='sword'?5:4.25):3)+(p.perks.damage||0)+(p.perks.bossOverdrive||0)*3;
 const dirX=Math.sin(p.angle),dirZ=Math.cos(p.angle),hit=[];
 for(const e of [...state.enemies]){
 const dx=e.x-p.x,dz=e.z-p.z,dist=Math.hypot(dx,dz);
 const facing=dist<.001?1:(dx*dirX+dz*dirZ)/dist;
-if(dist<radius+ENEMY_TYPES[e.kind||'normal'].radius*.3&&facing>(shadow?.32:.2)){
+const spreadBonus=Math.min(5,p.perks.meleeSweep||0)*.125;
+if(dist<radius+ENEMY_TYPES[e.kind||'normal'].radius*.3&&facing>(shadow?.32:.2)-spreadBonus){
 hit.push({x:e.x,z:e.z});damageEnemy(e,damage,p)}
 }
-p.swing=(p.swing||0)+1;
-const fx={x:p.x,z:p.z,angle:p.angle,kind:shadow?'shadow':'flash',weapon:p.weapon,targets:hit};
+p.swing=(p.swing||0)+1;p.attackSeq=(p.attackSeq||0)+1;
+const fx={x:p.x,z:p.z,angle:p.angle,kind:shadow?'shadow':'flash',weapon:p.weapon,radius,targets:hit};
 meleeVisual(fx);if(mode==='host')broadcast({type:'melee',effect:fx})
 }
 function powerVisual(effect){
@@ -665,7 +837,7 @@ p.mana=Math.min(p.maxMana,p.manaRecoverStart+(p.maxMana-p.manaRecoverStart)*(p.m
 p.x=lim(p.x+i.x*8*Math.pow(1.14,p.perks.speed||0)*dt,-25,25);p.z=lim(p.z+i.z*8*Math.pow(1.14,p.perks.speed||0)*dt,-25,25);p.angle=Math.atan2(i.ax-p.x,i.az-p.z);if(p.power==='shadow'){p.summonType=i.summonType==='rabbit'?'rabbit':'wolf';p.weapon=i.weapon==='sword'?'sword':'spear'}p.cool=Math.max(0,p.cool-dt);
 if(i.special&&p.powerCool<=0&&state.phase==='fight')castPower(p);
 if(p.perks.regen)p.hp=Math.min(p.maxHp,p.hp+dt*p.perks.regen*1.4);
-if(i.fire&&p.cool===0){if(p.power==='shadow'||p.power==='flash'){p.cool=Math.max(.17,(p.power==='shadow'?.39:.31)*Math.pow(.84,p.perks.rapid||0)*Math.pow(.82,p.perks.bossOverdrive||0));performMelee(p)}else{p.cool=Math.max(.05,.22*Math.pow(.84,p.perks.rapid||0)*Math.pow(.82,p.perks.bossOverdrive||0));const shots=1+Math.min(3,p.perks.multi||0),damage=1+(p.perks.damage||0)+3*(p.perks.bossOverdrive||0),penetration=1+(p.perks.pierce||0),color=colors[state.players.indexOf(p)%6];
+if(i.fire&&p.cool===0){if(p.power==='shadow'||p.power==='flash'){p.cool=Math.max(.17,(p.power==='shadow'?.39:.31)*Math.pow(.84,p.perks.rapid||0)*Math.pow(.82,p.perks.bossOverdrive||0));performMelee(p)}else{p.cool=Math.max(.05,.22*Math.pow(.84,p.perks.rapid||0)*Math.pow(.82,p.perks.bossOverdrive||0));p.attackSeq=(p.attackSeq||0)+1;const shots=1+Math.min(3,p.perks.multi||0),damage=1+(p.perks.damage||0)+3*(p.perks.bossOverdrive||0),penetration=1+(p.perks.pierce||0),color=colors[state.players.indexOf(p)%6];
 for(let j=0;j<shots;j++){const angle=p.angle+(j-(shots-1)/2)*.045,dx=Math.sin(angle),dz=Math.cos(angle),hits=[];
 for(const e of state.enemies){const ex=e.x-p.x,ez=e.z-p.z,along=ex*dx+ez*dz,dist=Math.abs(ex*dz-ez*dx),radius=ENEMY_TYPES[e.kind||'normal'].radius;if(along>0&&along<23&&dist<radius+.3)hits.push({e,along})}
 hits.sort((a,b)=>a.along-b.along);const struck=hits.slice(0,penetration),last=struck.at(-1),to=last?{x:last.e.x,z:last.e.z}:{x:p.x+dx*23,z:p.z+dz*23},from={x:p.x,z:p.z};
@@ -739,7 +911,82 @@ rune.rotation.x=-Math.PI/2;rune.position.y=.08;rune.userData.abilityRune=true;ro
 root.userData={externalModel:true,skin:o.skin,label,rune};attachShadowWeapon(root,o);
 scene.add(root);return root
 }
-function makeModel(enemy,i,o){if(!enemy&&loadedCharacters.has(o.skin)){const hero=makeExternalCharacter(o);if(hero)return hero}const g=new THREE.Group(),kind=o.kind||'normal',t=ENEMY_TYPES[kind],color=enemy?t.color:colors[i%6];
+function makeOriginalFpsHero(i,o){
+const skin=SKINS[o.skin]||SKINS.sunny,astra=skin.kind==='astra';
+const g=new THREE.Group(),dark=0x101326,black=0x080d1b,ink=new THREE.MeshBasicMaterial({color:black,side:THREE.BackSide});
+const mats=new Map();
+function matColor(color,glow=0){const key=color+':'+glow;if(!mats.has(key))mats.set(key,new THREE.MeshToonMaterial({color,emissive:color,emissiveIntensity:glow}));return mats.get(key)}
+function part(geometry,color,x,y,z,rx=0,ry=0,rz=0,sx=1,sy=1,sz=1,outline=false,shine=0){
+const m=new THREE.Mesh(geometry,matColor(color,shine));m.position.set(x,y,z);m.rotation.set(rx,ry,rz);m.scale.set(sx,sy,sz);g.add(m);
+if(outline){const edge=new THREE.Mesh(geometry,ink);edge.position.copy(m.position);edge.rotation.copy(m.rotation);edge.scale.set(sx*1.048,sy*1.048,sz*1.048);g.add(edge)}
+return m}
+const box=(x,y,z)=>new THREE.BoxGeometry(x,y,z),cyl=(r1,r2,h,n=12)=>new THREE.CylinderGeometry(r1,r2,h,n),orb=(r,n=16)=>new THREE.SphereGeometry(r,n,Math.max(9,n-4));
+const main=astra?0xe5edf3:0x222037,plates=astra?0x9cbace:0x332854,accent=astra?0xf4ce7e:0xad69f9,glow=astra?0x70eaff:0x8ce3ff,deep=astra?0x344462:0x130e30,cloth=astra?0x547295:0x421f64;
+// Tall futuristic boots with articulated shins, knee plates, and heel lights.
+for(const side of [-1,1]){
+part(cyl(.19,.21,.81),main,side*.24,.53,.015,0,0,side*.04,1,1,1,true);
+part(box(.34,.45,.37),plates,side*.24,.58,.19,0,0,side*.04,1,1,1,true);
+part(box(.23,.08,.40),accent,side*.24,.90,.26,0,0,0,1,1,1,false,.25);
+part(box(.39,.20,.59),dark,side*.24,.13,.15,0,0,0,1,1,1,true);
+part(box(.14,.13,.04),glow,side*.24,.14,.455,0,0,0,1,1,1,false,.85);
+part(orb(.22),main,side*.25,1.07,0,0,0,0,1,1.15,1.1,true);
+}
+// Layered cuirass, shaped breast plate, chest energy crystal and segmented waist.
+part(cyl(.43,.39,.87),main,0,1.48,0,0,0,0,1,1,1,true);
+part(box(.80,.60,.30),plates,0,1.55,.32,0,0,0,1,1,1,true);
+part(box(.53,.09,.35),accent,0,1.82,.345);
+part(box(.53,.12,.27),accent,0,1.26,.38);
+part(cyl(.42,.47,.22),deep,0,1.01,-.02);
+part(box(.93,.19,.39),dark,0,1.04,.12);
+for(let j=-2;j<=2;j++)part(box(.032,.12,.055),accent,j*.148,1.02,.34);
+part(new THREE.OctahedronGeometry(.19),glow,0,1.58,.525,0,0,0,1,1.3,.6,true,.9);
+part(new THREE.TorusGeometry(.25,.028,6,24),accent,0,1.58,.51,0,0,0,1,1,1,false,.5);
+// Armoured shoulder pieces and forearm energy bracers.
+for(const side of [-1,1]){
+part(orb(.35),plates,side*.55,1.78,-.02,0,0,0,1.3,.67,1.22,true);
+part(box(.39,.24,.45),accent,side*.72,1.80,-.05,0,0,side*.17);
+part(cyl(.16,.15,.59),main,side*.72,1.45,.035,0,0,side*.13,1,1,1,true);
+part(box(.25,.30,.31),deep,side*.78,1.24,.19,0,0,side*.08,1,1,1,true);
+part(box(.10,.30,.08),glow,side*.78,1.23,.37,0,0,0,1,1,1,false,.7);
+part(orb(.17),main,side*.79,1.07,.20,0,0,0,1,1,1,true);
+}
+// Helmet, brow, visor, side fins. Organic anime-sci-fi proportions.
+part(cyl(.19,.18,.22),skin.skin,0,1.98,.04);
+part(orb(.47,22),astra?0xe5f2f3:0x26203b,0,2.35,.04,0,0,0,.99,1.07,.90,true);
+part(box(.82,.17,.47),accent,0,2.62,.20);
+part(box(.77,.17,.12),glow,0,2.38,.48,0,0,0,1,1,1,false,.95);
+part(box(.46,.07,.13),0xf3f7ff,0,2.27,.52);
+part(box(.16,.26,.16),deep,0,2.10,.46);
+for(const side of [-1,1]){
+part(new THREE.ConeGeometry(.17,.54,6),accent,side*.43,2.62,-.02,0,0,side*.15);
+part(box(.13,.25,.35),deep,side*.46,2.28,.04,0,0,0,1,1,1,true);
+part(box(.13,.08,.15),glow,side*.47,2.34,.30,0,0,0,1,1,1,false,1.2);
+}
+// Back-mounted personal effects and cape with separate panels.
+if(astra){
+// Golden floating crown with two cyan wings and an energy spear-like spine.
+const crown=new THREE.Mesh(new THREE.TorusGeometry(.55,.035,8,32),matColor(accent,.7));
+crown.rotation.x=.35;crown.position.set(0,2.80,-.08);g.add(crown);
+for(const side of [-1,1]){
+part(box(.20,1.1,.10),glow,side*.70,1.67,-.33,0,0,side*.28,1,1,1,false,.55);
+part(new THREE.ConeGeometry(.20,.80,5),accent,side*.62,2.3,-.36,0,0,-side*.24);
+part(box(.25,.80,.11),cloth,side*.32,1.03,-.48,0,0,side*.08);}
+part(new THREE.OctahedronGeometry(.26),glow,0,1.58,-.50,0,0,0,1,1,.65,false,1);
+}else{
+// Dark asymmetrical cloth cape, long split hood tails and neon spine.
+for(const side of [-1,1]){
+part(box(.43,1.55,.07),side>0?0x46265f:0x251633,side*.36,1.08,-.50,0,0,side*.13,1,1,1,true);
+part(box(.05,1.47,.04),glow,side*.58,1.05,-.45,0,0,side*.13,1,1,1,false,.7);
+part(cyl(.21,.10,.8),deep,side*.27,2.0,-.35,0,0,side*.09);}
+for(let j=-1;j<=1;j++)part(box(.09,.8,.08),accent,j*.20,1.50,-.54,0,0,j*.06);
+part(new THREE.OctahedronGeometry(.25),glow,0,1.50,-.62,0,0,0,1,1.5,.6,false,1.0)
+}
+const rune=new THREE.Mesh(new THREE.TorusGeometry(.91,.05,8,40),new THREE.MeshBasicMaterial({color:(POWERS[o.power]||POWERS.purple).color,transparent:true,opacity:.65,side:THREE.DoubleSide}));
+rune.rotation.x=-Math.PI/2;rune.position.y=.08;g.add(rune);
+const label=makeLabel(o.name);label.sprite.position.y=3.47;g.add(label.sprite);
+g.userData={skin:o.skin,label,rune,originalCharacter:true};attachShadowWeapon(g,o);scene.add(g);return g
+}
+function makeModel(enemy,i,o){if(!enemy&&['nova','astra'].includes(SKINS[o.skin]?.kind))return makeOriginalFpsHero(i,o);if(!enemy&&loadedCharacters.has(o.skin)){const hero=makeExternalCharacter(o);if(hero)return hero}const g=new THREE.Group(),kind=o.kind||'normal',t=ENEMY_TYPES[kind],color=enemy?t.color:colors[i%6];
 if(!enemy&&SKINS[o.skin]?.kind==='panda'){
 const toon=(c)=>new THREE.MeshToonMaterial({color:c,emissive:c,emissiveIntensity:.08});
 const white=toon(0xf9f8f0),black=toon(0x24252a),nose=toon(0x14111a),shirt=toon(0xd89c3e);
@@ -987,7 +1234,7 @@ if(k==='f'&&mode!=='menu'){e.preventDefault();if(!e.repeat)triggerBossSkill();re
 if(k==='g'&&mode!=='menu'){e.preventDefault();if(!e.repeat)cycleBossSkill();return}
 if(['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright'].includes(k)&&mode!=='menu'){e.preventDefault();keys.add(k.replace('arrowup','w').replace('arrowdown','s').replace('arrowleft','a').replace('arrowright','d'))}});
 addEventListener('keyup',e=>keys.delete(e.key.toLowerCase().replace('arrowup','w').replace('arrowdown','s').replace('arrowleft','a').replace('arrowright','d')));
-$('c').onpointerdown=e=>{if(mode==='menu')return;
+$('c').onpointerdown=e=>{if(mode==='menu'||state?.phase==='upgrade'||state?.over||flashActive)return;
 if(e.pointerType==='touch'){fpsTouchLook={id:e.pointerId,x:e.clientX,y:e.clientY};try{$('c').setPointerCapture(e.pointerId)}catch{}return}
 if(!fpsPointerActive()){fpsLockMouse();return}fire=true;fpsKick=.16};
 addEventListener('pointerup',()=>{fire=false;fpsTouchLook=null});
