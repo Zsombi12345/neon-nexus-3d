@@ -1,0 +1,84 @@
+<!doctype html><html lang="hu"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NEON NEXUS 3D</title><style>
+*{box-sizing:border-box}body{margin:0;background:#050a1b;color:#e7fbff;font:15px system-ui;overflow:hidden}canvas{display:block}button,input{font:inherit;border:1px solid #4fdcf7;border-radius:9px;background:#0c203b;color:white;padding:12px}button{cursor:pointer}button:hover{background:#14436a}.primary{background:#3be3f5;color:#031020;font-weight:800}#menu,#end{position:fixed;inset:0;background:#02091de8;display:grid;place-items:center}section{width:min(460px,94vw);padding:32px;border:1px solid #43ddf78a;border-radius:20px;background:#09152e;box-shadow:0 0 80px #008ff62b;text-align:center}h1{font-size:52px;line-height:.95;color:#65edff;text-shadow:0 0 30px #15b4ff}p{color:#9ebcd2}input{width:100%;margin:6px 0 12px}section button{width:100%;margin:5px 0}.row{display:flex;gap:8px}.row input{flex:1;min-width:0}.row button{width:auto}.hidden{display:none!important}#hud{position:fixed;top:15px;left:15px;right:15px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}#hud>div{padding:12px 16px;background:#071b36dd;border:1px solid #4fe6f866;border-radius:12px;pointer-events:auto}#hud b{color:#62f6ff}#hud button{padding:5px 9px}#team{position:fixed;left:15px;top:100px;padding:12px;background:#071b36dd;border-radius:12px;min-width:165px}#tips{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);padding:10px 20px;background:#071b36dd;border-radius:10px;white-space:nowrap}#announce{position:fixed;top:28%;left:50%;transform:translateX(-50%);font-size:32px;font-weight:900;text-shadow:0 0 20px cyan;pointer-events:none}#touch{position:fixed;bottom:20px;left:15px;right:15px;display:none;justify-content:space-between;pointer-events:none}#touch button{pointer-events:auto}#fire{border-radius:50%;width:80px;height:80px}@media(pointer:coarse){#touch:not(.hidden){display:flex}#tips{display:none}#team{top:auto;bottom:145px}}@media(max-width:600px){#hud{font-size:11px}#hud>div{padding:7px}h1{font-size:40px}}
+</style><canvas id="c"></canvas><div id="menu"><section><small>3D ONLINE CO-OP SURVIVAL</small><h1>NEON<br>NEXUS</h1><p>Védd meg a kristályt a drónoktól a barátaiddal! Maximum 6 játékos, közös hullámok, pontszámok.</p><input id="name" maxlength="14" placeholder="Játékosneved" value="Játékos"><button class="primary" id="create">MULTIPLAYER SZOBA LÉTREHOZÁSA</button><div class="row"><input id="room" maxlength="6" placeholder="SZOBAKÓD"><button id="join">CSATLAKOZÁS</button></div><button id="solo">EGYJÁTÉKOS DEMO</button><p id="status"></p></section></div>
+<div id="hud" class="hidden"><div><strong>NEON NEXUS</strong><br>SZOBA: <b id="code">SOLO</b></div><div>HULLÁM <b id="wave">1</b> • KRISTÁLY <b id="health">100%</b><br>ÉLETERŐ <b id="hp">100</b></div><div><button id="invite">MEGHÍVÁS</button><button id="leave">KILÉPÉS</button></div></div><div id="team" class="hidden"></div><div id="tips" class="hidden">WASD: MOZGÁS • EGÉR: CÉLZÁS • KATTINTÁS: LÖVÉS</div><div id="announce"></div><div id="touch" class="hidden"><div><button data-k="w">▲</button><br><button data-k="a">◀</button><button data-k="s">▼</button><button data-k="d">▶</button></div><button id="fire">LŐ</button></div><div id="end" class="hidden"><section><h1>VÉGE</h1><p id="result"></p><button id="again" class="primary">ÚJRAINDÍTÁS</button><button id="back">MENÜ</button></section></div>
+<script src="https://unpkg.com/peerjs@1.5.5/dist/peerjs.min.js"></script><script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js';
+const $=s=>document.getElementById(s),scene=new THREE.Scene();scene.background=new THREE.Color(0x050b1b);scene.fog=new THREE.FogExp2(0x050b1b,.013);
+const renderer=new THREE.WebGLRenderer({canvas:$('c'),antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);
+const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,160);camera.position.set(0,27,28);camera.lookAt(0,0,0);
+scene.add(new THREE.HemisphereLight(0xb5efff,0x102039,2));const sun=new THREE.DirectionalLight(0xffffff,2);sun.position.set(-10,20,8);scene.add(sun);
+const mat=(c,e=.6)=>new THREE.MeshStandardMaterial({color:c,emissive:c,emissiveIntensity:e,metalness:.4,roughness:.4});
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(54,54),mat(0x0a1930,.1));floor.rotation.x=-Math.PI/2;scene.add(floor);
+const grid=new THREE.GridHelper(54,27,0x13517d,0x17436a);grid.position.y=.02;scene.add(grid);
+for(let i=0;i<4;i++){let wall=new THREE.Mesh(new THREE.BoxGeometry(i%2?1:54,1,i%2?54:1),mat(0x103b66,.4));wall.position.set(i===1?-27:i===3?27:0,.5,i===0?-27:i===2?27:0);scene.add(wall)}
+const crystal=new THREE.Mesh(new THREE.OctahedronGeometry(1.5),mat(0x43eeff,3));crystal.position.y=2.4;scene.add(crystal);
+const pedestal=new THREE.Mesh(new THREE.CylinderGeometry(2,2.6,.7,8),mat(0x1762a3,.7));pedestal.position.y=.35;scene.add(pedestal);
+const light=new THREE.PointLight(0x35eeff,65,20);light.position.y=3;scene.add(light);
+const models=new Map(),lasers=[],colors=[0x52eaff,0xb988ff,0x7affc1,0xffcb71,0xff78a6,0x8eabff];
+let mode='menu',peer,conn,clients=new Map(),state,room='',localId='',myName='',last=performance.now(),sendClock=0,hudClock=0,fire=false,aim={x:0,z:0},keys=new Set(),announcement=0;
+const code=()=>Array.from(crypto.getRandomValues(new Uint8Array(6)),n=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[n%32]).join('');
+const rnd=(a,b)=>a+Math.random()*(b-a),lim=(v,a,b)=>Math.max(a,Math.min(b,v)),safe=s=>String(s||'Játékos').trim().slice(0,14).replace(/[<>]/g,'')||'Játékos';
+function init(){return{players:[],enemies:[],core:100,wave:0,remaining:0,timer:1,over:false,next:0}}
+function add(id,name){if(state.players.some(p=>p.id===id))return;state.players.push({id,name:safe(name),x:rnd(-5,5),z:rnd(-5,5),angle:0,hp:100,kills:0,cool:0,input:{x:0,z:0,ax:0,az:0,fire:false}})}
+function pack(){return{players:state.players.map(({input,cool,...p})=>p),enemies:state.enemies,core:state.core,wave:state.wave,over:state.over}}
+function show(){for(const x of ['menu','end'])$(x).classList.add('hidden');for(const x of ['hud','team','tips','touch'])$(x).classList.remove('hidden');$('code').textContent=room||'SOLO';$('invite').style.display=room?'':'none';$('again').style.display=mode==='client'?'none':''}
+function reset(){if(conn)try{conn.close()}catch{};if(peer)try{peer.destroy()}catch{};conn=null;peer=null;clients.clear();state=null;mode='menu';room='';localId='';for(const m of models.values())scene.remove(m);models.clear();$('menu').classList.remove('hidden');for(const x of ['hud','team','tips','touch','end'])$(x).classList.add('hidden');$('create').disabled=false;$('join').disabled=false;$('status').textContent=''}
+function fail(t){reset();$('status').textContent=t}
+function send(c,o){if(c?.open)try{c.send(o)}catch{}}
+function broadcast(o){for(const c of clients.values())send(c,o)}
+function startSolo(){reset();mode='solo';localId='solo';state=init();add(localId,$('name').value);show()}
+function startHost(){reset();if(typeof Peer!=='function'){fail('A hálózati könyvtár nem töltődött be.');return}mode='host';room=code();localId='host';myName=safe($('name').value);$('create').disabled=true;$('status').textContent='Szoba létrehozása…';peer=new Peer('nnx3d-'+room.toLowerCase());
+peer.on('open',()=>{state=init();add(localId,myName);show()});
+peer.on('connection',c=>{let joined=false;c.on('data',m=>{if(!m||mode!=='host'||!state)return;
+if(m.type==='hello'&&!joined){if(state.players.length>=6){send(c,{type:'reject',message:'A szoba megtelt.'});setTimeout(()=>c.close(),150);return}joined=true;clients.set(c.peer,c);add(c.peer,m.name);send(c,{type:'welcome',id:c.peer,room});send(c,{type:'state',data:pack()})}
+if(m.type==='input'&&joined){const p=state.players.find(p=>p.id===c.peer);if(p)p.input={x:lim(+m.x||0,-1,1),z:lim(+m.z||0,-1,1),ax:lim(+m.ax||0,-25,25),az:lim(+m.az||0,-25,25),fire:!!m.fire}}});
+c.on('close',()=>{clients.delete(c.peer);if(state)state.players=state.players.filter(p=>p.id!==c.peer)})});
+peer.on('error',e=>fail('Nem sikerült megnyitni: '+e.type))}
+function startJoin(){const code=$('room').value.trim().toUpperCase();if(!/^[A-Z2-9]{6}$/.test(code)){$('status').textContent='Adj meg 6 karakteres szobakódot.';return}
+reset();mode='client';room=code;myName=safe($('name').value);$('join').disabled=true;$('status').textContent='Csatlakozás…';peer=new Peer();
+peer.on('open',()=>{conn=peer.connect('nnx3d-'+room.toLowerCase(),{reliable:true});conn.on('open',()=>send(conn,{type:'hello',name:myName}));
+conn.on('data',m=>{if(m.type==='reject')fail(m.message);if(m.type==='welcome'){localId=m.id;show()}if(m.type==='state'){state=m.data;if(localId)show()}if(m.type==='laser')laser(m.a,m.b,m.color)});
+conn.on('close',()=>{if(mode==='client')fail('A házigazda kilépett.')})});peer.on('error',e=>fail(e.type==='peer-unavailable'?'Nem található aktív szoba.':'Hálózati hiba: '+e.type))}
+function input(){let x=+keys.has('d')-+keys.has('a'),z=+keys.has('s')-+keys.has('w');let d=Math.hypot(x,z)||1;return{x:x/d,z:z/d,ax:aim.x,az:aim.z,fire}}
+function laser(a,b,color){const line=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(a.x,1.2,a.z),new THREE.Vector3(b.x,1,b.z)]),new THREE.LineBasicMaterial({color,transparent:true}));scene.add(line);lasers.push({line,t:.14})}
+function announce(s){$('announce').textContent=s;announcement=performance.now()+1900}
+function tick(dt){if(!state||state.over)return;
+if(state.wave===0||state.remaining===0&&state.enemies.length===0&&state.timer<=0){state.wave++;state.remaining=Math.min(8+state.wave*3,75);state.timer=1.2;announce('HULLÁM '+state.wave)}
+state.timer-=dt;if(state.remaining>0&&state.timer<=0){let a=rnd(0,Math.PI*2);state.enemies.push({id:++state.next,x:Math.cos(a)*24,z:Math.sin(a)*24,hp:2+Math.floor(state.wave/4),cool:0});state.remaining--;state.timer=.55}
+for(const p of state.players){if(p.hp<=0){p.cool-=dt;if(p.cool<-3){p.hp=100;p.x=rnd(-5,5);p.z=rnd(-5,5);p.cool=0}continue}
+const i=p.id===localId?input():p.input;p.x=lim(p.x+i.x*8*dt,-25,25);p.z=lim(p.z+i.z*8*dt,-25,25);p.angle=Math.atan2(i.ax-p.x,i.az-p.z);p.cool=Math.max(0,p.cool-dt);
+if(i.fire&&p.cool===0){p.cool=.22;let dx=Math.sin(p.angle),dz=Math.cos(p.angle),hit=null,best=20;
+for(const e of state.enemies){let xx=e.x-p.x,zz=e.z-p.z,along=xx*dx+zz*dz;if(along>0&&along<best&&Math.abs(xx*dz-zz*dx)<1){hit=e;best=along}}
+const to=hit?{x:hit.x,z:hit.z}:{x:p.x+dx*20,z:p.z+dz*20};const from={x:p.x,z:p.z},color=colors[state.players.indexOf(p)%6];laser(from,to,color);if(mode==='host')broadcast({type:'laser',a:from,b:to,color});if(hit&&--hit.hp<=0){state.enemies=state.enemies.filter(e=>e!==hit);p.kills++}}}
+for(const e of state.enemies){let target=null,dist=Infinity;for(const p of state.players){let d=Math.hypot(p.x-e.x,p.z-e.z);if(p.hp>0&&d<dist){dist=d;target=p}}
+if(dist>5)target=null;let tx=target?target.x:0,tz=target?target.z:0,dx=tx-e.x,dz=tz-e.z,d=Math.hypot(dx,dz)||1,s=2.2+Math.min(state.wave*.09,2);e.x+=dx/d*s*dt;e.z+=dz/d*s*dt;e.cool-=dt;
+if(d<1.5&&e.cool<=0){if(target){target.hp=Math.max(0,target.hp-15);target.cool=target.hp===0?0:target.cool}else state.core=Math.max(0,state.core-4);e.cool=1}}
+if(state.core===0){state.over=true;broadcast({type:'state',data:pack()})}}
+function makeModel(enemy,i){const g=new THREE.Group(),color=enemy?0xff497f:colors[i%6],body=new THREE.Mesh(enemy?new THREE.IcosahedronGeometry(.7):new THREE.CylinderGeometry(.45,.65,1.3,6),mat(color,1.5));body.position.y=enemy?1:1;g.add(body);
+if(!enemy){const head=new THREE.Mesh(new THREE.SphereGeometry(.38,12,8),mat(color,1));head.position.y=1.9;g.add(head);const gun=new THREE.Mesh(new THREE.BoxGeometry(.18,.2,.95),mat(0xdafaff,.6));gun.position.set(0,1.2,.7);g.add(gun)}scene.add(g);return g}
+function drawState(){if(!state)return;const active=new Set();for(const [enemy,arr] of [[false,state.players],[true,state.enemies]])arr.forEach((o,i)=>{const key=(enemy?'e':'p')+o.id;active.add(key);let m=models.get(key);if(!m){m=makeModel(enemy,i);models.set(key,m);m.position.set(o.x,0,o.z)}m.position.x+=(o.x-m.position.x)*.27;m.position.z+=(o.z-m.position.z)*.27;m.rotation.y=enemy?m.rotation.y+.02:o.angle||0;m.position.y=enemy?Math.sin(performance.now()*.003+i)*.15:0;m.visible=enemy||o.hp>0});
+for(const [k,m]of models)if(!active.has(k)){scene.remove(m);models.delete(k)}
+const me=state.players.find(p=>p.id===localId);if(me){camera.position.x+=(me.x-camera.position.x)*.04;camera.position.z+=(me.z+28-camera.position.z)*.04;camera.lookAt(camera.position.x,0,camera.position.z-28)}
+}
+function hud(){if(!state)return;$('wave').textContent=state.wave;$('health').textContent=Math.ceil(state.core)+'%';const me=state.players.find(p=>p.id===localId);$('hp').textContent=me?Math.ceil(me.hp):0;$('team').replaceChildren();for(const p of state.players){const line=document.createElement('div');line.textContent=(p.id===localId?'◆ ':'')+p.name+' — '+p.kills+' ✦';$('team').append(line)}
+if(state.over){$('end').classList.remove('hidden');$('result').textContent='Elért hullám: '+state.wave+' • Csapat pontszám: '+state.players.reduce((n,p)=>n+p.kills,0)}
+if(performance.now()>announcement)$('announce').textContent=''}
+function frame(t){requestAnimationFrame(frame);const dt=Math.min((t-last)/1000,.06);last=t;crystal.rotation.y+=dt;crystal.position.y=2.4+Math.sin(t*.002)*.3;
+if(mode==='solo'||mode==='host'){tick(dt);sendClock+=dt;if(mode==='host'&&sendClock>.09){broadcast({type:'state',data:pack()});sendClock=0}}
+if(mode==='client'){sendClock+=dt;if(sendClock>.05){send(conn,{type:'input',...input()});sendClock=0}}
+drawState();hudClock+=dt;if(hudClock>.17){hud();hudClock=0}
+for(let i=lasers.length-1;i>=0;i--){let l=lasers[i];l.t-=dt;if(l.t<=0){scene.remove(l.line);l.line.geometry.dispose();l.line.material.dispose();lasers.splice(i,1)}else l.line.material.opacity=l.t/.14}
+renderer.render(scene,camera)}requestAnimationFrame(frame);
+$('create').onclick=startHost;$('join').onclick=startJoin;$('solo').onclick=startSolo;$('leave').onclick=reset;$('back').onclick=reset;
+$('again').onclick=()=>{if(mode==='client')return;const people=state.players.map(p=>({id:p.id,name:p.name}));state=init();people.forEach(p=>add(p.id,p.name));$('end').classList.add('hidden')};
+$('invite').onclick=async()=>{const url=new URL(location.href);url.searchParams.set('room',room);try{await navigator.clipboard.writeText(url.href);announce('MEGHÍVÓ KIMÁSOLVA')}catch{prompt('Meghívólink:',url.href)}};
+addEventListener('keydown',e=>{let k=e.key.toLowerCase();if(['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright'].includes(k)&&mode!=='menu'){e.preventDefault();keys.add(k.replace('arrowup','w').replace('arrowdown','s').replace('arrowleft','a').replace('arrowright','d'))}});
+addEventListener('keyup',e=>keys.delete(e.key.toLowerCase().replace('arrowup','w').replace('arrowdown','s').replace('arrowleft','a').replace('arrowright','d')));
+$('c').onpointerdown=()=>fire=true;addEventListener('pointerup',()=>fire=false);addEventListener('blur',()=>{keys.clear();fire=false});
+$('c').onpointermove=e=>{const mouse=new THREE.Vector2(e.clientX/innerWidth*2-1,1-e.clientY/innerHeight*2),ray=new THREE.Raycaster();ray.setFromCamera(mouse,camera);const point=new THREE.Vector3();if(ray.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0,1,0),0),point)){aim.x=lim(point.x,-25,25);aim.z=lim(point.z,-25,25)}};
+for(const b of document.querySelectorAll('[data-k]')){const k=b.dataset.k;b.onpointerdown=e=>{e.preventDefault();keys.add(k);b.setPointerCapture(e.pointerId)};b.onpointerup=()=>keys.delete(k);b.onpointercancel=()=>keys.delete(k)}
+$('fire').onpointerdown=e=>{fire=true;$('fire').setPointerCapture(e.pointerId)};$('fire').onpointerup=()=>fire=false;
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+const q=new URLSearchParams(location.search).get('room');if(q&&/^[A-Z2-9]{6}$/i.test(q)){$('room').value=q.toUpperCase();$('status').textContent='Meghívót kaptál. Add meg a neved, majd csatlakozz!'}
+</script></html>
