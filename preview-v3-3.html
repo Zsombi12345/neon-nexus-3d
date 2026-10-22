@@ -177,9 +177,6 @@ const loadedCharacters=new Map();
 const missingCharacters=new Set();
 const gltfLoader=new GLTFLoader();
 function loadedStatus(){const el=$('assetStatus');if(!el)return;const count=loadedCharacters.size;el.textContent=count===3?'✓ Mindhárom 3D modell betöltve':count+'/3 eredeti 3D modell betöltve'+(missingCharacters.size?' • hiányzó fájlhoz átmeneti modell látható':'')}
-for(const [key,skin] of Object.entries(SKINS)){
-gltfLoader.load(skin.model,asset=>{loadedCharacters.set(key,asset);missingCharacters.delete(key);loadedStatus()},undefined,err=>{missingCharacters.add(key);loadedStatus();console.warn('3D modell hiányzik vagy hibás:',skin.model,err?.message||err)})
-}
 const models=new Map(),lasers=[],particles=[],colors=[0x52eaff,0xb988ff,0x7affc1,0xffcb71,0xff78a6,0x8eabff];
 let coreFlash=0,upgradeView='',shake=0,summonChoice='wolf',flashActive=false,flashStart=0;
 const UPGRADES={
@@ -213,6 +210,10 @@ shadow:{name:'Árnyékidézés',desc:'Q: farkas (4 mana) vagy nyuszi (2 mana) �
 flash:{name:'Fekete villanás',desc:'Közeli ellenségekre pusztító villámcsapás.',icon:'⚡',cooldown:8,color:0xfa8dff},
 reverse:{name:'Fordított energia',desc:'Gyógyítja a csapatot és a központi kristályt.',icon:'💚',cooldown:17,color:0x64ffcb}
 };
+for(const [key,skin] of Object.entries(SKINS)){
+gltfLoader.load(skin.model,asset=>{loadedCharacters.set(key,asset);missingCharacters.delete(key);loadedStatus()},undefined,err=>{missingCharacters.add(key);loadedStatus();console.warn('3D modell hiányzik vagy hibás:',skin.model,err?.message||err)})
+}
+
 const savedChoice=(key,fallback,options)=>{try{const v=localStorage.getItem('neon-nexus-'+key);return Object.hasOwn(options,v)?v:fallback}catch{return fallback}};
 let selectedSkin=savedChoice('skin','sunny',SKINS),selectedPower=savedChoice('power','purple',POWERS),castTap=0;
 function renderCharacterChoices(){
