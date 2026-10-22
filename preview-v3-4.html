@@ -176,7 +176,9 @@ star.position.set(Math.cos(theta)*rad,.22,Math.sin(theta)*rad);scene.add(star)}
 const loadedCharacters=new Map();
 const missingCharacters=new Set();
 const gltfLoader=new GLTFLoader();
-function loadedStatus(){const el=$('assetStatus');if(!el)return;const count=loadedCharacters.size;el.textContent=count===3?'✓ Mindhárom 3D modell betöltve':count+'/3 eredeti 3D modell betöltve'+(missingCharacters.size?' • hiányzó fájlhoz átmeneti modell látható':'')}
+function loadedStatus(){const el=$('assetStatus');if(!el)return;const count=loadedCharacters.size;
+el.textContent=count===3?'✓ Mindhárom valódi 3D skin betöltve':count+'/3 GLB modell betöltve'+(missingCharacters.size?' ⚠ A hiányzó modelleket fel kell tölteni a GitHub models/ mappájába.':' • Betöltés…');
+el.style.color=missingCharacters.size?'#ffb08d':'#a9f4d6'}
 const models=new Map(),lasers=[],particles=[],colors=[0x52eaff,0xb988ff,0x7affc1,0xffcb71,0xff78a6,0x8eabff];
 let coreFlash=0,upgradeView='',shake=0,summonChoice='wolf',shadowWeaponChoice='spear',flashActive=false,flashStart=0;
 const UPGRADES={
@@ -207,8 +209,8 @@ const POWERS={
 purple:{name:'Lila energiatörés',desc:'Erős, egyenes energiacsapás, több drónt eltalál.',icon:'🟣',cooldown:9,color:0xb069ff},
 infinity:{name:'Végtelen mező',desc:'Eltaszítja és lelassítja a körülötted lévő ellenségeket.',icon:'🔵',cooldown:12,color:0x64caff},
 shadow:{name:'Árnyékidézés',desc:'Q: idézés • R: farkas/nyuszi • T: kard/lándzsa • közelharci fegyver és idézett társak.',icon:'🐺',cooldown:1.05,color:0xb38eff},
-flash:{name:'Fekete villanás',desc:'Közeli ellenségekre pusztító villámcsapás.',icon:'⚡',cooldown:8,color:0xfa8dff},
-reverse:{name:'Fordított energia',desc:'Gyógyítja a csapatot és a központi kristályt.',icon:'💚',cooldown:17,color:0x64ffcb}
+flash:{name:'Fekete villanás',desc:'170 életerő • bal klikk: ökölharc • Q kétszer: rövid távú, időzített találat.',icon:'⚡',cooldown:8,color:0xfa8dff},
+reverse:{name:'Fordított energia',desc:'Közepes (9,5 egység) hatótávon gyógyítja a csapatot és a közeli kristályt.',icon:'💚',cooldown:17,color:0x64ffcb}
 };
 for(const [key,skin] of Object.entries(SKINS)){
 gltfLoader.load(skin.model,asset=>{loadedCharacters.set(key,asset);missingCharacters.delete(key);loadedStatus()},undefined,err=>{missingCharacters.add(key);loadedStatus();console.warn('3D modell hiányzik vagy hibás:',skin.model,err?.message||err)})
@@ -348,15 +350,15 @@ fxPetals(x,z,0xa0d8ff,21,4);
 shake=Math.max(shake,.25)}
 if(effect.type==='shadow'){const wolf=effect.kind!=='rabbit',color=wolf?0xb16bfa:0x8feeff;fxSeal(x,z,color,wolf?2.7:1.75,.8);ring(x,z,0x55338e,1.5);fxSphere(x,z,color,wolf?1.3:.8,.42);fxPetals(x,z,color,wolf?15:9);burst(x,z,color,10,1);shake=Math.max(shake,.22)}
 if(effect.type==='flash'){
-const perfect=!!effect.perfect,deep=perfect?0x12030c:0x080c25,edge=perfect?0xff3046:0x3d8bff;
-fxSeal(x,z,edge,perfect?7.3:4.2,.75);for(const size of (perfect?[1.2,3.1,5.3,7]:[1.2,2.8]))ring(x,z,edge,size);
-fxSphere(x,z,deep,perfect?4.1:2.3,.47,1.35);fxSphere(x,z,edge,perfect?1.4:.85,.30);
-for(let j=0;j<(perfect?20:7);j++){const ang=j*Math.PI*2/(perfect?20:7);
-fxLightning(x,z,x+Math.cos(ang)*(perfect?7:4),z+Math.sin(ang)*(perfect?7:4),j%2?edge:deep,perfect?9:6,.49)}
-fxPetals(x,z,edge,perfect?30:12);shake=Math.max(shake,perfect?1:.29)}
+const perfect=!!effect.perfect,deep=perfect?0x12030c:0x080c25,edge=perfect?0xff3046:0x3d8bff,range=perfect?3.3:2.3;
+fxSeal(x,z,edge,range,.63);for(const size of perfect?[.85,1.65,2.8,3.3]:[.75,1.65])ring(x,z,edge,size);
+fxSphere(x,z,deep,perfect?2.25:1.3,.34,1.35);fxSphere(x,z,edge,perfect?1:.7,.23);
+for(let j=0;j<(perfect?16:6);j++){const ang=j*Math.PI*2/(perfect?16:6);
+fxLightning(x,z,x+Math.cos(ang)*range,z+Math.sin(ang)*range,j%2?edge:deep,perfect?7:5,.38)}
+fxPetals(x,z,edge,perfect?25:9);shake=Math.max(shake,perfect?.7:.20)}
 if(effect.type==='reverse'){
-fxSeal(x,z,0x87ffce,6.2,.95);fxSeal(0,0,0x86d4ff,3.2,.9);
-for(const size of [1.2,3,5.7])ring(x,z,0x7cfbd9,size);
+fxSeal(x,z,0x87ffce,9.5,.95);fxSeal(0,0,0x86d4ff,2.8,.9);
+for(const size of [1.5,5.1,9.5])ring(x,z,0x7cfbd9,size);
 fxSphere(x,z,0x44edb5,3.2,.64,1.45);fxSphere(0,0,0x7efeea,2.35,.6,2);
 fxPetals(x,z,0x85ffdf,31);
 for(const p of effect.targets||[]){fxSphere(p.x,p.z,0x85ffb2,.62,.46);fxPetals(p.x,p.z,0xa7ffe3,5)}
