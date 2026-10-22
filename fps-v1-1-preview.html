@@ -492,13 +492,13 @@ shake=Math.max(shake,.20)}
 }
 function spawnSummon(p,kind){
 if(!state||p.power!=='shadow'||state.phase!=='fight')return false;
-const valid=kind==='rabbit'?'rabbit':'wolf',cost=valid==='wolf'?4:2,limit=2+(p.perks.summonSlots||0);
+const valid=kind==='rabbit'?'rabbit':'wolf',cost=valid==='wolf'?4:2,limit=2+(p.perks.summonSlots||0)+2*(p.perks.bossLegion||0);
 if(p.mana<cost||state.summons.filter(x=>x.owner===p.id&&x.hp>0).length>=limit)return false;
 p.mana-=cost;p.powerCool=1.05;
-const buff=p.perks.summonFangs||0,baseHp=valid==='wolf'?52:19;
-const hp=baseHp*(1+buff*.35),angle=p.angle+rnd(-.7,.7);
+const buff=p.perks.summonFangs||0,legion=p.perks.bossLegion||0,baseHp=valid==='wolf'?64:24;
+const hp=baseHp*(1+buff*.35+legion*.38),angle=p.angle+rnd(-.7,.7);
 const creature={id:++state.nextSummon,owner:p.id,kind:valid,x:lim(p.x+Math.sin(angle)*2,-24,24),z:lim(p.z+Math.cos(angle)*2,-24,24),
-hp,maxHp:hp,damage:(valid==='wolf'?6:2.2)*(1+buff*.32),speed:valid==='wolf'?4.2:5.6,cool:.3};
+hp,maxHp:hp,damage:(valid==='wolf'?6.6:2.5)*(1+buff*.32+legion*.3),speed:valid==='wolf'?4.2:5.6,cool:.3,angle};
 state.summons.push(creature);p.manaRecharge=0;p.manaRecoverStart=null;
 const fx={type:'shadow',x:creature.x,z:creature.z,kind:valid,targets:[]};
 powerVisual(fx);if(mode==='host')broadcast({type:'powerfx',effect:fx});
@@ -514,7 +514,10 @@ const attackTarget=target&&Math.hypot(target.x-creature.x,target.z-creature.z)<1
 const aim=attackTarget||{x:owner.x+Math.sin(owner.angle)*1.5,z:owner.z+Math.cos(owner.angle)*1.5};
 const dx=aim.x-creature.x,dz=aim.z-creature.z,dist=Math.hypot(dx,dz)||1;
 if(dist>(attackTarget?(creature.kind==='wolf'?1.22:1.1):1.6)){
-creature.x=lim(creature.x+dx/dist*creature.speed*dt,-25,25);creature.z=lim(creature.z+dz/dist*creature.speed*dt,-25,25)}
+const speed=creature.speed*dt;const oldX=creature.x,oldZ=creature.z;
+creature.x=lim(creature.x+dx/dist*speed,-25,25);creature.z=lim(creature.z+dz/dist*speed,-25,25);
+if(Math.hypot(creature.x-oldX,creature.z-oldZ)>.001)creature.angle=Math.atan2(creature.x-oldX,creature.z-oldZ)}
+else if(attackTarget&&dist>.25)creature.angle=Math.atan2(dx,dz);
 if(attackTarget&&dist<1.7&&creature.cool<=0){creature.cool=creature.kind==='wolf'?.68:.47;
 const hit=attackTarget;const color=creature.kind==='wolf'?0xd19cff:0x93e9ff;
 burst(hit.x,hit.z,color,4,.55);damageEnemy(hit,creature.damage,owner)}
@@ -824,6 +827,7 @@ for(const pet of state.summons||[]){const key='s'+pet.id;active.add(key);let m=m
 if(!m){m=makeSummonModel(pet);m.position.set(pet.x,0,pet.z);models.set(key,m)}
 m.position.x+=(pet.x-m.position.x)*.36;m.position.z+=(pet.z-m.position.z)*.36;
 m.position.y=Math.sin(performance.now()*.005+pet.id)*.08;
+if(Number.isFinite(pet.angle)){const difference=Math.atan2(Math.sin(pet.angle-m.rotation.y),Math.cos(pet.angle-m.rotation.y));m.rotation.y+=difference*.28}
 const proportion=Math.max(.02,Math.min(1,pet.hp/pet.maxHp));m.userData.hp.scale.x=proportion;m.userData.hp.position.x=-(1-proportion)*.58;
 m.userData.aura.rotation.z+=.04}
 for(const[k,m]of models)if(!active.has(k)){removeModel(m);models.delete(k)}
@@ -839,7 +843,7 @@ function hud(){if(!state)return;$('wave').textContent=state.wave;$('health').tex
 $('team').replaceChildren();for(const p of state.players){const line=document.createElement('div');line.textContent=(p.id===localId?'◆ ':'')+p.name+' — '+p.kills+' ✦'+(state.phase==='upgrade'?(p.picked?' ✓':' …'):'');$('team').append(line)}
 $('perklist').replaceChildren();if(me){const items=Object.entries(me.perks||{});if(!items.length)$('perklist').textContent='Még nincs fejlesztésed.';for(const [id,lvl]of items){if(!UPGRADES[id])continue;const d=document.createElement('div');d.className='perk';const name=document.createElement('div');name.textContent=UPGRADES[id].icon+' '+UPGRADES[id].name;const level=document.createElement('span');level.textContent='Lv.'+lvl;d.append(name,level);$('perklist').append(d)}}
 if(me){const activeShadow=me.power==='shadow';$('summonHud').classList.toggle('hidden',!activeShadow);
-if(activeShadow){const kind=summonChoice,cost=kind==='wolf'?4:2,alive=(state.summons||[]).filter(p=>p.owner===me.id&&p.hp>0).length,limit=2+(me.perks.summonSlots||0);
+if(activeShadow){const kind=summonChoice,cost=kind==='wolf'?4:2,alive=(state.summons||[]).filter(p=>p.owner===me.id&&p.hp>0).length,limit=2+(me.perks.summonSlots||0)+2*(me.perks.bossLegion||0);
 $('summonLabel').textContent=(kind==='wolf'?'🐺 Farkas':'🐇 Nyuszi')+' ('+cost+' mana)';
 $('manaFill').style.width=(100*me.mana/me.maxMana)+'%';
 const recovering=alive===0&&me.mana<me.maxMana;
@@ -848,7 +852,7 @@ $('summonCount').textContent='Idézettek: '+alive+' / '+limit;$('toggleWeapon').
 const power=POWERS[me.power]||POWERS.purple,remain=Math.max(0,me.powerCool||0);
 $('abilitySymbol').textContent=power.icon;$('abilityName').textContent=power.name;
 $('abilityTimer').textContent=remain>0?remain.toFixed(1)+' mp újratöltés':(me.power==='flash'?'Q • IDŐZÍTŐ SÁV':me.power==='shadow'?'Q • IDÉZÉS':'Q • AKTIVÁLHATÓ');
-$('abilityFill').style.width=(100*(1-remain/power.cooldown))+'%';$('useAbility').disabled=state.phase!=='fight'||remain>0||me.hp<=0||(me.power==='shadow'&&(me.mana<(summonChoice==='wolf'?4:2)||(state.summons||[]).filter(x=>x.owner===me.id).length>=2+(me.perks.summonSlots||0)))}
+$('abilityFill').style.width=(100*(1-remain/power.cooldown))+'%';$('useAbility').disabled=state.phase!=='fight'||remain>0||me.hp<=0||(me.power==='shadow'&&(me.mana<(summonChoice==='wolf'?4:2)||(state.summons||[]).filter(x=>x.owner===me.id).length>=2+(me.perks.summonSlots||0)+2*(me.perks.bossLegion||0)))}
 const boss=state.enemies.find(e=>e.kind==='boss');$('bossbar').classList.toggle('hidden',!boss);if(boss){const v=Math.max(0,boss.hp/boss.maxHp*100);$('bossfill').style.width=v+'%';$('bosshp').textContent=Math.ceil(v)+'%'}
 refreshUpgradeUI();if(state.over){fpsReleaseMouse();$('upgrades').classList.add('hidden');$('end').classList.remove('hidden');$('result').textContent='Elért hullám: '+state.wave+' • Csapat pontszám: '+state.players.reduce((n,p)=>n+p.kills,0)}
 if(performance.now()>announcement)$('announce').textContent=''}
