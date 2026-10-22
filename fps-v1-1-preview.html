@@ -1,4 +1,4 @@
-<!doctype html><html lang="hu"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NEON NEXUS 3D — FPS Edition</title><style>
+<!doctype html><html lang="hu"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NEON NEXUS 3D — FPS Boss Hunter Edition v1.1</title><style>
 *{box-sizing:border-box}body{margin:0;background:#050a1b;color:#e7fbff;font:15px system-ui;overflow:hidden}canvas{display:block}button,input{font:inherit;border:1px solid #4fdcf7;border-radius:9px;background:#0c203b;color:white;padding:12px}button{cursor:pointer}button:hover{background:#14436a}.primary{background:#3be3f5;color:#031020;font-weight:800}#menu,#end{position:fixed;inset:0;background:#02091de8;display:grid;place-items:center}section{width:min(460px,94vw);padding:32px;border:1px solid #43ddf78a;border-radius:20px;background:#09152e;box-shadow:0 0 80px #008ff62b;text-align:center}h1{font-size:52px;line-height:.95;color:#65edff;text-shadow:0 0 30px #15b4ff}p{color:#9ebcd2}input{width:100%;margin:6px 0 12px}section button{width:100%;margin:5px 0}.row{display:flex;gap:8px}.row input{flex:1;min-width:0}.row button{width:auto}.hidden{display:none!important}#hud{position:fixed;top:15px;left:15px;right:15px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}#hud>div{padding:12px 16px;background:#071b36dd;border:1px solid #4fe6f866;border-radius:12px;pointer-events:auto}#hud b{color:#62f6ff}#hud button{padding:5px 9px}#team{position:fixed;left:15px;top:100px;padding:12px;background:#071b36dd;border-radius:12px;min-width:165px}#tips{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);padding:10px 20px;background:#071b36dd;border-radius:10px;white-space:nowrap}#announce{position:fixed;top:28%;left:50%;transform:translateX(-50%);font-size:32px;font-weight:900;text-shadow:0 0 20px cyan;pointer-events:none}#touch{position:fixed;bottom:20px;left:15px;right:15px;display:none;justify-content:space-between;pointer-events:none}#touch button{pointer-events:auto}#fire{border-radius:50%;width:80px;height:80px}@media(pointer:coarse){#touch:not(.hidden){display:flex}#tips{display:none}#team{top:auto;bottom:145px}}@media(max-width:600px){#hud{font-size:11px}#hud>div{padding:7px}h1{font-size:40px}}
 
 #perks{position:fixed;right:15px;top:105px;width:230px;max-height:55vh;overflow:auto;border:1px solid #5adff666;background:#07182de8;border-radius:12px;padding:13px;pointer-events:none}
@@ -164,7 +164,7 @@ radial-gradient(ellipse 60% 70% at 85% 90%,#ff70af22,transparent 70%),#050719eb}
 <div class="fps-entry"><span>🎯 Egér: körbenézés</span><span>⌨ WASD: mozgás</span><span>🖱 Kattintás: támadás</span><span>Esc: kurzor</span></div><input id="name" maxlength="14" placeholder="Játékosneved" value="Játékos"><button class="primary" id="create">FPS MULTIPLAYER SZOBA</button><div class="row"><input id="room" maxlength="6" placeholder="SZOBAKÓD"><button id="join">CSATLAKOZÁS</button></div><button id="solo">EGYJÁTÉKOS FPS JÁTÉK</button><p id="status"></p><p class="fps-original-link"><a href="./index.html">← Vissza az eredeti, külső nézetes játékhoz</a></p></section></div>
 <div id="hud" class="hidden"><div><strong>NEON NEXUS</strong><br>SZOBA: <b id="code">SOLO</b></div><div>HULLÁM <b id="wave">1</b> • KRISTÁLY <b id="health">100%</b><br>ÉLETERŐ <b id="hp">100</b></div><div><button id="invite">MEGHÍVÁS</button><button id="leave">KILÉPÉS</button></div></div><div id="fpsCrosshair" class="hidden" aria-hidden="true"><span class="cross-h"></span><span class="cross-v"></span><span class="cross-dot"></span></div>
 <div id="fpsLockHint" class="hidden">KATTINTS A PÁLYÁRA AZ EGÉR RÖGZÍTÉSÉHEZ <small>Esc: egér felszabadítása • Q: képesség • R/T: váltás</small></div>
-<div id="fpsRadar" class="hidden"><canvas id="radarCanvas" width="144" height="144"></canvas><span>ARENA RADAR</span></div><div id="version-badge" aria-label="Játékverzió">◆ NEON NEXUS • FPS v1.0.1 • v3.4 ALAP</div>
+<div id="fpsRadar" class="hidden"><canvas id="radarCanvas" width="144" height="144"></canvas><span>ARENA RADAR</span></div><div id="version-badge" aria-label="Játékverzió">◆ NEON NEXUS • FPS v1.1 • BOSS HUNTER</div>
 <div id="abilityHud" class="hidden"><button id="useAbility" title="Különleges képesség: Q"><span id="abilitySymbol">✦</span><span class="ability-meta"><strong id="abilityName">Képesség</strong><small id="abilityTimer">Q • KÉSZ</small></span><strong>Q</strong></button><div id="abilityBar"><div id="abilityFill"></div></div></div>
 <div id="summonHud" class="hidden"><strong id="summonLabel">🐺 Farkas (4 mana)</strong><div id="manaTrack"><div id="manaFill"></div></div><small id="manaText">Mana: 12/12</small><button id="toggleSummon">R • Nyuszi / Farkas váltás</button><small id="summonCount">Idézettek: 0/2</small><button id="toggleWeapon">T • Lándzsa / kard</button></div>
 <div id="flashOverlay" class="hidden"><div id="flashPrompt"><h3>⚡ FEKETE VILLANÁS</h3><p>Nyomj újra Q-t a zöld zónában!</p><div id="flashTrack"><div id="flashZone"></div><div id="flashMarker"></div></div><button id="flashStop">Q • IDŐZÍTÉS</button></div></div>
@@ -218,11 +218,21 @@ summonSlots:{icon:'🐺',name:'Falka vezető',desc:'Árnyékidézőként eggyel 
 manaWell:{icon:'🔮',name:'Mana forrás',desc:'+4 maximális mana (csak az összes idézett eltűnése után, 120 másodperc alatt tölt vissza).'},
 summonFangs:{icon:'🐾',name:'Falka erő',desc:'Idézett farkasaid és nyulaid több életet és sebzést kapnak.'}
 };
+const BOSS_UPGRADES={
+bossMeteor:{icon:'☄️',name:'Égi Meteor',desc:'BOSS EREKLYE • F: lángoló meteort hív le 7 egységre előre. Nagy területen sebez.',active:true,cooldown:24},
+bossFreeze:{icon:'❄️',name:'Időfagyasztás',desc:'BOSS EREKLYE • F: rövid időre megállítja a közelben lévő ellenségeket és lassítja a főbosst.',active:true,cooldown:27},
+bossAegis:{icon:'🛡️',name:'Titánpajzs',desc:'BOSS EREKLYE • F: csapatvédő pajzs 8 mp-re, ami a kristályt is védi.',active:true,cooldown:32},
+bossOverdrive:{icon:'🔥',name:'Boss dühe',desc:'BOSS EREKLYE • +3 alapsebzés és gyorsabb támadás.'},
+bossVampire:{icon:'🩸',name:'Lélekszívás',desc:'BOSS EREKLYE • Az ellenségeken okozott sebzés egy részét visszagyógyítja.'},
+bossLegion:{icon:'🐺',name:'Árnyéklégió',desc:'BOSS EREKLYE • +2 árnyékidézési hely, erősebb farkasok és nyuszik (csak idézőnek).'}
+};
+const getUpgrade=id=>UPGRADES[id]||BOSS_UPGRADES[id];
+const bossRelicsFor=p=>Object.keys(BOSS_UPGRADES).filter(id=>id!=='bossLegion'||p?.power==='shadow');
 const ENEMY_TYPES={
-normal:{color:0xff457d,speed:2.7,hp:2,damage:4,period:1.25,radius:.72},
-runner:{color:0x39e9fb,speed:4.9,hp:1,damage:2,period:.85,radius:.53},
-tank:{color:0xffb44e,speed:1.75,hp:4,damage:7,period:1.65,radius:.95},
-boss:{color:0xb760ff,speed:1.35,hp:65,damage:17,period:1.8,radius:2.15}
+normal:{color:0xff457d,speed:2.9,hp:3,damage:5,period:1.18,radius:.72},
+runner:{color:0x39e9fb,speed:5.1,hp:2,damage:3,period:.80,radius:.53},
+tank:{color:0xffb44e,speed:1.90,hp:6,damage:8,period:1.55,radius:.95},
+boss:{color:0xb760ff,speed:2.12,hp:185,damage:24,period:1.0,radius:2.15}
 };
 const SKINS={
 sunny:{name:'Marin Kitagawa',desc:'My Dress-Up Darling • feltöltött 3D modell',kind:'school',hair:0xf1c783,tips:0xf49bb3,skin:0xffdfca,outfit:0xf6f8fb,skirt:0x8eaeca,trim:0x395677,accent:0x668aa8,eye:0x9f4d69,boots:0x392f3a,model:'models/marin.glb',flipX:true},
@@ -260,16 +270,42 @@ renderCharacterChoices();
 let mode='menu',peer,conn,clients=new Map(),state,room='',localId='',myName='',last=performance.now(),sendClock=0,hudClock=0,fire=false,aim={x:0,z:0},keys=new Set(),announcement=0;
 const code=()=>Array.from(crypto.getRandomValues(new Uint8Array(6)),n=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[n%32]).join('');
 const rnd=(a,b)=>a+Math.random()*(b-a),lim=(v,a,b)=>Math.max(a,Math.min(b,v)),safe=s=>String(s||'Játékos').trim().slice(0,14).replace(/[<>]/g,'')||'Játékos';
-function init(){return{players:[],enemies:[],summons:[],nextSummon:0,core:100,coreMax:100,wave:0,remaining:0,timer:0,over:false,next:0,phase:'fight',breakId:0}}
-function rollChoices(p){const standard=Object.keys(UPGRADES).filter(k=>!['summonSlots','manaWell','summonFangs'].includes(k));
+function init(){return{players:[],enemies:[],summons:[],nextSummon:0,core:125,coreMax:125,wave:0,remaining:0,timer:0,over:false,next:0,phase:'fight',breakId:0,bossDefeatedWave:0,lastBossReward:false,coreGuardTimer:0}}
+function rollChoices(p,bossReward=false){
+if(bossReward){return bossRelicsFor(p).sort(()=>Math.random()-.5).slice(0,3)}
+const standard=Object.keys(UPGRADES).filter(k=>!['summonSlots','manaWell','summonFangs'].includes(k));
 const special=p?.power==='shadow'?['summonSlots','manaWell','summonFangs']:[];const pool=standard.sort(()=>Math.random()-.5);
 if(special.length)return[special[Math.floor(Math.random()*special.length)],...pool.slice(0,2)].sort(()=>Math.random()-.5);return pool.slice(0,3)}
-function add(id,name,skin='sunny',power='purple'){if(state.players.some(p=>p.id===id))return;const waiting=state.phase==='upgrade';state.players.push({id,name:safe(name),skin:Object.hasOwn(SKINS,skin)?skin:'sunny',power:Object.hasOwn(POWERS,power)?power:'purple',powerCool:0,mana:12,maxMana:12,manaRecharge:0,manaRecoverStart:null,summonType:'wolf',weapon:'spear',swing:0,x:rnd(-5,5),z:rnd(-5,5),angle:0,hp:power==='flash'?170:100,maxHp:power==='flash'?170:100,kills:0,cool:0,revive:0,perks:{},choices:waiting?rollChoices({power}):[],picked:!waiting,input:{x:0,z:0,ax:0,az:0,fire:false,special:false,summonType:'wolf',weapon:'spear'}})}
-function pack(){return{players:state.players.map(({input,cool,revive,...p})=>p),enemies:state.enemies,summons:state.summons,core:state.core,coreMax:state.coreMax,wave:state.wave,over:state.over,phase:state.phase,breakId:state.breakId}}
-function applyUpgrade(id,index){if(!state||state.phase!=='upgrade')return;const p=state.players.find(x=>x.id===id);if(!p||p.picked||!Number.isInteger(index)||index<0||index>2)return;const key=p.choices[index];if(!UPGRADES[key])return;p.perks[key]=(p.perks[key]||0)+1;p.picked=true;p.choices=[];if(key==='heal'){p.maxHp+=25;p.hp=Math.min(p.maxHp,p.hp+45)}if(key==='repair'){state.coreMax+=8;state.core=Math.min(state.coreMax,state.core+24)}if(key==='multi')p.perks[key]=Math.min(3,p.perks[key]);if(key==='manaWell'){p.maxMana+=4;if(p.manaRecoverStart!==null)p.manaRecoverStart=Math.min(p.manaRecoverStart,p.mana)}if(key==='summonSlots')p.perks[key]=Math.min(8,p.perks[key]);if(mode==='host')broadcast({type:'state',data:pack()})}
-function beginWave(){state.phase='fight';state.wave++;state.remaining=Math.min(8+state.wave*3,65);state.timer=1;for(const p of state.players){p.picked=true;p.choices=[];p.hp=Math.min(p.maxHp,p.hp+15)}if(state.wave%10===0){const a=rnd(0,Math.PI*2);spawnEnemy('boss',a);announce('☠ BOSS HULLÁM '+state.wave+' ☠')}else announce('HULLÁM '+state.wave)}
-function enterUpgrade(){state.phase='upgrade';state.breakId++;for(const p of state.players){p.choices=rollChoices(p);p.picked=false;p.input.fire=false}announce('✓ '+state.wave+'. HULLÁM TELJESÍTVE!');if(mode==='host')broadcast({type:'state',data:pack()})}
-function spawnEnemy(kind,angle){const t=ENEMY_TYPES[kind],factor=kind==='boss'?1+Math.max(0,state.wave-10)*.07:1+Math.floor(state.wave/7)*.45;const hp=Math.max(1,Math.round(t.hp*factor));state.enemies.push({id:++state.next,kind,x:Math.cos(angle)*24,z:Math.sin(angle)*24,hp,maxHp:hp,cool:0})}
+function add(id,name,skin='sunny',power='purple'){if(state.players.some(p=>p.id===id))return;const waiting=state.phase==='upgrade';state.players.push({id,name:safe(name),skin:Object.hasOwn(SKINS,skin)?skin:'sunny',power:Object.hasOwn(POWERS,power)?power:'purple',powerCool:0,bossCool:0,bossActive:'',guardTimer:0,mana:12,maxMana:12,manaRecharge:0,manaRecoverStart:null,summonType:'wolf',weapon:'spear',swing:0,x:rnd(-5,5),z:rnd(-5,5),angle:0,hp:power==='flash'?185:115,maxHp:power==='flash'?185:115,kills:0,cool:0,revive:0,perks:{},choices:waiting?rollChoices({power},state.lastBossReward):[],picked:!waiting,input:{x:0,z:0,ax:0,az:0,fire:false,special:false,summonType:'wolf',weapon:'spear'}})}
+function pack(){return{players:state.players.map(({input,cool,revive,...p})=>p),enemies:state.enemies,summons:state.summons,core:state.core,coreMax:state.coreMax,wave:state.wave,over:state.over,phase:state.phase,breakId:state.breakId,lastBossReward:state.lastBossReward,coreGuardTimer:state.coreGuardTimer}}
+function applyUpgrade(id,index){if(!state||state.phase!=='upgrade')return;
+const p=state.players.find(x=>x.id===id);
+if(!p||p.picked||!Number.isInteger(index)||index<0||index>2)return;
+const key=p.choices[index],perk=getUpgrade(key),isBoss=!!BOSS_UPGRADES[key];
+if(!perk||isBoss!==!!state.lastBossReward)return;
+p.perks[key]=(p.perks[key]||0)+1;p.picked=true;p.choices=[];
+if(key==='heal'){p.maxHp+=25;p.hp=Math.min(p.maxHp,p.hp+45)}
+if(key==='repair'){state.coreMax+=8;state.core=Math.min(state.coreMax,state.core+24)}
+if(key==='multi')p.perks[key]=Math.min(3,p.perks[key]);
+if(key==='manaWell'){p.maxMana+=4;if(p.manaRecoverStart!==null)p.manaRecoverStart=Math.min(p.manaRecoverStart,p.mana)}
+if(key==='summonSlots')p.perks[key]=Math.min(8,p.perks[key]);
+if(key==='bossLegion'){p.maxMana+=4;if(p.manaRecoverStart!==null)p.manaRecoverStart=Math.min(p.manaRecoverStart,p.mana)}
+if(perk.active){p.bossActive=key;p.bossCool=0}
+if(mode==='host')broadcast({type:'state',data:pack()})}
+function beginWave(){state.phase='fight';state.wave++;state.bossDefeatedWave=0;state.lastBossReward=false;
+state.remaining=Math.min(8+state.wave*3,68);state.timer=1;for(const p of state.players){p.picked=true;p.choices=[];p.hp=Math.min(p.maxHp,p.hp+18)}
+if(state.wave%5===0){const a=rnd(0,Math.PI*2);spawnEnemy('boss',a);
+spawnEnemy('tank',a+.38);spawnEnemy('runner',a-.38);
+announce('☠ TITÁN BOSS • '+state.wave+'. HULLÁM ☠')}else announce('HULLÁM '+state.wave)}
+function enterUpgrade(){state.phase='upgrade';state.breakId++;
+state.lastBossReward=state.wave%5===0&&state.bossDefeatedWave===state.wave;
+for(const p of state.players){p.choices=rollChoices(p,state.lastBossReward);p.picked=false;p.input.fire=false}
+announce(state.lastBossReward?'🏆 BOSS LEGYŐZVE! VÁLASSZ RITKA KÉPESSÉGET!':'✓ '+state.wave+'. HULLÁM TELJESÍTVE!');
+if(mode==='host')broadcast({type:'state',data:pack()})}
+function spawnEnemy(kind,angle){const t=ENEMY_TYPES[kind];
+const factor=kind==='boss'?(1+Math.max(0,Math.floor((state.wave-5)/5))*.45)*(1+Math.max(0,state.players.length-1)*.25):1+Math.floor(state.wave/7)*.35;
+const hp=Math.max(1,Math.round(t.hp*factor));
+state.enemies.push({id:++state.next,kind,x:Math.cos(angle)*24,z:Math.sin(angle)*24,hp,maxHp:hp,cool:0,shockTimer:kind==='boss'?5.8:0,shockWindup:0,reinforceTimer:kind==='boss'?8.5:0,reinforced:0,frozen:0})}
 
 function show(){ $('menu').classList.add('hidden');if(!state?.over)$('end').classList.add('hidden');for(const x of ['hud','team','tips','touch','perks','abilityHud'])$(x).classList.remove('hidden');fpsUi();$('code').textContent=room||'SOLO';$('invite').style.display=room?'':'none';$('again').style.display=mode==='client'?'none':''}
 function removeModel(g){scene.remove(g);
