@@ -565,6 +565,15 @@ function finishFlash(forceFail=false){if(!flashActive)return;const perfect=!forc
 flashActive=false;$('flashOverlay').classList.add('hidden');
 if(mode==='client')send(conn,{type:'flash',perfect});
 else{const p=state?.players?.find(p=>p.id===localId);if(p?.power==='flash')castPower(p,perfect)}}
+function cycleBossSkill(){const me=state?.players?.find(p=>p.id===localId);
+if(!me)return;const skills=Object.keys(BOSS_UPGRADES).filter(id=>BOSS_UPGRADES[id].active&&me.perks?.[id]);
+if(skills.length<2)return;
+const index=skills.indexOf(me.bossActive),next=skills[(index+1+skills.length)%skills.length];
+me.bossActive=next;if(mode==='client')send(conn,{type:'bossSelect',skill:next});hud()}
+function triggerBossSkill(){if(!state||state.phase!=='fight'||!localId)return;
+const me=state.players.find(p=>p.id===localId);
+if(!me||me.hp<=0||me.bossCool>0||!BOSS_UPGRADES[me.bossActive]?.active||!me.perks?.[me.bossActive])return;
+if(mode==='client')send(conn,{type:'bossUltimate'});else castBossUltimate(me)}
 function handleAbilityTap(){if(!state||!localId||state.phase!=='fight')return;
 const p=state.players.find(p=>p.id===localId);if(!p||p.hp<=0)return;
 if(p.power==='flash'){if(flashActive){finishFlash();return}if(p.powerCool>0)return;flashActive=true;flashStart=performance.now();fpsReleaseMouse();$('flashOverlay').classList.remove('hidden');return}
@@ -933,7 +942,7 @@ if(activeRelic){const perk=BOSS_UPGRADES[activeRelic],remain=Math.max(0,me.bossC
 $('bossSkillSymbol').textContent=perk.icon;$('bossSkillName').textContent=perk.name;
 $('bossSkillCool').textContent=remain>0?remain.toFixed(1)+' mp újratöltés':'F • AKTIVÁLHATÓ';
 $('bossSkillFill').style.width=(100*(1-remain/Math.max(12,perk.cooldown-(me.perks[activeRelic]-1)*2.5)))+'%';
-$('useBossSkill').disabled=!!me.picked===false&&state.phase==='upgrade'||state.phase!=='fight'||me.hp<=0||remain>0;
+$('useBossSkill').disabled=state.phase!=='fight'||me.hp<=0||remain>0;
 $('cycleBossSkill').style.display=learned.length>1?'':'none';
 }
 $('bossSkillHud').classList.toggle('has-summons',me.power==='shadow');
@@ -972,6 +981,8 @@ $('invite').onclick=async()=>{const url=new URL(location.href);url.searchParams.
 addEventListener('keydown',e=>{let k=e.key.toLowerCase();if(k==='q'&&mode!=='menu'){e.preventDefault();if(!e.repeat)handleAbilityTap();return}
 if(k==='r'&&mode!=='menu'){e.preventDefault();if(!e.repeat)toggleSummonChoice();return}
 if(k==='t'&&mode!=='menu'){e.preventDefault();if(!e.repeat)toggleShadowWeapon();return}
+if(k==='f'&&mode!=='menu'){e.preventDefault();if(!e.repeat)triggerBossSkill();return}
+if(k==='g'&&mode!=='menu'){e.preventDefault();if(!e.repeat)cycleBossSkill();return}
 if(['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright'].includes(k)&&mode!=='menu'){e.preventDefault();keys.add(k.replace('arrowup','w').replace('arrowdown','s').replace('arrowleft','a').replace('arrowright','d'))}});
 addEventListener('keyup',e=>keys.delete(e.key.toLowerCase().replace('arrowup','w').replace('arrowdown','s').replace('arrowleft','a').replace('arrowright','d')));
 $('c').onpointerdown=e=>{if(mode==='menu')return;
@@ -985,7 +996,7 @@ fpsYaw-=dx*.007;fpsPitch=lim(fpsPitch-dy*.006,-1.15,1.1);
 fpsTouchLook.x=e.clientX;fpsTouchLook.y=e.clientY}};
 for(const b of document.querySelectorAll('[data-k]')){const k=b.dataset.k;b.onpointerdown=e=>{e.preventDefault();keys.add(k);b.setPointerCapture(e.pointerId)};b.onpointerup=()=>keys.delete(k);b.onpointercancel=()=>keys.delete(k)}
 $('fire').onpointerdown=e=>{fire=true;fpsKick=.16;$('fire').setPointerCapture(e.pointerId)};$('fire').onpointerup=()=>fire=false;
-$('useAbility').onclick=handleAbilityTap;$('flashStop').onclick=handleAbilityTap;$('toggleSummon').onclick=toggleSummonChoice;$('toggleWeapon').onclick=toggleShadowWeapon;
+$('useAbility').onclick=handleAbilityTap;$('flashStop').onclick=handleAbilityTap;$('toggleSummon').onclick=toggleSummonChoice;$('toggleWeapon').onclick=toggleShadowWeapon;$('useBossSkill').onclick=triggerBossSkill;$('cycleBossSkill').onclick=cycleBossSkill;
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
 const q=new URLSearchParams(location.search).get('room');if(q&&/^[A-Z2-9]{6}$/i.test(q)){$('room').value=q.toUpperCase();$('status').textContent='Meghívót kaptál. Add meg a neved, majd csatlakozz!'}
 </script></html>
