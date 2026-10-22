@@ -1,4 +1,4 @@
-<!doctype html><html lang="hu"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NEON NEXUS 3D — FPS Edition</title><style>
+<!doctype html><html lang="hu"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NEON NEXUS 3D — FPS Boss Hunter Edition v1.1</title><style>
 *{box-sizing:border-box}body{margin:0;background:#050a1b;color:#e7fbff;font:15px system-ui;overflow:hidden}canvas{display:block}button,input{font:inherit;border:1px solid #4fdcf7;border-radius:9px;background:#0c203b;color:white;padding:12px}button{cursor:pointer}button:hover{background:#14436a}.primary{background:#3be3f5;color:#031020;font-weight:800}#menu,#end{position:fixed;inset:0;background:#02091de8;display:grid;place-items:center}section{width:min(460px,94vw);padding:32px;border:1px solid #43ddf78a;border-radius:20px;background:#09152e;box-shadow:0 0 80px #008ff62b;text-align:center}h1{font-size:52px;line-height:.95;color:#65edff;text-shadow:0 0 30px #15b4ff}p{color:#9ebcd2}input{width:100%;margin:6px 0 12px}section button{width:100%;margin:5px 0}.row{display:flex;gap:8px}.row input{flex:1;min-width:0}.row button{width:auto}.hidden{display:none!important}#hud{position:fixed;top:15px;left:15px;right:15px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}#hud>div{padding:12px 16px;background:#071b36dd;border:1px solid #4fe6f866;border-radius:12px;pointer-events:auto}#hud b{color:#62f6ff}#hud button{padding:5px 9px}#team{position:fixed;left:15px;top:100px;padding:12px;background:#071b36dd;border-radius:12px;min-width:165px}#tips{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);padding:10px 20px;background:#071b36dd;border-radius:10px;white-space:nowrap}#announce{position:fixed;top:28%;left:50%;transform:translateX(-50%);font-size:32px;font-weight:900;text-shadow:0 0 20px cyan;pointer-events:none}#touch{position:fixed;bottom:20px;left:15px;right:15px;display:none;justify-content:space-between;pointer-events:none}#touch button{pointer-events:auto}#fire{border-radius:50%;width:80px;height:80px}@media(pointer:coarse){#touch:not(.hidden){display:flex}#tips{display:none}#team{top:auto;bottom:145px}}@media(max-width:600px){#hud{font-size:11px}#hud>div{padding:7px}h1{font-size:40px}}
 
 #perks{position:fixed;right:15px;top:105px;width:230px;max-height:55vh;overflow:auto;border:1px solid #5adff666;background:#07182de8;border-radius:12px;padding:13px;pointer-events:none}
@@ -151,6 +151,28 @@ radial-gradient(ellipse 60% 70% at 85% 90%,#ff70af22,transparent 70%),#050719eb}
 @media(max-width:700px){#fpsRadar{bottom:54px;left:6px;padding:4px}#fpsRadar canvas{width:90px;height:90px}#fpsRadar span{font-size:8px}}
 @media(pointer:coarse){#fpsLockHint{display:none!important}#touch{z-index:8}}
 
+
+/* FPS v1.1 Boss Hunter exclusive reward visuals */
+#bossSkillHud{position:fixed;bottom:125px;right:15px;z-index:8;width:235px;padding:10px;border:2px solid #f3c879;background:linear-gradient(145deg,#302142ed,#19102aed);border-radius:12px;box-shadow:0 0 19px #e6a84933}
+#bossSkillHud.has-summons{bottom:312px}
+#bossSkillHud .boss-relic-title{text-align:center;letter-spacing:2px;font-size:11px;font-weight:900;color:#ffe49e;margin-bottom:7px}
+#useBossSkill{padding:9px 11px;width:100%;display:flex;align-items:center;justify-content:space-between;background:#44305b;border:1px solid #f4c97e;color:#fff;gap:8px}
+#useBossSkill>span:first-child{font-size:25px}
+#useBossSkill>span:nth-child(2){display:flex;flex-direction:column;align-items:flex-start;font-size:12px}
+#useBossSkill strong{color:#ffe0a9}
+#useBossSkill small{font-size:10px;color:#e5c9e9}
+#useBossSkill:disabled{opacity:.62}
+#bossSkillProgress{height:5px;margin:7px 0 5px;background:#2a173e;border-radius:9px;overflow:hidden}
+#bossSkillFill{height:100%;width:100%;background:linear-gradient(90deg,#b566ff,#f4d16b)}
+#cycleBossSkill{width:100%;font-size:10px;padding:6px;background:#3b244a;color:#edd6ff;border:1px solid #9269af}
+#upgrades.boss-reward{background:radial-gradient(ellipse at center,#42233cdd 0%,#080916f3 75%)}
+#upgrades.boss-reward section{border:3px solid #f7c477;box-shadow:0 0 100px #ffcf654a;background:linear-gradient(145deg,#352037,#151026)}
+#upgrades.boss-reward h2{color:#ffdf8e}
+.option.boss-option{border:2px solid #e8b85a;background:linear-gradient(160deg,#563549,#2d1b37,#16132f);box-shadow:inset 0 0 32px #ffcd6721}
+.option.boss-option:hover{border-color:#fff0a5;box-shadow:0 0 25px #f9c8766b}
+.boss-perk{color:#ffe4ac!important}
+#bossbar{border-color:#f4ad64;box-shadow:0 0 34px #ff813f66}
+@media(max-width:740px){#bossSkillHud{right:8px;bottom:212px;width:165px;padding:7px}#bossSkillHud.has-summons{bottom:395px}#bossSkillHud .boss-relic-title{font-size:9px}#useBossSkill{padding:6px;font-size:10px}#cycleBossSkill{font-size:9px}}
 </style><canvas id="c"></canvas><div id="menu"><section><small>FPS EDITION • BELSŐ NÉZETES CO-OP</small><h1>NEON<br>NEXUS</h1><p>Ugyanaz a NEON NEXUS, most belső nézetből! Egérrel körbenézhető 3D aréna, kard, lándzsa, plazmafegyver, hullámok és bossok. Maximum 6 játékos.</p>
 <div id="selector" aria-label="Anime karakter összeállítása">
 <h2>01 / COSPLAY SKIN</h2>
@@ -164,11 +186,17 @@ radial-gradient(ellipse 60% 70% at 85% 90%,#ff70af22,transparent 70%),#050719eb}
 <div class="fps-entry"><span>🎯 Egér: körbenézés</span><span>⌨ WASD: mozgás</span><span>🖱 Kattintás: támadás</span><span>Esc: kurzor</span></div><input id="name" maxlength="14" placeholder="Játékosneved" value="Játékos"><button class="primary" id="create">FPS MULTIPLAYER SZOBA</button><div class="row"><input id="room" maxlength="6" placeholder="SZOBAKÓD"><button id="join">CSATLAKOZÁS</button></div><button id="solo">EGYJÁTÉKOS FPS JÁTÉK</button><p id="status"></p><p class="fps-original-link"><a href="./index.html">← Vissza az eredeti, külső nézetes játékhoz</a></p></section></div>
 <div id="hud" class="hidden"><div><strong>NEON NEXUS</strong><br>SZOBA: <b id="code">SOLO</b></div><div>HULLÁM <b id="wave">1</b> • KRISTÁLY <b id="health">100%</b><br>ÉLETERŐ <b id="hp">100</b></div><div><button id="invite">MEGHÍVÁS</button><button id="leave">KILÉPÉS</button></div></div><div id="fpsCrosshair" class="hidden" aria-hidden="true"><span class="cross-h"></span><span class="cross-v"></span><span class="cross-dot"></span></div>
 <div id="fpsLockHint" class="hidden">KATTINTS A PÁLYÁRA AZ EGÉR RÖGZÍTÉSÉHEZ <small>Esc: egér felszabadítása • Q: képesség • R/T: váltás</small></div>
-<div id="fpsRadar" class="hidden"><canvas id="radarCanvas" width="144" height="144"></canvas><span>ARENA RADAR</span></div><div id="version-badge" aria-label="Játékverzió">◆ NEON NEXUS • FPS v1.0.1 • v3.4 ALAP</div>
+<div id="fpsRadar" class="hidden"><canvas id="radarCanvas" width="144" height="144"></canvas><span>ARENA RADAR</span></div><div id="version-badge" aria-label="Játékverzió">◆ NEON NEXUS • FPS v1.1 • BOSS HUNTER</div>
 <div id="abilityHud" class="hidden"><button id="useAbility" title="Különleges képesség: Q"><span id="abilitySymbol">✦</span><span class="ability-meta"><strong id="abilityName">Képesség</strong><small id="abilityTimer">Q • KÉSZ</small></span><strong>Q</strong></button><div id="abilityBar"><div id="abilityFill"></div></div></div>
+<div id="bossSkillHud" class="hidden">
+<div class="boss-relic-title">🏆 BOSS EREKLYE</div>
+<button id="useBossSkill" title="F: különleges boss-képesség"><span id="bossSkillSymbol">☄️</span><span><strong id="bossSkillName">Égi Meteor</strong><small id="bossSkillCool">F • KÉSZ</small></span><b>F</b></button>
+<div id="bossSkillProgress"><div id="bossSkillFill"></div></div>
+<button id="cycleBossSkill">G • Boss-képesség váltás</button>
+</div>
 <div id="summonHud" class="hidden"><strong id="summonLabel">🐺 Farkas (4 mana)</strong><div id="manaTrack"><div id="manaFill"></div></div><small id="manaText">Mana: 12/12</small><button id="toggleSummon">R • Nyuszi / Farkas váltás</button><small id="summonCount">Idézettek: 0/2</small><button id="toggleWeapon">T • Lándzsa / kard</button></div>
 <div id="flashOverlay" class="hidden"><div id="flashPrompt"><h3>⚡ FEKETE VILLANÁS</h3><p>Nyomj újra Q-t a zöld zónában!</p><div id="flashTrack"><div id="flashZone"></div><div id="flashMarker"></div></div><button id="flashStop">Q • IDŐZÍTÉS</button></div></div>
-<div id="team" class="hidden"></div><div id="tips" class="hidden">WASD: MOZGÁS • EGÉR: KÖRBENÉZÉS • KATTINTÁS: TÁMADÁS • Q: KÉPESSÉG • R/T: VÁLTÁS • ESC: KURZOR</div><div id="announce"></div><div id="touch" class="hidden"><div><button data-k="w">▲</button><br><button data-k="a">◀</button><button data-k="s">▼</button><button data-k="d">▶</button></div><button id="fire">LŐ</button></div><div id="end" class="hidden"><section><h1>VÉGE</h1><p id="result"></p><button id="again" class="primary">ÚJRAINDÍTÁS</button><button id="back">MENÜ</button></section></div>
+<div id="team" class="hidden"></div><div id="tips" class="hidden">WASD: MOZGÁS • EGÉR: KÖRBENÉZÉS • KATTINTÁS: TÁMADÁS • Q: KÉPESSÉG • F: BOSS EREKLYE • G: VÁLTÁS • R/T • ESC</div><div id="announce"></div><div id="touch" class="hidden"><div><button data-k="w">▲</button><br><button data-k="a">◀</button><button data-k="s">▼</button><button data-k="d">▶</button></div><button id="fire">LŐ</button></div><div id="end" class="hidden"><section><h1>VÉGE</h1><p id="result"></p><button id="again" class="primary">ÚJRAINDÍTÁS</button><button id="back">MENÜ</button></section></div>
 <div id="perks" class="hidden"><h3>⚡ FEJLESZTÉSEID</h3><div id="perklist">Az első hullám után választhatsz.</div></div>
 <div id="bossbar" class="hidden">☠ TITÁN BOSS • <span id="bosshp">100%</span><div id="bosstrack"><div id="bossfill"></div></div></div>
 <div id="damageFlash"></div>
@@ -218,11 +246,21 @@ summonSlots:{icon:'🐺',name:'Falka vezető',desc:'Árnyékidézőként eggyel 
 manaWell:{icon:'🔮',name:'Mana forrás',desc:'+4 maximális mana (csak az összes idézett eltűnése után, 120 másodperc alatt tölt vissza).'},
 summonFangs:{icon:'🐾',name:'Falka erő',desc:'Idézett farkasaid és nyulaid több életet és sebzést kapnak.'}
 };
+const BOSS_UPGRADES={
+bossMeteor:{icon:'☄️',name:'Égi Meteor',desc:'BOSS EREKLYE • F: lángoló meteort hív le 7 egységre előre. Nagy területen sebez.',active:true,cooldown:24},
+bossFreeze:{icon:'❄️',name:'Időfagyasztás',desc:'BOSS EREKLYE • F: rövid időre megállítja a közelben lévő ellenségeket és lassítja a főbosst.',active:true,cooldown:27},
+bossAegis:{icon:'🛡️',name:'Titánpajzs',desc:'BOSS EREKLYE • F: csapatvédő pajzs 8 mp-re, ami a kristályt is védi.',active:true,cooldown:32},
+bossOverdrive:{icon:'🔥',name:'Boss dühe',desc:'BOSS EREKLYE • +3 alapsebzés és gyorsabb támadás.'},
+bossVampire:{icon:'🩸',name:'Lélekszívás',desc:'BOSS EREKLYE • Az ellenségeken okozott sebzés egy részét visszagyógyítja.'},
+bossLegion:{icon:'🐺',name:'Árnyéklégió',desc:'BOSS EREKLYE • +2 árnyékidézési hely, erősebb farkasok és nyuszik (csak idézőnek).'}
+};
+const getUpgrade=id=>UPGRADES[id]||BOSS_UPGRADES[id];
+const bossRelicsFor=p=>Object.keys(BOSS_UPGRADES).filter(id=>id!=='bossLegion'||p?.power==='shadow');
 const ENEMY_TYPES={
-normal:{color:0xff457d,speed:2.7,hp:2,damage:4,period:1.25,radius:.72},
-runner:{color:0x39e9fb,speed:4.9,hp:1,damage:2,period:.85,radius:.53},
-tank:{color:0xffb44e,speed:1.75,hp:4,damage:7,period:1.65,radius:.95},
-boss:{color:0xb760ff,speed:1.35,hp:65,damage:17,period:1.8,radius:2.15}
+normal:{color:0xff457d,speed:2.9,hp:3,damage:5,period:1.18,radius:.72},
+runner:{color:0x39e9fb,speed:5.1,hp:2,damage:3,period:.80,radius:.53},
+tank:{color:0xffb44e,speed:1.90,hp:6,damage:8,period:1.55,radius:.95},
+boss:{color:0xb760ff,speed:2.12,hp:185,damage:24,period:1.0,radius:2.15}
 };
 const SKINS={
 sunny:{name:'Marin Kitagawa',desc:'My Dress-Up Darling • feltöltött 3D modell',kind:'school',hair:0xf1c783,tips:0xf49bb3,skin:0xffdfca,outfit:0xf6f8fb,skirt:0x8eaeca,trim:0x395677,accent:0x668aa8,eye:0x9f4d69,boots:0x392f3a,model:'models/marin.glb',flipX:true},
@@ -260,23 +298,51 @@ renderCharacterChoices();
 let mode='menu',peer,conn,clients=new Map(),state,room='',localId='',myName='',last=performance.now(),sendClock=0,hudClock=0,fire=false,aim={x:0,z:0},keys=new Set(),announcement=0;
 const code=()=>Array.from(crypto.getRandomValues(new Uint8Array(6)),n=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[n%32]).join('');
 const rnd=(a,b)=>a+Math.random()*(b-a),lim=(v,a,b)=>Math.max(a,Math.min(b,v)),safe=s=>String(s||'Játékos').trim().slice(0,14).replace(/[<>]/g,'')||'Játékos';
-function init(){return{players:[],enemies:[],summons:[],nextSummon:0,core:100,coreMax:100,wave:0,remaining:0,timer:0,over:false,next:0,phase:'fight',breakId:0}}
-function rollChoices(p){const standard=Object.keys(UPGRADES).filter(k=>!['summonSlots','manaWell','summonFangs'].includes(k));
+function init(){return{players:[],enemies:[],summons:[],nextSummon:0,core:125,coreMax:125,wave:0,remaining:0,timer:0,over:false,next:0,phase:'fight',breakId:0,bossDefeatedWave:0,lastBossReward:false,coreGuardTimer:0}}
+function rollChoices(p,bossReward=false){
+if(bossReward){const pool=bossRelicsFor(p),active=pool.filter(id=>BOSS_UPGRADES[id].active).sort(()=>Math.random()-.5);
+const guaranteedActive=active[0],others=pool.filter(id=>id!==guaranteedActive).sort(()=>Math.random()-.5);
+return[guaranteedActive,...others.slice(0,2)].sort(()=>Math.random()-.5)}
+const standard=Object.keys(UPGRADES).filter(k=>!['summonSlots','manaWell','summonFangs'].includes(k));
 const special=p?.power==='shadow'?['summonSlots','manaWell','summonFangs']:[];const pool=standard.sort(()=>Math.random()-.5);
 if(special.length)return[special[Math.floor(Math.random()*special.length)],...pool.slice(0,2)].sort(()=>Math.random()-.5);return pool.slice(0,3)}
-function add(id,name,skin='sunny',power='purple'){if(state.players.some(p=>p.id===id))return;const waiting=state.phase==='upgrade';state.players.push({id,name:safe(name),skin:Object.hasOwn(SKINS,skin)?skin:'sunny',power:Object.hasOwn(POWERS,power)?power:'purple',powerCool:0,mana:12,maxMana:12,manaRecharge:0,manaRecoverStart:null,summonType:'wolf',weapon:'spear',swing:0,x:rnd(-5,5),z:rnd(-5,5),angle:0,hp:power==='flash'?170:100,maxHp:power==='flash'?170:100,kills:0,cool:0,revive:0,perks:{},choices:waiting?rollChoices({power}):[],picked:!waiting,input:{x:0,z:0,ax:0,az:0,fire:false,special:false,summonType:'wolf',weapon:'spear'}})}
-function pack(){return{players:state.players.map(({input,cool,revive,...p})=>p),enemies:state.enemies,summons:state.summons,core:state.core,coreMax:state.coreMax,wave:state.wave,over:state.over,phase:state.phase,breakId:state.breakId}}
-function applyUpgrade(id,index){if(!state||state.phase!=='upgrade')return;const p=state.players.find(x=>x.id===id);if(!p||p.picked||!Number.isInteger(index)||index<0||index>2)return;const key=p.choices[index];if(!UPGRADES[key])return;p.perks[key]=(p.perks[key]||0)+1;p.picked=true;p.choices=[];if(key==='heal'){p.maxHp+=25;p.hp=Math.min(p.maxHp,p.hp+45)}if(key==='repair'){state.coreMax+=8;state.core=Math.min(state.coreMax,state.core+24)}if(key==='multi')p.perks[key]=Math.min(3,p.perks[key]);if(key==='manaWell'){p.maxMana+=4;if(p.manaRecoverStart!==null)p.manaRecoverStart=Math.min(p.manaRecoverStart,p.mana)}if(key==='summonSlots')p.perks[key]=Math.min(8,p.perks[key]);if(mode==='host')broadcast({type:'state',data:pack()})}
-function beginWave(){state.phase='fight';state.wave++;state.remaining=Math.min(8+state.wave*3,65);state.timer=1;for(const p of state.players){p.picked=true;p.choices=[];p.hp=Math.min(p.maxHp,p.hp+15)}if(state.wave%10===0){const a=rnd(0,Math.PI*2);spawnEnemy('boss',a);announce('☠ BOSS HULLÁM '+state.wave+' ☠')}else announce('HULLÁM '+state.wave)}
-function enterUpgrade(){state.phase='upgrade';state.breakId++;for(const p of state.players){p.choices=rollChoices(p);p.picked=false;p.input.fire=false}announce('✓ '+state.wave+'. HULLÁM TELJESÍTVE!');if(mode==='host')broadcast({type:'state',data:pack()})}
-function spawnEnemy(kind,angle){const t=ENEMY_TYPES[kind],factor=kind==='boss'?1+Math.max(0,state.wave-10)*.07:1+Math.floor(state.wave/7)*.45;const hp=Math.max(1,Math.round(t.hp*factor));state.enemies.push({id:++state.next,kind,x:Math.cos(angle)*24,z:Math.sin(angle)*24,hp,maxHp:hp,cool:0})}
+function add(id,name,skin='sunny',power='purple'){if(state.players.some(p=>p.id===id))return;const waiting=state.phase==='upgrade';state.players.push({id,name:safe(name),skin:Object.hasOwn(SKINS,skin)?skin:'sunny',power:Object.hasOwn(POWERS,power)?power:'purple',powerCool:0,bossCool:0,bossActive:'',guardTimer:0,mana:12,maxMana:12,manaRecharge:0,manaRecoverStart:null,summonType:'wolf',weapon:'spear',swing:0,x:rnd(-5,5),z:rnd(-5,5),angle:0,hp:power==='flash'?185:115,maxHp:power==='flash'?185:115,kills:0,cool:0,revive:0,perks:{},choices:waiting?rollChoices({power},state.lastBossReward):[],picked:!waiting,input:{x:0,z:0,ax:0,az:0,fire:false,special:false,summonType:'wolf',weapon:'spear'}})}
+function pack(){return{players:state.players.map(({input,cool,revive,...p})=>p),enemies:state.enemies,summons:state.summons,core:state.core,coreMax:state.coreMax,wave:state.wave,over:state.over,phase:state.phase,breakId:state.breakId,lastBossReward:state.lastBossReward,coreGuardTimer:state.coreGuardTimer}}
+function applyUpgrade(id,index){if(!state||state.phase!=='upgrade')return;
+const p=state.players.find(x=>x.id===id);
+if(!p||p.picked||!Number.isInteger(index)||index<0||index>2)return;
+const key=p.choices[index],perk=getUpgrade(key),isBoss=!!BOSS_UPGRADES[key];
+if(!perk||isBoss!==!!state.lastBossReward)return;
+p.perks[key]=(p.perks[key]||0)+1;p.picked=true;p.choices=[];
+if(key==='heal'){p.maxHp+=25;p.hp=Math.min(p.maxHp,p.hp+45)}
+if(key==='repair'){state.coreMax+=8;state.core=Math.min(state.coreMax,state.core+24)}
+if(key==='multi')p.perks[key]=Math.min(3,p.perks[key]);
+if(key==='manaWell'){p.maxMana+=4;if(p.manaRecoverStart!==null)p.manaRecoverStart=Math.min(p.manaRecoverStart,p.mana)}
+if(key==='summonSlots')p.perks[key]=Math.min(8,p.perks[key]);
+if(key==='bossLegion'){p.maxMana+=4;if(p.manaRecoverStart!==null)p.manaRecoverStart=Math.min(p.manaRecoverStart,p.mana)}
+if(perk.active){p.bossActive=key;p.bossCool=0}
+if(mode==='host')broadcast({type:'state',data:pack()})}
+function beginWave(){state.phase='fight';state.wave++;state.bossDefeatedWave=0;state.lastBossReward=false;
+state.remaining=Math.min(8+state.wave*3,68);state.timer=1;for(const p of state.players){p.picked=true;p.choices=[];p.hp=Math.min(p.maxHp,p.hp+18)}
+if(state.wave%5===0){const a=rnd(0,Math.PI*2);spawnEnemy('boss',a);
+spawnEnemy('tank',a+.38);spawnEnemy('runner',a-.38);
+announce('☠ TITÁN BOSS • '+state.wave+'. HULLÁM ☠')}else announce('HULLÁM '+state.wave)}
+function enterUpgrade(){state.phase='upgrade';state.breakId++;
+state.lastBossReward=state.wave%5===0&&state.bossDefeatedWave===state.wave;
+for(const p of state.players){p.choices=rollChoices(p,state.lastBossReward);p.picked=false;p.input.fire=false}
+announce(state.lastBossReward?'🏆 BOSS LEGYŐZVE! VÁLASSZ RITKA KÉPESSÉGET!':'✓ '+state.wave+'. HULLÁM TELJESÍTVE!');
+if(mode==='host')broadcast({type:'state',data:pack()})}
+function spawnEnemy(kind,angle){const t=ENEMY_TYPES[kind];
+const factor=kind==='boss'?(1+Math.max(0,Math.floor((state.wave-5)/5))*.45)*(1+Math.max(0,state.players.length-1)*.25):1+Math.floor(state.wave/7)*.35;
+const hp=Math.max(1,Math.round(t.hp*factor));
+state.enemies.push({id:++state.next,kind,x:Math.cos(angle)*24,z:Math.sin(angle)*24,hp,maxHp:hp,cool:0,shockTimer:kind==='boss'?5.8:0,shockWindup:0,reinforceTimer:kind==='boss'?8.5:0,reinforced:0,frozen:0})}
 
 function show(){ $('menu').classList.add('hidden');if(!state?.over)$('end').classList.add('hidden');for(const x of ['hud','team','tips','touch','perks','abilityHud'])$(x).classList.remove('hidden');fpsUi();$('code').textContent=room||'SOLO';$('invite').style.display=room?'':'none';$('again').style.display=mode==='client'?'none':''}
 function removeModel(g){scene.remove(g);
 if(g.userData.externalModel){if(g.userData.weaponGroup)g.userData.weaponGroup.traverse(o=>{o.geometry?.dispose();o.material?.dispose()});for(const o of g.children){if(o.isSprite){o.material.map?.dispose();o.material.dispose()}else if(o.userData?.abilityRune){o.geometry?.dispose();o.material?.dispose()}}return}
 g.traverse(o=>{o.geometry?.dispose();if(o.material){for(const m of (Array.isArray(o.material)?o.material:[o.material])){m.map?.dispose();m.dispose()}}})}
 function clearEffects(){for(const e of [...lasers,...particles]){scene.remove(e.obj);e.obj.geometry?.dispose();e.obj.material?.dispose()}lasers.length=0;particles.length=0}
-function reset(){fpsReleaseMouse();fpsGunRig.visible=false;fpsViewType='';fpsLastPos=null;fpsTouchLook=null;if(conn)try{conn.close()}catch{};if(peer)try{peer.destroy()}catch{};conn=null;peer=null;clients.clear();state=null;mode='menu';room='';localId='';for(const m of models.values())removeModel(m);models.clear();clearEffects();$('menu').classList.remove('hidden');for(const x of ['hud','team','tips','touch','end','upgrades','perks','bossbar','abilityHud'])$(x).classList.add('hidden');$('create').disabled=false;$('join').disabled=false;$('status').textContent='';upgradeView='';coreFlash=0;castTap=0;flashActive=false;$('flashOverlay').classList.add('hidden');$('summonHud').classList.add('hidden');keys.clear();fire=false;fpsUi()}
+function reset(){fpsReleaseMouse();fpsGunRig.visible=false;fpsViewType='';fpsLastPos=null;fpsTouchLook=null;if(conn)try{conn.close()}catch{};if(peer)try{peer.destroy()}catch{};conn=null;peer=null;clients.clear();state=null;mode='menu';room='';localId='';for(const m of models.values())removeModel(m);models.clear();clearEffects();$('menu').classList.remove('hidden');for(const x of ['hud','team','tips','touch','end','upgrades','perks','bossbar','abilityHud','bossSkillHud'])$(x).classList.add('hidden');$('create').disabled=false;$('join').disabled=false;$('status').textContent='';upgradeView='';coreFlash=0;castTap=0;flashActive=false;$('flashOverlay').classList.add('hidden');$('summonHud').classList.add('hidden');keys.clear();fire=false;fpsUi()}
 
 function fail(t){reset();$('status').textContent=t}
 function send(c,o){if(c?.open)try{c.send(o)}catch{}}
@@ -288,13 +354,15 @@ peer.on('connection',c=>{let joined=false;c.on('data',m=>{if(!m||mode!=='host'||
 if(m.type==='hello'&&!joined){if(state.players.length>=6){send(c,{type:'reject',message:'A szoba megtelt.'});setTimeout(()=>c.close(),150);return}joined=true;clients.set(c.peer,c);add(c.peer,m.name,m.skin,m.power);send(c,{type:'welcome',id:c.peer,room});send(c,{type:'state',data:pack()})}
 if(m.type==='upgrade'&&joined&&m.breakId===state.breakId){applyUpgrade(c.peer,m.index)}
 if(m.type==='flash'&&joined){const p=state.players.find(p=>p.id===c.peer);if(p?.power==='flash')castPower(p,!!m.perfect)}
+if(m.type==='bossSelect'&&joined){const p=state.players.find(p=>p.id===c.peer);if(p&&BOSS_UPGRADES[m.skill]?.active&&p.perks[m.skill])p.bossActive=m.skill}
+if(m.type==='bossUltimate'&&joined){const p=state.players.find(p=>p.id===c.peer);if(p)castBossUltimate(p)}
 if(m.type==='input'&&joined){const p=state.players.find(p=>p.id===c.peer);if(p)p.input={x:lim(+m.x||0,-1,1),z:lim(+m.z||0,-1,1),ax:lim(+m.ax||0,-60,60),az:lim(+m.az||0,-60,60),fire:!!m.fire,special:!!m.special,summonType:m.summonType==='rabbit'?'rabbit':'wolf',weapon:m.weapon==='sword'?'sword':'spear'}}});
 c.on('close',()=>{clients.delete(c.peer);if(state){state.players=state.players.filter(p=>p.id!==c.peer);state.summons=state.summons.filter(p=>p.owner!==c.peer)}})});
 peer.on('error',e=>fail('Nem sikerült megnyitni: '+e.type))}
 function startJoin(){fpsYaw=0;fpsPitch=-.035;const code=$('room').value.trim().toUpperCase();if(!/^[A-Z2-9]{6}$/.test(code)){$('status').textContent='Adj meg 6 karakteres szobakódot.';return}
 reset();mode='client';room=code;myName=safe($('name').value);$('join').disabled=true;$('status').textContent='Csatlakozás…';peer=new Peer();
 peer.on('open',()=>{conn=peer.connect('nnx3dfps-'+room.toLowerCase(),{reliable:true});conn.on('open',()=>send(conn,{type:'hello',name:myName,skin:selectedSkin,power:selectedPower}));
-conn.on('data',m=>{if(m.type==='reject')fail(m.message);if(m.type==='welcome'){localId=m.id;show()}if(m.type==='state'){state=m.data;if(localId)show()}if(m.type==='laser')laser(m.a,m.b,m.color,m.hit);if(m.type==='corehit')coreImpact(m.x,m.z,m.boss);if(m.type==='powerfx')powerVisual(m.effect);if(m.type==='melee')meleeVisual(m.effect)});
+conn.on('data',m=>{if(m.type==='reject')fail(m.message);if(m.type==='welcome'){localId=m.id;show()}if(m.type==='state'){state=m.data;if(localId)show()}if(m.type==='laser')laser(m.a,m.b,m.color,m.hit);if(m.type==='corehit')coreImpact(m.x,m.z,m.boss);if(m.type==='powerfx')powerVisual(m.effect);if(m.type==='melee')meleeVisual(m.effect);if(m.type==='bossattack')visualBossAttack(m.effect);if(m.type==='bossultimate')visualBossUltimate(m.effect)});
 conn.on('close',()=>{if(mode==='client')fail('A házigazda kilépett.')})});peer.on('error',e=>fail(e.type==='peer-unavailable'?'Nem található aktív szoba.':'Hálózati hiba: '+e.type))}
 
 /* First-person input and camera remain client-side; combat/waves still run on the host. */
@@ -371,10 +439,13 @@ function laser(a,b,color,hit=false){const from=new THREE.Vector3(a.x,1.35,a.z),t
 for(const [r,opacity]of [[.13,.25],[.045,.95]]){const obj=new THREE.Mesh(new THREE.CylinderGeometry(r,r,length,8,1),new THREE.MeshBasicMaterial({color:r<.05?0xffffff:color,transparent:true,opacity,depthWrite:false,blending:THREE.AdditiveBlending}));obj.position.copy(from).addScaledVector(delta,.5);obj.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),direction);scene.add(obj);lasers.push({obj,life:r<.05?.14:.21,max:r<.05?.14:.21,base:opacity})}
 burst(a.x,a.z,color,3,.45);if(hit){burst(b.x,b.z,color,7,.55);ring(b.x,b.z,color,.35)}}
 
-function damageEnemy(e,damage,owner){if(!state.enemies.includes(e))return;
-e.hp-=damage;
+function damageEnemy(e,damage,owner){if(!state.enemies.includes(e)||!owner)return;
+const actual=Math.min(Math.max(.01,damage),Math.max(0,e.hp));e.hp-=damage;
+if(owner.perks?.bossVampire&&owner.hp>0)owner.hp=Math.min(owner.maxHp,owner.hp+actual*.22*(owner.perks.bossVampire||0));
 if(e.hp<=0){state.enemies=state.enemies.filter(x=>x!==e);owner.kills++;
-if(e.kind==='boss'){ring(e.x,e.z,0xcf65ff,4);burst(e.x,e.z,0xff8bdf,40,1.8);announce('🏆 BOSS LEGYŐZVE!')}
+if(e.kind==='boss'){state.bossDefeatedWave=state.wave;
+ring(e.x,e.z,0xcf65ff,4);burst(e.x,e.z,0xff8bdf,42,1.8);
+announce('🏆 TITÁN LEGYŐZVE! KÜLÖNLEGES KÉPESSÉG JÁR A HULLÁM VÉGÉN!')}
 else burst(e.x,e.z,ENEMY_TYPES[e.kind||'normal'].color,8,.7)}}
 // Cinematic but bounded spell visuals; every primitive is cleaned up by frame().
 function fxItem(obj,life=.45,type='glow',v=null){if(particles.length>345){obj.geometry?.dispose();obj.material?.dispose();return}
@@ -407,7 +478,7 @@ for(const pt of fx.targets||[]){burst(pt.x,pt.z,kind==='shadow'?0xb186ff:0x364ce
 }
 function performMelee(p){
 const shadow=p.power==='shadow',radius=shadow?(p.weapon==='sword'?3.3:4.55):2.65;
-const damage= (shadow?(p.weapon==='sword'?5:4.25):3)+(p.perks.damage||0);
+const damage=(shadow?(p.weapon==='sword'?5:4.25):3)+(p.perks.damage||0)+(p.perks.bossOverdrive||0)*3;
 const dirX=Math.sin(p.angle),dirZ=Math.cos(p.angle),hit=[];
 for(const e of [...state.enemies]){
 const dx=e.x-p.x,dz=e.z-p.z,dist=Math.hypot(dx,dz);
@@ -456,13 +527,13 @@ shake=Math.max(shake,.20)}
 }
 function spawnSummon(p,kind){
 if(!state||p.power!=='shadow'||state.phase!=='fight')return false;
-const valid=kind==='rabbit'?'rabbit':'wolf',cost=valid==='wolf'?4:2,limit=2+(p.perks.summonSlots||0);
+const valid=kind==='rabbit'?'rabbit':'wolf',cost=valid==='wolf'?4:2,limit=2+(p.perks.summonSlots||0)+2*(p.perks.bossLegion||0);
 if(p.mana<cost||state.summons.filter(x=>x.owner===p.id&&x.hp>0).length>=limit)return false;
 p.mana-=cost;p.powerCool=1.05;
-const buff=p.perks.summonFangs||0,baseHp=valid==='wolf'?52:19;
-const hp=baseHp*(1+buff*.35),angle=p.angle+rnd(-.7,.7);
+const buff=p.perks.summonFangs||0,legion=p.perks.bossLegion||0,baseHp=valid==='wolf'?64:24;
+const hp=baseHp*(1+buff*.35+legion*.38),angle=p.angle+rnd(-.7,.7);
 const creature={id:++state.nextSummon,owner:p.id,kind:valid,x:lim(p.x+Math.sin(angle)*2,-24,24),z:lim(p.z+Math.cos(angle)*2,-24,24),
-hp,maxHp:hp,damage:(valid==='wolf'?6:2.2)*(1+buff*.32),speed:valid==='wolf'?4.2:5.6,cool:.3};
+hp,maxHp:hp,damage:(valid==='wolf'?6.6:2.5)*(1+buff*.32+legion*.3),speed:valid==='wolf'?4.2:5.6,cool:.3,angle};
 state.summons.push(creature);p.manaRecharge=0;p.manaRecoverStart=null;
 const fx={type:'shadow',x:creature.x,z:creature.z,kind:valid,targets:[]};
 powerVisual(fx);if(mode==='host')broadcast({type:'powerfx',effect:fx});
@@ -478,7 +549,10 @@ const attackTarget=target&&Math.hypot(target.x-creature.x,target.z-creature.z)<1
 const aim=attackTarget||{x:owner.x+Math.sin(owner.angle)*1.5,z:owner.z+Math.cos(owner.angle)*1.5};
 const dx=aim.x-creature.x,dz=aim.z-creature.z,dist=Math.hypot(dx,dz)||1;
 if(dist>(attackTarget?(creature.kind==='wolf'?1.22:1.1):1.6)){
-creature.x=lim(creature.x+dx/dist*creature.speed*dt,-25,25);creature.z=lim(creature.z+dz/dist*creature.speed*dt,-25,25)}
+const speed=creature.speed*dt;const oldX=creature.x,oldZ=creature.z;
+creature.x=lim(creature.x+dx/dist*speed,-25,25);creature.z=lim(creature.z+dz/dist*speed,-25,25);
+if(Math.hypot(creature.x-oldX,creature.z-oldZ)>.001)creature.angle=Math.atan2(creature.x-oldX,creature.z-oldZ)}
+else if(attackTarget&&dist>.25)creature.angle=Math.atan2(dx,dz);
 if(attackTarget&&dist<1.7&&creature.cool<=0){creature.cool=creature.kind==='wolf'?.68:.47;
 const hit=attackTarget;const color=creature.kind==='wolf'?0xd19cff:0x93e9ff;
 burst(hit.x,hit.z,color,4,.55);damageEnemy(hit,creature.damage,owner)}
@@ -493,6 +567,15 @@ function finishFlash(forceFail=false){if(!flashActive)return;const perfect=!forc
 flashActive=false;$('flashOverlay').classList.add('hidden');
 if(mode==='client')send(conn,{type:'flash',perfect});
 else{const p=state?.players?.find(p=>p.id===localId);if(p?.power==='flash')castPower(p,perfect)}}
+function cycleBossSkill(){const me=state?.players?.find(p=>p.id===localId);
+if(!me)return;const skills=Object.keys(BOSS_UPGRADES).filter(id=>BOSS_UPGRADES[id].active&&me.perks?.[id]);
+if(skills.length<2)return;
+const index=skills.indexOf(me.bossActive),next=skills[(index+1+skills.length)%skills.length];
+me.bossActive=next;if(mode==='client')send(conn,{type:'bossSelect',skill:next});hud()}
+function triggerBossSkill(){if(!state||state.phase!=='fight'||!localId)return;
+const me=state.players.find(p=>p.id===localId);
+if(!me||me.hp<=0||me.bossCool>0||!BOSS_UPGRADES[me.bossActive]?.active||!me.perks?.[me.bossActive])return;
+if(mode==='client')send(conn,{type:'bossUltimate'});else castBossUltimate(me)}
 function handleAbilityTap(){if(!state||!localId||state.phase!=='fight')return;
 const p=state.players.find(p=>p.id===localId);if(!p||p.hp<=0)return;
 if(p.power==='flash'){if(flashActive){finishFlash();return}if(p.powerCool>0)return;flashActive=true;flashStart=performance.now();fpsReleaseMouse();$('flashOverlay').classList.remove('hidden');return}
@@ -516,14 +599,60 @@ powerVisual(fx);if(mode==='host')broadcast({type:'powerfx',effect:fx});
 if(p.id===localId)announce(type==='flash'?(flashPerfect?'🔴 FEKETE VILLANÁS!':'🔵 GYENGE TALÁLAT'):(power.name.toUpperCase()+' ✦'));
 return true}
 function announce(s){$('announce').textContent=s;announcement=performance.now()+1900}
+function visualBossAttack(effect){if(!effect)return;const {x,z,phase}=effect;
+if(phase==='warn'){fxSeal(x,z,0xff3d82,6.4,1.35);ring(x,z,0xff4a7b,6.2);fxSphere(x,z,0x9831ae,1.55,.65);return}
+fxStorm(x,z,0xff477d,6.0);burst(x,z,0xff78af,28,1.4);shake=Math.max(shake,.8)}
+function bossShockwave(e){if(!state||!state.enemies.includes(e))return;const range=6.4;
+const effect={x:e.x,z:e.z,phase:'impact'};visualBossAttack(effect);
+if(mode==='host')broadcast({type:'bossattack',effect});
+for(const p of state.players){if(p.hp>0&&Math.hypot(p.x-e.x,p.z-e.z)<=range){
+const guard=p.guardTimer>0?.32:1;p.hp=Math.max(0,p.hp-(19+Math.floor(state.wave/5)*2)*guard)}}
+for(const pet of state.summons){if(pet.hp>0&&Math.hypot(pet.x-e.x,pet.z-e.z)<=range)pet.hp=Math.max(0,pet.hp-21)}
+if(Math.hypot(e.x,e.z)<=range+2.2){state.core=Math.max(0,state.core-16*(state.coreGuardTimer>0?.28:1));
+coreImpact(e.x,e.z,true);if(mode==='host')broadcast({type:'corehit',x:e.x,z:e.z,boss:true})}}
+function tickBossAbilities(e,dt){if(e.kind!=='boss'||e.hp<=0)return;
+e.frozen=Math.max(0,(e.frozen||0)-dt);
+if(e.frozen>0)return;
+if(e.shockWindup>0){e.shockWindup-=dt;if(e.shockWindup<=0){e.shockWindup=0;bossShockwave(e)}}
+else{e.shockTimer-=dt;if(e.shockTimer<=0){e.shockTimer=7.2;
+e.shockWindup=1.15;const effect={x:e.x,z:e.z,phase:'warn'};visualBossAttack(effect);
+if(mode==='host')broadcast({type:'bossattack',effect})}}
+e.reinforceTimer-=dt;
+if(e.reinforceTimer<=0&&e.reinforced<6&&state.enemies.length<28){
+e.reinforceTimer=10;e.reinforced+=2;
+for(let j=0;j<2;j++){const angle=j*Math.PI+Math.random()*1.2;
+spawnEnemy(j?'runner':'tank',angle);
+const spawned=state.enemies[state.enemies.length-1];
+spawned.x=lim(e.x+Math.cos(angle)*3,-24,24);
+spawned.z=lim(e.z+Math.sin(angle)*3,-24,24)}
+announce('☠ A BOSS ERŐSÍTÉST HÍVOTT!')}}
+function visualBossUltimate(fx){if(!fx)return;
+const {x,z,kind}=fx;
+if(kind==='bossMeteor'){fxStorm(x,z,0xff8d32,6.1);fxSphere(x,z,0xff752f,3,.55);fxPetals(x,z,0xffc36a,27);shake=Math.max(shake,.55)}
+if(kind==='bossFreeze'){fxSeal(x,z,0x86d9ff,9,.95);fxSphere(x,z,0x8ce9ff,3.8,.52);for(const radius of [3,5,8])ring(x,z,0xc3f9ff,radius);fxPetals(x,z,0xa5edff,35)}
+if(kind==='bossAegis'){fxSeal(x,z,0x9dffbf,8,.9);fxSphere(x,z,0x5cffac,4,.67);fxPetals(x,z,0xc3ffe5,28);fxSeal(0,0,0x9dffbf,3.1,.8)}}
+function castBossUltimate(p){if(!state||state.phase!=='fight'||p.hp<=0||p.bossCool>0)return false;
+const skill=p.bossActive;if(!BOSS_UPGRADES[skill]?.active||!(p.perks?.[skill]>0))return false;
+p.bossCool=Math.max(12,BOSS_UPGRADES[skill].cooldown-(p.perks[skill]-1)*2.5);
+const x=p.x,z=p.z,lv=p.perks[skill],fx={kind:skill,x,z,targets:[]};
+if(skill==='bossMeteor'){const dx=Math.sin(p.angle),dz=Math.cos(p.angle),at={x:lim(x+dx*8,-24,24),z:lim(z+dz*8,-24,24)};
+fx.x=at.x;fx.z=at.z;
+for(const e of [...state.enemies])if(Math.hypot(e.x-at.x,e.z-at.z)<=5.3+ENEMY_TYPES[e.kind||'normal'].radius*.4)damageEnemy(e,15+(lv-1)*5,p)}
+if(skill==='bossFreeze'){for(const e of state.enemies)if(Math.hypot(e.x-x,e.z-z)<8.5)e.frozen=Math.max(e.frozen||0,e.kind==='boss'?2.4:5.5+(lv-1)*.75)}
+if(skill==='bossAegis'){const seconds=7+(lv-1)*1.5;
+for(const ally of state.players){if(Math.hypot(ally.x-x,ally.z-z)<14){ally.guardTimer=Math.max(ally.guardTimer||0,seconds);ally.hp=Math.min(ally.maxHp,ally.hp+18+lv*6);fx.targets.push({x:ally.x,z:ally.z})}}
+state.coreGuardTimer=Math.max(state.coreGuardTimer,seconds);state.core=Math.min(state.coreMax,state.core+15+lv*7)}
+visualBossUltimate(fx);if(mode==='host')broadcast({type:'bossultimate',effect:fx});
+if(p.id===localId)announce('🌟 BOSS EREKLYE: '+BOSS_UPGRADES[skill].name.toUpperCase());return true}
 function tick(dt){if(!state||state.over)return;
 if(state.wave===0)beginWave();
 if(state.phase==='upgrade'){if(state.players.length&&state.players.every(p=>p.picked))beginWave();return}
-state.timer-=dt;
+state.timer-=dt;state.coreGuardTimer=Math.max(0,(state.coreGuardTimer||0)-dt);
+
 if(state.remaining>0&&state.timer<=0){const roll=Math.random(),kind=roll<.35?'runner':roll<.68?'normal':'tank';spawnEnemy(kind,rnd(0,Math.PI*2));state.remaining--;state.timer=Math.max(.2,.65-state.wave*.008)}
 for(const p of state.players){const i=p.id===localId?input():p.input;
-if(p.hp<=0){p.powerCool=Math.max(0,p.powerCool-dt);p.revive=(p.revive||0)+dt;if(p.revive>=3){p.hp=p.maxHp;p.x=rnd(-5,5);p.z=rnd(-5,5);p.revive=0}continue}
-p.revive=0;p.powerCool=Math.max(0,p.powerCool-dt);
+if(p.hp<=0){p.powerCool=Math.max(0,p.powerCool-dt);p.bossCool=Math.max(0,(p.bossCool||0)-dt);p.revive=(p.revive||0)+dt;if(p.revive>=3){p.hp=p.maxHp;p.x=rnd(-5,5);p.z=rnd(-5,5);p.revive=0}continue}
+p.revive=0;p.powerCool=Math.max(0,p.powerCool-dt);p.bossCool=Math.max(0,(p.bossCool||0)-dt);p.guardTimer=Math.max(0,(p.guardTimer||0)-dt);
 if(p.power==='shadow'){
 const owned=(state.summons||[]).some(s=>s.owner===p.id&&s.hp>0);
 if(owned){p.manaRecharge=0;p.manaRecoverStart=null}
@@ -536,7 +665,7 @@ p.mana=Math.min(p.maxMana,p.manaRecoverStart+(p.maxMana-p.manaRecoverStart)*(p.m
 p.x=lim(p.x+i.x*8*Math.pow(1.14,p.perks.speed||0)*dt,-25,25);p.z=lim(p.z+i.z*8*Math.pow(1.14,p.perks.speed||0)*dt,-25,25);p.angle=Math.atan2(i.ax-p.x,i.az-p.z);if(p.power==='shadow'){p.summonType=i.summonType==='rabbit'?'rabbit':'wolf';p.weapon=i.weapon==='sword'?'sword':'spear'}p.cool=Math.max(0,p.cool-dt);
 if(i.special&&p.powerCool<=0&&state.phase==='fight')castPower(p);
 if(p.perks.regen)p.hp=Math.min(p.maxHp,p.hp+dt*p.perks.regen*1.4);
-if(i.fire&&p.cool===0){if(p.power==='shadow'||p.power==='flash'){p.cool=Math.max(.18,(p.power==='shadow'?.39:.31)*Math.pow(.84,p.perks.rapid||0));performMelee(p)}else{p.cool=Math.max(.055,.22*Math.pow(.84,p.perks.rapid||0));const shots=1+Math.min(3,p.perks.multi||0),damage=1+(p.perks.damage||0),penetration=1+(p.perks.pierce||0),color=colors[state.players.indexOf(p)%6];
+if(i.fire&&p.cool===0){if(p.power==='shadow'||p.power==='flash'){p.cool=Math.max(.17,(p.power==='shadow'?.39:.31)*Math.pow(.84,p.perks.rapid||0)*Math.pow(.82,p.perks.bossOverdrive||0));performMelee(p)}else{p.cool=Math.max(.05,.22*Math.pow(.84,p.perks.rapid||0)*Math.pow(.82,p.perks.bossOverdrive||0));const shots=1+Math.min(3,p.perks.multi||0),damage=1+(p.perks.damage||0)+3*(p.perks.bossOverdrive||0),penetration=1+(p.perks.pierce||0),color=colors[state.players.indexOf(p)%6];
 for(let j=0;j<shots;j++){const angle=p.angle+(j-(shots-1)/2)*.045,dx=Math.sin(angle),dz=Math.cos(angle),hits=[];
 for(const e of state.enemies){const ex=e.x-p.x,ez=e.z-p.z,along=ex*dx+ez*dz,dist=Math.abs(ex*dz-ez*dx),radius=ENEMY_TYPES[e.kind||'normal'].radius;if(along>0&&along<23&&dist<radius+.3)hits.push({e,along})}
 hits.sort((a,b)=>a.along-b.along);const struck=hits.slice(0,penetration),last=struck.at(-1),to=last?{x:last.e.x,z:last.e.z}:{x:p.x+dx*23,z:p.z+dz*23},from={x:p.x,z:p.z};
@@ -546,13 +675,16 @@ for(const h of struck)damageEnemy(h.e,damage,p)
 tickSummons(dt);
 for(const e of [...state.enemies]){if(!state.enemies.includes(e))continue;const type=ENEMY_TYPES[e.kind||'normal'];
 if(e.dot>0){e.dot=Math.max(0,e.dot-dt);const owner=state.players.find(p=>p.id===e.dotOwner);if(owner)damageEnemy(e,dt*2.2,owner);if(!state.enemies.includes(e))continue}
+if(e.kind==='boss')tickBossAbilities(e,dt);
+else e.frozen=Math.max(0,(e.frozen||0)-dt);
+if(e.frozen>0||e.shockWindup>0)continue;
 let target=null,dist=Infinity;
 for(const p of state.players){const d=Math.hypot(p.x-e.x,p.z-e.z);if(p.hp>0&&d<dist){dist=d;target=p}}
 for(const friend of state.summons){if(friend.hp<=0)continue;const d=Math.hypot(friend.x-e.x,friend.z-e.z);if(d<dist){dist=d;target=friend}}
 if(dist>4.5)target=null;const tx=target?target.x:0,tz=target?target.z:0,dx=tx-e.x,dz=tz-e.z,d=Math.hypot(dx,dz)||1;
 if(d>(target?1.5:type.radius+1.5)){e.x+=dx/d*(type.speed+Math.min(state.wave*.06,1.2))*dt*(e.slow>0?.23:1);e.z+=dz/d*(type.speed+Math.min(state.wave*.06,1.2))*dt*(e.slow>0?.45:1)}
 e.cool-=dt;e.slow=Math.max(0,(e.slow||0)-dt);
-if(d< (target?1.7:type.radius+1.7)&&e.cool<=0){if(target){target.hp=Math.max(0,target.hp-type.damage*(target.kind==='wolf'||target.kind==='rabbit'?2:2.4))}else{state.core=Math.max(0,state.core-type.damage);coreImpact(e.x,e.z,e.kind==='boss');if(mode==='host')broadcast({type:'corehit',x:e.x,z:e.z,boss:e.kind==='boss'})}e.cool=type.period}}
+if(d< (target?1.7:type.radius+1.7)&&e.cool<=0){if(target){target.hp=Math.max(0,target.hp-type.damage*(target.kind==='wolf'||target.kind==='rabbit'?2:2.4)*(target.guardTimer>0?.34:1))}else{state.core=Math.max(0,state.core-type.damage*(state.coreGuardTimer>0?.28:1));coreImpact(e.x,e.z,e.kind==='boss');if(mode==='host')broadcast({type:'corehit',x:e.x,z:e.z,boss:e.kind==='boss'})}e.cool=type.period}}
 state.summons=state.summons.filter(x=>x.hp>0);
 if(state.core<=0){state.over=true;state.phase='over';if(mode==='host')broadcast({type:'state',data:pack()});return}
 if(state.remaining===0&&state.enemies.length===0)enterUpgrade()}
@@ -788,6 +920,7 @@ for(const pet of state.summons||[]){const key='s'+pet.id;active.add(key);let m=m
 if(!m){m=makeSummonModel(pet);m.position.set(pet.x,0,pet.z);models.set(key,m)}
 m.position.x+=(pet.x-m.position.x)*.36;m.position.z+=(pet.z-m.position.z)*.36;
 m.position.y=Math.sin(performance.now()*.005+pet.id)*.08;
+if(Number.isFinite(pet.angle)){const difference=Math.atan2(Math.sin(pet.angle-m.rotation.y),Math.cos(pet.angle-m.rotation.y));m.rotation.y+=difference*.28}
 const proportion=Math.max(.02,Math.min(1,pet.hp/pet.maxHp));m.userData.hp.scale.x=proportion;m.userData.hp.position.x=-(1-proportion)*.58;
 m.userData.aura.rotation.z+=.04}
 for(const[k,m]of models)if(!active.has(k)){removeModel(m);models.delete(k)}
@@ -795,15 +928,28 @@ for(const[k,m]of models)if(!active.has(k)){removeModel(m);models.delete(k)}
 
 function refreshUpgradeUI(){if(!state||!localId){$('upgrades').classList.add('hidden');upgradeView='';return}
 const me=state.players.find(p=>p.id===localId);if(state.phase!=='upgrade'||!me){$('upgrades').classList.add('hidden');upgradeView='';return}
-const key=state.breakId+':'+localId+':'+me.picked;if(upgradeView!==key){upgradeView=key;$('options').replaceChildren();$('upgradeTitle').textContent=me.picked?'FEJLESZTÉS KIVÁLASZTVA':'VÁLASSZ 1 FEJLESZTÉST!';
-$('upgradeHint').textContent=me.picked?'Várakozás a többi játékosra…':'Válassz egyet a három fejlesztés közül. A következő hullám minden játékos választása után indul.';
-if(!me.picked)me.choices.forEach((id,i)=>{const perk=UPGRADES[id];if(!perk)return;const b=document.createElement('button');b.className='option';const icon=document.createElement('div');icon.className='emblem';icon.textContent=perk.icon;const strong=document.createElement('strong');strong.textContent=perk.name;const info=document.createElement('small');info.textContent=perk.desc;const lvl=document.createElement('small');lvl.textContent='Jelenlegi szint: '+(me.perks[id]||0);b.append(icon,strong,info,lvl);b.onclick=()=>chooseUpgrade(i);$('options').append(b)})}
+const key=state.breakId+':'+localId+':'+me.picked;if(upgradeView!==key){upgradeView=key;$('options').replaceChildren();$('upgradeTitle').textContent=me.picked?'FEJLESZTÉS KIVÁLASZTVA':state.lastBossReward?'🏆 BOSS EREKLYE – VÁLASSZ!':'VÁLASSZ 1 FEJLESZTÉST!';
+$('upgrades').classList.toggle('boss-reward',!!state.lastBossReward);
+$('upgradeHint').textContent=me.picked?'Várakozás a többi játékosra…':(state.lastBossReward?'A legyőzött boss három különleges ereklyét hagyott hátra. Válassz EGY ritka képességet!':'Válassz egyet a három fejlesztés közül. A következő hullám minden játékos választása után indul.');
+if(!me.picked)me.choices.forEach((id,i)=>{const perk=getUpgrade(id);if(!perk)return;const b=document.createElement('button');b.className=state.lastBossReward?'option boss-option':'option';const icon=document.createElement('div');icon.className='emblem';icon.textContent=perk.icon;const strong=document.createElement('strong');strong.textContent=perk.name;const info=document.createElement('small');info.textContent=perk.desc;const lvl=document.createElement('small');lvl.textContent='Jelenlegi szint: '+(me.perks[id]||0);b.append(icon,strong,info,lvl);b.onclick=()=>chooseUpgrade(i);$('options').append(b)})}
 $('upgrades').classList.remove('hidden');fpsReleaseMouse()}
 function hud(){if(!state)return;$('wave').textContent=state.wave;$('health').textContent=Math.ceil(state.core)+' / '+state.coreMax;const me=state.players.find(p=>p.id===localId);$('hp').textContent=me?Math.ceil(me.hp):0;
 $('team').replaceChildren();for(const p of state.players){const line=document.createElement('div');line.textContent=(p.id===localId?'◆ ':'')+p.name+' — '+p.kills+' ✦'+(state.phase==='upgrade'?(p.picked?' ✓':' …'):'');$('team').append(line)}
-$('perklist').replaceChildren();if(me){const items=Object.entries(me.perks||{});if(!items.length)$('perklist').textContent='Még nincs fejlesztésed.';for(const [id,lvl]of items){if(!UPGRADES[id])continue;const d=document.createElement('div');d.className='perk';const name=document.createElement('div');name.textContent=UPGRADES[id].icon+' '+UPGRADES[id].name;const level=document.createElement('span');level.textContent='Lv.'+lvl;d.append(name,level);$('perklist').append(d)}}
-if(me){const activeShadow=me.power==='shadow';$('summonHud').classList.toggle('hidden',!activeShadow);
-if(activeShadow){const kind=summonChoice,cost=kind==='wolf'?4:2,alive=(state.summons||[]).filter(p=>p.owner===me.id&&p.hp>0).length,limit=2+(me.perks.summonSlots||0);
+$('perklist').replaceChildren();if(me){const items=Object.entries(me.perks||{});if(!items.length)$('perklist').textContent='Még nincs fejlesztésed.';for(const [id,lvl]of items){const perk=getUpgrade(id);if(!perk)continue;const d=document.createElement('div');d.className='perk';if(BOSS_UPGRADES[id])d.classList.add('boss-perk');const name=document.createElement('div');name.textContent=perk.icon+' '+perk.name;const level=document.createElement('span');level.textContent='Lv.'+lvl;d.append(name,level);$('perklist').append(d)}}
+if(me){
+const learned=Object.keys(BOSS_UPGRADES).filter(id=>BOSS_UPGRADES[id].active&&me.perks?.[id]);
+const activeRelic=learned.includes(me.bossActive)?me.bossActive:learned[0];
+$('bossSkillHud').classList.toggle('hidden',learned.length===0);
+if(activeRelic){const perk=BOSS_UPGRADES[activeRelic],remain=Math.max(0,me.bossCool||0);
+$('bossSkillSymbol').textContent=perk.icon;$('bossSkillName').textContent=perk.name;
+$('bossSkillCool').textContent=remain>0?remain.toFixed(1)+' mp újratöltés':'F • AKTIVÁLHATÓ';
+$('bossSkillFill').style.width=(100*(1-remain/Math.max(12,perk.cooldown-(me.perks[activeRelic]-1)*2.5)))+'%';
+$('useBossSkill').disabled=state.phase!=='fight'||me.hp<=0||remain>0;
+$('cycleBossSkill').style.display=learned.length>1?'':'none';
+}
+$('bossSkillHud').classList.toggle('has-summons',me.power==='shadow');
+const activeShadow=me.power==='shadow';$('summonHud').classList.toggle('hidden',!activeShadow);
+if(activeShadow){const kind=summonChoice,cost=kind==='wolf'?4:2,alive=(state.summons||[]).filter(p=>p.owner===me.id&&p.hp>0).length,limit=2+(me.perks.summonSlots||0)+2*(me.perks.bossLegion||0);
 $('summonLabel').textContent=(kind==='wolf'?'🐺 Farkas':'🐇 Nyuszi')+' ('+cost+' mana)';
 $('manaFill').style.width=(100*me.mana/me.maxMana)+'%';
 const recovering=alive===0&&me.mana<me.maxMana;
@@ -812,7 +958,8 @@ $('summonCount').textContent='Idézettek: '+alive+' / '+limit;$('toggleWeapon').
 const power=POWERS[me.power]||POWERS.purple,remain=Math.max(0,me.powerCool||0);
 $('abilitySymbol').textContent=power.icon;$('abilityName').textContent=power.name;
 $('abilityTimer').textContent=remain>0?remain.toFixed(1)+' mp újratöltés':(me.power==='flash'?'Q • IDŐZÍTŐ SÁV':me.power==='shadow'?'Q • IDÉZÉS':'Q • AKTIVÁLHATÓ');
-$('abilityFill').style.width=(100*(1-remain/power.cooldown))+'%';$('useAbility').disabled=state.phase!=='fight'||remain>0||me.hp<=0||(me.power==='shadow'&&(me.mana<(summonChoice==='wolf'?4:2)||(state.summons||[]).filter(x=>x.owner===me.id).length>=2+(me.perks.summonSlots||0)))}
+$('abilityFill').style.width=(100*(1-remain/power.cooldown))+'%';$('useAbility').disabled=state.phase!=='fight'||remain>0||me.hp<=0||(me.power==='shadow'&&(me.mana<(summonChoice==='wolf'?4:2)||(state.summons||[]).filter(x=>x.owner===me.id).length>=2+(me.perks.summonSlots||0)+2*(me.perks.bossLegion||0)))}
+if(!me)$('bossSkillHud').classList.add('hidden');
 const boss=state.enemies.find(e=>e.kind==='boss');$('bossbar').classList.toggle('hidden',!boss);if(boss){const v=Math.max(0,boss.hp/boss.maxHp*100);$('bossfill').style.width=v+'%';$('bosshp').textContent=Math.ceil(v)+'%'}
 refreshUpgradeUI();if(state.over){fpsReleaseMouse();$('upgrades').classList.add('hidden');$('end').classList.remove('hidden');$('result').textContent='Elért hullám: '+state.wave+' • Csapat pontszám: '+state.players.reduce((n,p)=>n+p.kills,0)}
 if(performance.now()>announcement)$('announce').textContent=''}
@@ -836,6 +983,8 @@ $('invite').onclick=async()=>{const url=new URL(location.href);url.searchParams.
 addEventListener('keydown',e=>{let k=e.key.toLowerCase();if(k==='q'&&mode!=='menu'){e.preventDefault();if(!e.repeat)handleAbilityTap();return}
 if(k==='r'&&mode!=='menu'){e.preventDefault();if(!e.repeat)toggleSummonChoice();return}
 if(k==='t'&&mode!=='menu'){e.preventDefault();if(!e.repeat)toggleShadowWeapon();return}
+if(k==='f'&&mode!=='menu'){e.preventDefault();if(!e.repeat)triggerBossSkill();return}
+if(k==='g'&&mode!=='menu'){e.preventDefault();if(!e.repeat)cycleBossSkill();return}
 if(['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright'].includes(k)&&mode!=='menu'){e.preventDefault();keys.add(k.replace('arrowup','w').replace('arrowdown','s').replace('arrowleft','a').replace('arrowright','d'))}});
 addEventListener('keyup',e=>keys.delete(e.key.toLowerCase().replace('arrowup','w').replace('arrowdown','s').replace('arrowleft','a').replace('arrowright','d')));
 $('c').onpointerdown=e=>{if(mode==='menu')return;
@@ -849,7 +998,7 @@ fpsYaw-=dx*.007;fpsPitch=lim(fpsPitch-dy*.006,-1.15,1.1);
 fpsTouchLook.x=e.clientX;fpsTouchLook.y=e.clientY}};
 for(const b of document.querySelectorAll('[data-k]')){const k=b.dataset.k;b.onpointerdown=e=>{e.preventDefault();keys.add(k);b.setPointerCapture(e.pointerId)};b.onpointerup=()=>keys.delete(k);b.onpointercancel=()=>keys.delete(k)}
 $('fire').onpointerdown=e=>{fire=true;fpsKick=.16;$('fire').setPointerCapture(e.pointerId)};$('fire').onpointerup=()=>fire=false;
-$('useAbility').onclick=handleAbilityTap;$('flashStop').onclick=handleAbilityTap;$('toggleSummon').onclick=toggleSummonChoice;$('toggleWeapon').onclick=toggleShadowWeapon;
+$('useAbility').onclick=handleAbilityTap;$('flashStop').onclick=handleAbilityTap;$('toggleSummon').onclick=toggleSummonChoice;$('toggleWeapon').onclick=toggleShadowWeapon;$('useBossSkill').onclick=triggerBossSkill;$('cycleBossSkill').onclick=cycleBossSkill;
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
 const q=new URLSearchParams(location.search).get('room');if(q&&/^[A-Z2-9]{6}$/i.test(q)){$('room').value=q.toUpperCase();$('status').textContent='Meghívót kaptál. Add meg a neved, majd csatlakozz!'}
 </script></html>
