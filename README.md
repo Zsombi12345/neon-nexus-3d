@@ -1,37 +1,57 @@
-# NEON NEXUS 3D — Multiplayer Wave Survival
+# NEON NEXUS 3D — Anime Edition v3.0.0
 
-3D sci-fi browser game: defend a central crystal with up to six players and survive increasingly difficult drone waves.
+A coop sci-fi 3D browser-based wave-survival game: defend the crystal against drones, upgrade your skills and survive a boss every 10 waves.
 
 **Play online:** https://zsombi12345.github.io/neon-nexus-3d/
 
-## New in v2
-- **3 upgrades at the end of every wave:** pick one upgrade per player. The next round waits for all active players to choose.
-- **8 stackable upgrades:** attack speed, damage, movement speed, multishot, max health, health regeneration, piercing shots and crystal repair.
-- Your selected upgrades appear on the right side of the screen with their levels.
-- Player names and live HP bars above characters.
-- Bright dual-layer plasma beams, impact sparks, rings and crystal attack warning flashes.
-- **Boss encounter every 10 waves**, with a large boss model and dedicated health bar.
-- Enemy varieties: fast cyan runners (low HP), pink standard drones, orange heavy drones (slower, more durable).
+## Anime Edition v3 features
+
+### Pick your look BEFORE starting
+Four original, anime-styled cosplay outfits inspired by the fashion and cosplay atmosphere of **My Dress-Up Darling**:
+- Marin-inspired gyaru: blonde hair, school-style outfit and pink ribbon
+- Shizuku-inspired gothic cosplay: dark hair and violet-black fashion
+- Rizu-inspired anime idol: sky-blue hair and bright performance outfit
+- Marin-inspired streetwear: pastel pink clothes and light hair
+
+These are game-made 3D character designs, not copied artwork or official licensed assets. Everyone in the room can see the skin you pick. The browser remembers your selection.
+
+### Pick a Jujutsu Kaisen-inspired cursed technique
+Pick one ability in the main menu; use it with **Q** in battle. Each ability has a cooldown:
+- **Purple Energy Break (9s):** powerful beam through multiple enemies
+- **Infinity Field (12s):** knock back and slow surrounding drones
+- **Shadow Summoning (10s):** spectral wolves target up to five nearby enemies
+- **Black Flash (8s):** heavy area-of-effect attack
+- **Reverse Energy (17s):** heal nearby teammates and repair the crystal
+
+Effects are performed by the authoritative host and synchronized over WebRTC in multiplayer.
+
+### Visuals
+- Anime-inspired toon-shaded characters and drones
+- Character-specific hair, outfits and accessories with hand-built Three.js geometry
+- Neon magical sigils and combat particles
+- Name and HP bar above every player
+- **Version v3.0.0** shown in the bottom-left corner
+- Abilities HUD showing cooldown and readiness
 
 ## Controls
-- WASD or arrow keys — move
-- Mouse — aim
-- Left click — shoot
-- Touchscreen — movement buttons and FIRE
+- **WASD** or arrow keys: move
+- **Mouse**: aim
+- **Left click**: shoot
+- **Q** or tap the skill button: use selected special ability
+- **Mobile touch**: directional buttons, shoot button and ability button
 
-## Multiplayer
-1. One player chooses **MULTIPLAYER SZOBA LÉTREHOZÁSA**.
-2. Share the 6-character room code or **MEGHÍVÁS** invitation link.
-3. Other players join with the code; maximum 6 players.
-4. At the end of each wave, each player chooses a personal upgrade. The host starts the next wave when all have selected.
+## Wave upgrades and boss fights
+Pick one of three upgrades after each wave. In multiplayer, everyone chooses individually and the next wave starts when all players are ready. Every tenth wave has a strong titan boss with a dedicated health bar. Drone enemies have different colors, HP and movement speeds.
 
-Multiplayer is peer-to-peer using PeerJS. The host must remain in the game; WebRTC may not work on every restrictive network.
+## Multiplayer and hosting
+1. Select a skin and ability, then enter your name.
+2. Press **MULTIPLAYER SZOBA LÉTREHOZÁSA** to host.
+3. Invite friends with the six-character code or invitation link.
+4. Friends choose their skins/abilities before joining with **CSATLAKOZÁS**.
 
-## Hosting
-The static site is deployed through **GitHub Pages**, from the `main` branch and the `/ (root)` folder. `index.html` is the entry point.
+Up to six players may join a session. Multiplayer uses PeerJS/WebRTC and depends on peer connectivity and the host remaining online.
 
-## Technology
-HTML, CSS, JavaScript, Three.js, PeerJS. Three.js and PeerJS are loaded from CDNs, so an internet connection is required.
+The static site is hosted via GitHub Pages from the `main` branch and `/ (root)`. `index.html` is the entry point. Three.js and PeerJS are loaded from CDNs, requiring an internet connection.
 
-## Notes
-This is an early browser-game prototype. Game progress isn't saved when the page is closed, and multiplayer connections depend on network conditions.
+### Notes
+Game progress is not persisted between page reloads. Character menu preferences are saved locally in the browser. This is a playable prototype and not an official collaboration with any anime franchise.
