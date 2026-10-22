@@ -1,4 +1,4 @@
-<!doctype html><html lang="hu"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NEON NEXUS 3D | Anime Edition v3.0</title><style>
+<!doctype html><html lang="hu"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NEON NEXUS 3D | Marin Edition v3.2</title><style>
 *{box-sizing:border-box}body{margin:0;background:#050a1b;color:#e7fbff;font:15px system-ui;overflow:hidden}canvas{display:block}button,input{font:inherit;border:1px solid #4fdcf7;border-radius:9px;background:#0c203b;color:white;padding:12px}button{cursor:pointer}button:hover{background:#14436a}.primary{background:#3be3f5;color:#031020;font-weight:800}#menu,#end{position:fixed;inset:0;background:#02091de8;display:grid;place-items:center}section{width:min(460px,94vw);padding:32px;border:1px solid #43ddf78a;border-radius:20px;background:#09152e;box-shadow:0 0 80px #008ff62b;text-align:center}h1{font-size:52px;line-height:.95;color:#65edff;text-shadow:0 0 30px #15b4ff}p{color:#9ebcd2}input{width:100%;margin:6px 0 12px}section button{width:100%;margin:5px 0}.row{display:flex;gap:8px}.row input{flex:1;min-width:0}.row button{width:auto}.hidden{display:none!important}#hud{position:fixed;top:15px;left:15px;right:15px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}#hud>div{padding:12px 16px;background:#071b36dd;border:1px solid #4fe6f866;border-radius:12px;pointer-events:auto}#hud b{color:#62f6ff}#hud button{padding:5px 9px}#team{position:fixed;left:15px;top:100px;padding:12px;background:#071b36dd;border-radius:12px;min-width:165px}#tips{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);padding:10px 20px;background:#071b36dd;border-radius:10px;white-space:nowrap}#announce{position:fixed;top:28%;left:50%;transform:translateX(-50%);font-size:32px;font-weight:900;text-shadow:0 0 20px cyan;pointer-events:none}#touch{position:fixed;bottom:20px;left:15px;right:15px;display:none;justify-content:space-between;pointer-events:none}#touch button{pointer-events:auto}#fire{border-radius:50%;width:80px;height:80px}@media(pointer:coarse){#touch:not(.hidden){display:flex}#tips{display:none}#team{top:auto;bottom:145px}}@media(max-width:600px){#hud{font-size:11px}#hud>div{padding:7px}h1{font-size:40px}}
 
 #perks{position:fixed;right:15px;top:105px;width:230px;max-height:55vh;overflow:auto;border:1px solid #5adff666;background:#07182de8;border-radius:12px;padding:13px;pointer-events:none}
@@ -77,10 +77,38 @@ radial-gradient(ellipse 60% 70% at 85% 90%,#ff70af22,transparent 70%),#050719eb}
 @media(max-width:380px){#selector .pick strong{font-size:11px}.cosplay-portrait{width:64px;height:64px}#menu section{padding:16px 8px}}
 @media(prefers-reduced-motion:reduce){#menu .primary,#selector .pick{transition:none}}
 
+
+/* v3.2 — reference-inspired Marin outfit cards */
+#selector .selection-grid:has(button[data-skin]){grid-template-columns:repeat(3,minmax(0,1fr))}
+#selector .pick[data-skin]{min-height:174px;background:linear-gradient(165deg,#241b45,#10182e)}
+#selector .pick[data-skin="school"]{--accent-glow:#92c7ff}
+#selector .pick[data-skin="blazer"]{--accent-glow:#c67aaf}
+#selector .pick[data-skin="yukata"]{--accent-glow:#ffac72}
+#selector .pick[data-skin].selected{box-shadow:0 0 0 2px #e9dfff55,inset 0 0 34px #ff83be21,0 0 19px var(--accent-glow)}
+.cosplay-portrait{width:90px;height:94px;border-radius:18px 18px 12px 12px;background:radial-gradient(circle at 32% 22%,#fff7ee,#d1acee 65%,#644580)}
+.cosplay-portrait .hair-back{left:18px;top:3px;width:56px;height:82px;z-index:1;border-radius:25px 25px 15px 15px}
+.cosplay-portrait .neck{left:39px;top:48px;z-index:3}
+.cosplay-portrait .face{left:28px;top:16px;width:36px;height:40px;z-index:3}
+.cosplay-portrait .fringe{left:25px;top:11px;width:42px;height:20px;z-index:5}
+.cosplay-portrait .eyes{left:34px;top:33px;width:24px;z-index:5;border-color:#a8497b}
+.cosplay-portrait .hair-tips{position:absolute;z-index:2;left:16px;top:56px;width:61px;height:36px;background:linear-gradient(to bottom,transparent,var(--tips));clip-path:polygon(5% 0,26% 0,31% 100%,40% 9%,64% 5%,68% 100%,80% 8%,97% 0,94% 100%,0 100%)}
+.cosplay-portrait .outfit{left:19px;top:62px;width:54px;height:32px;z-index:5;border-radius:13px 13px 0 0}
+.cosplay-portrait .tie{position:absolute;left:42px;top:64px;z-index:7;width:8px;height:24px;background:var(--trim);clip-path:polygon(0 0,100% 0,72% 100%,28% 100%)}
+.cosplay-portrait .ribbon{z-index:8;left:36px;top:60px;background:var(--trim)}
+.cosplay-portrait .skirt{position:absolute;z-index:5;left:17px;top:85px;height:17px;width:58px;background:repeating-linear-gradient(90deg,transparent 0px,#2c526c77 2px,transparent 4px,transparent 12px),var(--skirt);clip-path:polygon(11% 0,89% 0,100% 100%,0 100%)}
+#selector [data-skin="blazer"] .outfit{border:4px solid #c9d0dd;border-left-width:6px;border-right-width:6px}
+#selector [data-skin="blazer"] .tie{background:#a33653}
+#selector [data-skin="yukata"] .outfit{background:radial-gradient(circle at 20% 52%,#50404e 0 4px,transparent 5px),radial-gradient(circle at 78% 30%,#483e48 0 5px,transparent 6px),#191b23;border-top:3px solid #766e73}
+#selector [data-skin="yukata"] .tie{left:20px;top:83px;width:53px;height:11px;background:#9e2c53;clip-path:none}
+#selector [data-skin="yukata"] .skirt{background:#191b23}
+#selector [data-skin="yukata"] .ribbon{display:none}
+@media(max-width:720px){#selector .selection-grid:has(button[data-skin]){grid-template-columns:repeat(2,minmax(0,1fr))}#selector .pick[data-skin]{min-height:176px}}
+@media(max-width:390px){#selector .selection-grid:has(button[data-skin]){grid-template-columns:1fr}#selector .pick[data-skin]{min-height:126px}}
+
 </style><canvas id="c"></canvas><div id="menu"><section><small>ANIME EDITION • 3D ONLINE CO-OP</small><h1>NEON<br>NEXUS</h1><p>Védd meg a kristályt a drónoktól a barátaiddal! Maximum 6 játékos, közös hullámok, pontszámok.</p>
 <div id="selector" aria-label="Anime karakter összeállítása">
 <h2>01 / COSPLAY SKIN</h2>
-<p class="select-subtitle">My Dress-Up Darling-ihlette, saját készítésű anime karakterek. A skinedet a többiek is látják.</p>
+<p class="select-subtitle">A három feltöltött Marin-referencia alapján készült, részletes, anime-stílusú 3D skinek. A többi játékos is látja őket.</p>
 <div class="selection-grid" id="skinChoices" role="group" aria-label="Skinválasztás"></div>
 <h2>02 / ÁTOKTECHNIKA</h2>
 <p class="select-subtitle">Jujutsu Kaisen ihlette különleges képesség. Játék közben Q-val aktiválható.</p>
@@ -88,7 +116,7 @@ radial-gradient(ellipse 60% 70% at 85% 90%,#ff70af22,transparent 70%),#050719eb}
 <p class="character-tip">✦ Választásaid megmaradnak a böngésződben • Hullámok után további fejlesztéseket kapsz</p>
 </div>
 <input id="name" maxlength="14" placeholder="Játékosneved" value="Játékos"><button class="primary" id="create">MULTIPLAYER SZOBA LÉTREHOZÁSA</button><div class="row"><input id="room" maxlength="6" placeholder="SZOBAKÓD"><button id="join">CSATLAKOZÁS</button></div><button id="solo">EGYJÁTÉKOS DEMO</button><p id="status"></p></section></div>
-<div id="hud" class="hidden"><div><strong>NEON NEXUS</strong><br>SZOBA: <b id="code">SOLO</b></div><div>HULLÁM <b id="wave">1</b> • KRISTÁLY <b id="health">100%</b><br>ÉLETERŐ <b id="hp">100</b></div><div><button id="invite">MEGHÍVÁS</button><button id="leave">KILÉPÉS</button></div></div><div id="version-badge" aria-label="Játékverzió">◆ NEON NEXUS • v3.0.0 ANIME EDITION</div>
+<div id="hud" class="hidden"><div><strong>NEON NEXUS</strong><br>SZOBA: <b id="code">SOLO</b></div><div>HULLÁM <b id="wave">1</b> • KRISTÁLY <b id="health">100%</b><br>ÉLETERŐ <b id="hp">100</b></div><div><button id="invite">MEGHÍVÁS</button><button id="leave">KILÉPÉS</button></div></div><div id="version-badge" aria-label="Játékverzió">◆ NEON NEXUS • v3.2.0 MARIN EDITION</div>
 <div id="abilityHud" class="hidden"><button id="useAbility" title="Különleges képesség: Q"><span id="abilitySymbol">✦</span><span class="ability-meta"><strong id="abilityName">Képesség</strong><small id="abilityTimer">Q • KÉSZ</small></span><strong>Q</strong></button><div id="abilityBar"><div id="abilityFill"></div></div></div>
 <div id="team" class="hidden"></div><div id="tips" class="hidden">WASD: MOZGÁS • EGÉR: CÉLZÁS • KATTINTÁS: LÖVÉS • Q: ÁTOKTECHNIKA</div><div id="announce"></div><div id="touch" class="hidden"><div><button data-k="w">▲</button><br><button data-k="a">◀</button><button data-k="s">▼</button><button data-k="d">▶</button></div><button id="fire">LŐ</button></div><div id="end" class="hidden"><section><h1>VÉGE</h1><p id="result"></p><button id="again" class="primary">ÚJRAINDÍTÁS</button><button id="back">MENÜ</button></section></div>
 <div id="perks" class="hidden"><h3>⚡ FEJLESZTÉSEID</h3><div id="perklist">Az első hullám után választhatsz.</div></div>
@@ -122,7 +150,7 @@ const UPGRADES={
 rapid:{icon:'⚡',name:'Plazma gyorsító',desc:'16%-kal gyorsabb lövés minden szinten.'},
 damage:{icon:'💥',name:'Erősebb lövedék',desc:'+1 sebzés minden találatra.'},
 speed:{icon:'👟',name:'Turbó hajtómű',desc:'+14% mozgási sebesség.'},
-multi:{icon:'🎯',name:'Többszörös lövés',desc:'Még egy lézersugár egyszerre (max. 4).'},
+multi:{icon:'🎯',name:'Többszörös lövés',desc:'Még egy, a célkereszthez szorosabban tartó sugár (max. 4).'},
 heal:{icon:'❤️',name:'Páncélfejlesztés',desc:'+25 maximális életerő, azonnali gyógyulással.'},
 regen:{icon:'✨',name:'Nanobot regeneráció',desc:'Folyamatosan visszatöltő életerő.'},
 pierce:{icon:'🔱',name:'Átütő plazma',desc:'A lövés további ellenfeleken is áthatol.'},
@@ -135,10 +163,9 @@ tank:{color:0xffb44e,speed:1.75,hp:4,damage:7,period:1.65,radius:.95},
 boss:{color:0xb760ff,speed:1.35,hp:65,damage:17,period:1.8,radius:2.15}
 };
 const SKINS={
-sunny:{name:'Marin-ihlette gyaru',desc:'Szőke haj • rózsaszín masni • iskolai cosplay',hair:0xffd17b,skin:0xffdfbf,outfit:0x243568,trim:0xff7db4,accent:0xfaf0fc},
-goth:{name:'Shizuku-ihlette gótikus',desc:'Lila-fekete ruha • elegáns cosplay',hair:0x35224c,skin:0xffd4c5,outfit:0x271736,trim:0xbe85eb,accent:0xf1deff},
-idol:{name:'Rizu-ihlette anime idol',desc:'Csillagos popfellépő • aqua kiegészítők',hair:0x8edcf3,skin:0xf4d6cd,outfit:0xffffff,trim:0x5fbbe8,accent:0x5f7de5},
-street:{name:'Marin-ihlette streetwear',desc:'Divatos kabát • világos haj',hair:0xe5b18d,skin:0xffd8b9,outfit:0xf19dbf,trim:0x6f3b9c,accent:0xffec9a}
+sunny:{name:'Marin – iskolai egyenruha',desc:'Fehér ing, sötét nyakkendő, kék kockás rakott szoknya',kind:'school',hair:0xf1c783,tips:0xf49bb3,skin:0xffdfca,outfit:0xf6f8fb,skirt:0x8eaeca,trim:0x395677,accent:0x668aa8,eye:0x9f4d69,boots:0x392f3a},
+goth:{name:'Marin – blézeres viselet',desc:'Sötétkék blézer, piros nyakkendő, réteges felső',kind:'blazer',hair:0xf1c783,tips:0xed91b8,skin:0xffdfca,outfit:0x253860,skirt:0x99b7d0,trim:0xbb3c57,accent:0xf4f5fa,eye:0x9f4d69,boots:0x2c2735},
+idol:{name:'Marin – fekete jukata',desc:'Fekete virágmintás jukata, bordó obi, arany fények',kind:'yukata',hair:0xe4a964,tips:0xee85ad,skin:0xffd9b5,outfit:0x191a20,skirt:0x191a20,trim:0x92284d,accent:0xd7aa65,eye:0xa34052,boots:0x272228}
 };
 const POWERS={
 purple:{name:'Lila energiatörés',desc:'Erős, egyenes energiacsapás, több drónt eltalál.',icon:'🟣',cooldown:9,color:0xb069ff},
@@ -153,9 +180,9 @@ function renderCharacterChoices(){
 const hex=n=>'#'+n.toString(16).padStart(6,'0');
 const skinRoot=$('skinChoices'),powerRoot=$('powerChoices');skinRoot.replaceChildren();powerRoot.replaceChildren();
 for(const [key,skin] of Object.entries(SKINS)){
-const button=document.createElement('button');button.type='button';button.className='pick'+(selectedSkin===key?' selected':'');button.setAttribute('aria-pressed',String(selectedSkin===key));
-const portrait=document.createElement('span');portrait.className='cosplay-portrait';portrait.style.setProperty('--hair',hex(skin.hair));portrait.style.setProperty('--skin',hex(skin.skin));portrait.style.setProperty('--outfit',hex(skin.outfit));portrait.style.setProperty('--trim',hex(skin.trim));
-for(const cls of ['hair-back','neck','face','fringe','eyes','outfit','ribbon']){const elem=document.createElement('i');elem.className=cls;portrait.append(elem)}
+const button=document.createElement('button');button.type='button';button.className='pick'+(selectedSkin===key?' selected':'');button.setAttribute('aria-pressed',String(selectedSkin===key));button.dataset.skin=skin.kind;
+const portrait=document.createElement('span');portrait.className='cosplay-portrait';portrait.style.setProperty('--hair',hex(skin.hair));portrait.style.setProperty('--skin',hex(skin.skin));portrait.style.setProperty('--outfit',hex(skin.outfit));portrait.style.setProperty('--trim',hex(skin.trim));portrait.style.setProperty('--tips',hex(skin.tips));portrait.style.setProperty('--skirt',hex(skin.skirt));
+for(const cls of ['hair-back','neck','face','fringe','eyes','hair-tips','outfit','tie','ribbon','skirt']){const elem=document.createElement('i');elem.className=cls;portrait.append(elem)}
 const name=document.createElement('strong');name.textContent=skin.name;const desc=document.createElement('small');desc.textContent=skin.desc;button.append(portrait,name,desc);
 button.onclick=()=>{selectedSkin=key;try{localStorage.setItem('neon-nexus-skin',key)}catch{}renderCharacterChoices()};skinRoot.append(button)}
 for(const [key,power] of Object.entries(POWERS)){
@@ -245,7 +272,7 @@ p.revive=0;p.powerCool=Math.max(0,p.powerCool-dt);p.x=lim(p.x+i.x*8*Math.pow(1.1
 if(i.special&&p.powerCool<=0&&state.phase==='fight')castPower(p);
 if(p.perks.regen)p.hp=Math.min(p.maxHp,p.hp+dt*p.perks.regen*1.4);
 if(i.fire&&p.cool===0){p.cool=Math.max(.055,.22*Math.pow(.84,p.perks.rapid||0));const shots=1+Math.min(3,p.perks.multi||0),damage=1+(p.perks.damage||0),penetration=1+(p.perks.pierce||0),color=colors[state.players.indexOf(p)%6];
-for(let j=0;j<shots;j++){const angle=p.angle+(j-(shots-1)/2)*.17,dx=Math.sin(angle),dz=Math.cos(angle),hits=[];
+for(let j=0;j<shots;j++){const angle=p.angle+(j-(shots-1)/2)*.045,dx=Math.sin(angle),dz=Math.cos(angle),hits=[];
 for(const e of state.enemies){const ex=e.x-p.x,ez=e.z-p.z,along=ex*dx+ez*dz,dist=Math.abs(ex*dz-ez*dx),radius=ENEMY_TYPES[e.kind||'normal'].radius;if(along>0&&along<23&&dist<radius+.3)hits.push({e,along})}
 hits.sort((a,b)=>a.along-b.along);const struck=hits.slice(0,penetration),last=struck.at(-1),to=last?{x:last.e.x,z:last.e.z}:{x:p.x+dx*23,z:p.z+dz*23},from={x:p.x,z:p.z};
 laser(from,to,color,!!last);if(mode==='host')broadcast({type:'laser',a:from,b:to,color,hit:!!last});
