@@ -135,10 +135,10 @@ tank:{color:0xffb44e,speed:1.75,hp:4,damage:7,period:1.65,radius:.95},
 boss:{color:0xb760ff,speed:1.35,hp:65,damage:17,period:1.8,radius:2.15}
 };
 const SKINS={
-sunny:{name:'Szőke cosplay',desc:'Vidám konventstílus • rózsaszín masni',hair:0xffd17b,skin:0xffdfbf,outfit:0x243568,trim:0xff7db4,accent:0xfaf0fc},
-goth:{name:'Gótikus cosplay',desc:'Lila-fekete ruha • elegáns hangulat',hair:0x35224c,skin:0xffd4c5,outfit:0x271736,trim:0xbe85eb,accent:0xf1deff},
-idol:{name:'Kék idol',desc:'Csillagos popfellépő • aqua kiegészítők',hair:0x8edcf3,skin:0xf4d6cd,outfit:0xffffff,trim:0x5fbbe8,accent:0x5f7de5},
-street:{name:'Rózsaszín streetwear',desc:'Divatos kabát • világos haj',hair:0xe5b18d,skin:0xffd8b9,outfit:0xf19dbf,trim:0x6f3b9c,accent:0xffec9a}
+sunny:{name:'Marin-ihlette gyaru',desc:'Szőke haj • rózsaszín masni • iskolai cosplay',hair:0xffd17b,skin:0xffdfbf,outfit:0x243568,trim:0xff7db4,accent:0xfaf0fc},
+goth:{name:'Shizuku-ihlette gótikus',desc:'Lila-fekete ruha • elegáns cosplay',hair:0x35224c,skin:0xffd4c5,outfit:0x271736,trim:0xbe85eb,accent:0xf1deff},
+idol:{name:'Rizu-ihlette anime idol',desc:'Csillagos popfellépő • aqua kiegészítők',hair:0x8edcf3,skin:0xf4d6cd,outfit:0xffffff,trim:0x5fbbe8,accent:0x5f7de5},
+street:{name:'Marin-ihlette streetwear',desc:'Divatos kabát • világos haj',hair:0xe5b18d,skin:0xffd8b9,outfit:0xf19dbf,trim:0x6f3b9c,accent:0xffec9a}
 };
 const POWERS={
 purple:{name:'Lila energiatörés',desc:'Erős, egyenes energiacsapás, több drónt eltalál.',icon:'🟣',cooldown:9,color:0xb069ff},
@@ -334,7 +334,7 @@ for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.life-=dt;if(p.life
 if(shake>0){camera.position.x+=(Math.random()-.5)*shake*.5;shake=Math.max(0,shake-dt*1.8)}renderer.render(scene,camera)}requestAnimationFrame(frame);
 
 $('create').onclick=startHost;$('join').onclick=startJoin;$('solo').onclick=startSolo;$('leave').onclick=reset;$('back').onclick=reset;
-$('again').onclick=()=>{if(mode==='client')return;const people=state.players.map(p=>({id:p.id,name:p.name}));state=init();people.forEach(p=>add(p.id,p.name));$('end').classList.add('hidden');$('upgrades').classList.add('hidden');upgradeView=''};
+$('again').onclick=()=>{if(mode==='client')return;const people=state.players.map(p=>({id:p.id,name:p.name,skin:p.skin,power:p.power}));state=init();people.forEach(p=>add(p.id,p.name,p.skin,p.power));$('end').classList.add('hidden');$('upgrades').classList.add('hidden');upgradeView=''};
 $('invite').onclick=async()=>{const url=new URL(location.href);url.searchParams.set('room',room);try{await navigator.clipboard.writeText(url.href);announce('MEGHÍVÓ KIMÁSOLVA')}catch{prompt('Meghívólink:',url.href)}};
 addEventListener('keydown',e=>{let k=e.key.toLowerCase();if(['w','a','s','d','q','arrowup','arrowdown','arrowleft','arrowright'].includes(k)&&mode!=='menu'){e.preventDefault();keys.add(k.replace('arrowup','w').replace('arrowdown','s').replace('arrowleft','a').replace('arrowright','d'))}});
 addEventListener('keyup',e=>keys.delete(e.key.toLowerCase().replace('arrowup','w').replace('arrowdown','s').replace('arrowleft','a').replace('arrowright','d')));
