@@ -199,6 +199,32 @@ function laser(a,b,color,hit=false){const from=new THREE.Vector3(a.x,1.35,a.z),t
 for(const [r,opacity]of [[.13,.25],[.045,.95]]){const obj=new THREE.Mesh(new THREE.CylinderGeometry(r,r,length,8,1),new THREE.MeshBasicMaterial({color:r<.05?0xffffff:color,transparent:true,opacity,depthWrite:false,blending:THREE.AdditiveBlending}));obj.position.copy(from).addScaledVector(delta,.5);obj.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),direction);scene.add(obj);lasers.push({obj,life:r<.05?.14:.21,max:r<.05?.14:.21,base:opacity})}
 burst(a.x,a.z,color,3,.45);if(hit){burst(b.x,b.z,color,7,.55);ring(b.x,b.z,color,.35)}}
 
+function damageEnemy(e,damage,owner){if(!state.enemies.includes(e))return;
+e.hp-=damage;
+if(e.hp<=0){state.enemies=state.enemies.filter(x=>x!==e);owner.kills++;
+if(e.kind==='boss'){ring(e.x,e.z,0xcf65ff,4);burst(e.x,e.z,0xff8bdf,40,1.8);announce('🏆 BOSS LEGYŐZVE!')}
+else burst(e.x,e.z,ENEMY_TYPES[e.kind||'normal'].color,8,.7)}}
+function powerVisual(effect){if(!effect||!POWERS[effect.type])return;
+const c=POWERS[effect.type].color,{x,z}=effect;
+if(effect.type==='purple'){const to=effect.to||{x:x+10,z};laser({x,z},to,c,true);for(let j=1;j<9;j++){const q=j/9;burst(x+(to.x-x)*q,z+(to.z-z)*q,j%2?0xcc88ff:0xffe8ff,3,.7)}ring(to.x,to.z,0xd09dff,2)}
+if(effect.type==='infinity'){for(const size of [1.2,2.4,4.3])ring(x,z,c,size);burst(x,z,0xa3ddff,30,1.4)}
+if(effect.type==='shadow'){ring(x,z,0x9650d7,1.5);burst(x,z,0x7b50b0,18,1);for(const q of effect.targets||[]){laser({x,z},q,0xa17bff,true);burst(q.x,q.z,0x8f72ff,6,.6)}}
+if(effect.type==='flash'){for(const size of [1.1,3.5,5.7])ring(x,z,0xf6a3ff,size);burst(x,z,0xf1b3ff,35,2)}
+if(effect.type==='reverse'){ring(x,z,0x7cfbd9,2);ring(0,0,0x87fbd2,2.3);burst(x,z,c,26,1.3);for(const t of effect.targets||[])burst(t.x,t.z,c,6,.6)}
+}
+function castPower(p){if(!state||state.phase!=='fight'||p.hp<=0||p.powerCool>0)return;
+const type=Object.hasOwn(POWERS,p.power)?p.power:'purple',power=POWERS[type],x=p.x,z=p.z,fx={type,x,z,targets:[]};
+p.powerCool=power.cooldown;
+if(type==='purple'){const dx=Math.sin(p.angle),dz=Math.cos(p.angle);fx.to={x:lim(x+dx*22,-25,25),z:lim(z+dz*22,-25,25)};
+for(const e of [...state.enemies]){const ex=e.x-x,ez=e.z-z,forward=ex*dx+ez*dz,perp=Math.abs(ex*dz-ez*dx);if(forward>0&&forward<22&&perp<2.1)damageEnemy(e,13,p)}}
+if(type==='infinity'){for(const e of [...state.enemies]){const dist=Math.hypot(e.x-x,e.z-z);if(dist<8){damageEnemy(e,4,p);const length=Math.max(.2,dist);e.x=lim(e.x+(e.x-x)/length*3,-24,24);e.z=lim(e.z+(e.z-z)/length*3,-24,24);e.slow=4}}}
+if(type==='shadow'){const nearest=[...state.enemies].filter(e=>Math.hypot(e.x-x,e.z-z)<20).sort((a,b)=>Math.hypot(a.x-x,a.z-z)-Math.hypot(b.x-x,b.z-z)).slice(0,5);
+for(const e of nearest){fx.targets.push({x:e.x,z:e.z});damageEnemy(e,8,p)}}
+if(type==='flash'){for(const e of [...state.enemies])if(Math.hypot(e.x-x,e.z-z)<6.7)damageEnemy(e,12,p)}
+if(type==='reverse'){p.hp=Math.min(p.maxHp,p.hp+48);for(const ally of state.players){if(Math.hypot(ally.x-x,ally.z-z)<13){ally.hp=Math.min(ally.maxHp,ally.hp+40);fx.targets.push({x:ally.x,z:ally.z})}}state.core=Math.min(state.coreMax,state.core+18)}
+powerVisual(fx);if(mode==='host')broadcast({type:'powerfx',effect:fx});
+if(p.id===localId)announce(power.name.toUpperCase()+' ✦')}
+
 function announce(s){$('announce').textContent=s;announcement=performance.now()+1900}
 function tick(dt){if(!state||state.over)return;
 if(state.wave===0)beginWave();
@@ -215,13 +241,13 @@ for(let j=0;j<shots;j++){const angle=p.angle+(j-(shots-1)/2)*.17,dx=Math.sin(ang
 for(const e of state.enemies){const ex=e.x-p.x,ez=e.z-p.z,along=ex*dx+ez*dz,dist=Math.abs(ex*dz-ez*dx),radius=ENEMY_TYPES[e.kind||'normal'].radius;if(along>0&&along<23&&dist<radius+.3)hits.push({e,along})}
 hits.sort((a,b)=>a.along-b.along);const struck=hits.slice(0,penetration),last=struck.at(-1),to=last?{x:last.e.x,z:last.e.z}:{x:p.x+dx*23,z:p.z+dz*23},from={x:p.x,z:p.z};
 laser(from,to,color,!!last);if(mode==='host')broadcast({type:'laser',a:from,b:to,color,hit:!!last});
-for(const h of struck){h.e.hp-=damage;if(h.e.hp<=0&&state.enemies.includes(h.e)){state.enemies=state.enemies.filter(e=>e!==h.e);p.kills++;if(h.e.kind==='boss'){ring(h.e.x,h.e.z,0xcf65ff,4);burst(h.e.x,h.e.z,0xff8bdf,50,2);announce('🏆 BOSS LEGYŐZVE!')}}}
+for(const h of struck)damageEnemy(h.e,damage,p)
 }}}
 for(const e of state.enemies){const type=ENEMY_TYPES[e.kind||'normal'];let target=null,dist=Infinity;
 for(const p of state.players){const d=Math.hypot(p.x-e.x,p.z-e.z);if(p.hp>0&&d<dist){dist=d;target=p}}
 if(dist>4.5)target=null;const tx=target?target.x:0,tz=target?target.z:0,dx=tx-e.x,dz=tz-e.z,d=Math.hypot(dx,dz)||1;
-if(d>(target?1.5:type.radius+1.5)){e.x+=dx/d*(type.speed+Math.min(state.wave*.06,1.2))*dt;e.z+=dz/d*(type.speed+Math.min(state.wave*.06,1.2))*dt}
-e.cool-=dt;
+if(d>(target?1.5:type.radius+1.5)){e.x+=dx/d*(type.speed+Math.min(state.wave*.06,1.2))*dt*(e.slow>0?.45:1);e.z+=dz/d*(type.speed+Math.min(state.wave*.06,1.2))*dt*(e.slow>0?.45:1)}
+e.cool-=dt;e.slow=Math.max(0,(e.slow||0)-dt);
 if(d< (target?1.7:type.radius+1.7)&&e.cool<=0){if(target){target.hp=Math.max(0,target.hp-type.damage*2.4)}else{state.core=Math.max(0,state.core-type.damage);coreImpact(e.x,e.z,e.kind==='boss');if(mode==='host')broadcast({type:'corehit',x:e.x,z:e.z,boss:e.kind==='boss'})}e.cool=type.period}}
 if(state.core<=0){state.over=true;state.phase='over';if(mode==='host')broadcast({type:'state',data:pack()});return}
 if(state.remaining===0&&state.enemies.length===0)enterUpgrade()}
@@ -250,11 +276,15 @@ $('upgrades').classList.remove('hidden')}
 function hud(){if(!state)return;$('wave').textContent=state.wave;$('health').textContent=Math.ceil(state.core)+' / '+state.coreMax;const me=state.players.find(p=>p.id===localId);$('hp').textContent=me?Math.ceil(me.hp):0;
 $('team').replaceChildren();for(const p of state.players){const line=document.createElement('div');line.textContent=(p.id===localId?'◆ ':'')+p.name+' — '+p.kills+' ✦'+(state.phase==='upgrade'?(p.picked?' ✓':' …'):'');$('team').append(line)}
 $('perklist').replaceChildren();if(me){const items=Object.entries(me.perks||{});if(!items.length)$('perklist').textContent='Még nincs fejlesztésed.';for(const [id,lvl]of items){if(!UPGRADES[id])continue;const d=document.createElement('div');d.className='perk';const name=document.createElement('div');name.textContent=UPGRADES[id].icon+' '+UPGRADES[id].name;const level=document.createElement('span');level.textContent='Lv.'+lvl;d.append(name,level);$('perklist').append(d)}}
+if(me){const power=POWERS[me.power]||POWERS.purple,remain=Math.max(0,me.powerCool||0);
+$('abilitySymbol').textContent=power.icon;$('abilityName').textContent=power.name;
+$('abilityTimer').textContent=remain>0?remain.toFixed(1)+' mp újratöltés':'Q • AKTIVÁLHATÓ';
+$('abilityFill').style.width=(100*(1-remain/power.cooldown))+'%';$('useAbility').disabled=state.phase!=='fight'||remain>0||me.hp<=0}
 const boss=state.enemies.find(e=>e.kind==='boss');$('bossbar').classList.toggle('hidden',!boss);if(boss){const v=Math.max(0,boss.hp/boss.maxHp*100);$('bossfill').style.width=v+'%';$('bosshp').textContent=Math.ceil(v)+'%'}
 refreshUpgradeUI();if(state.over){$('upgrades').classList.add('hidden');$('end').classList.remove('hidden');$('result').textContent='Elért hullám: '+state.wave+' • Csapat pontszám: '+state.players.reduce((n,p)=>n+p.kills,0)}
 if(performance.now()>announcement)$('announce').textContent=''}
 
-function frame(t){requestAnimationFrame(frame);const dt=Math.min((t-last)/1000,.06);last=t;crystal.rotation.y+=dt;crystal.position.y=2.4+Math.sin(t*.002)*.3;coreFlash=Math.max(0,coreFlash-dt*1.7);
+function frame(t){requestAnimationFrame(frame);const dt=Math.min((t-last)/1000,.06);last=t;castTap=Math.max(0,castTap-dt);crystal.rotation.y+=dt;crystal.position.y=2.4+Math.sin(t*.002)*.3;coreFlash=Math.max(0,coreFlash-dt*1.7);
 crystal.material.emissive.setHex(coreFlash>.1?0xff315c:0x43eeff);crystal.material.emissiveIntensity=3+coreFlash*4;light.color.setHex(coreFlash>.1?0xff3658:0x35eeff);$('damageFlash').style.opacity=String(Math.min(coreFlash*.65,.48));
 if(mode==='solo'||mode==='host'){tick(dt);sendClock+=dt;if(mode==='host'&&sendClock>.085){broadcast({type:'state',data:pack()});sendClock=0}}
 if(mode==='client'){sendClock+=dt;if(sendClock>.06){send(conn,{type:'input',...input()});sendClock=0}}
@@ -266,12 +296,13 @@ if(shake>0){camera.position.x+=(Math.random()-.5)*shake*.5;shake=Math.max(0,shak
 $('create').onclick=startHost;$('join').onclick=startJoin;$('solo').onclick=startSolo;$('leave').onclick=reset;$('back').onclick=reset;
 $('again').onclick=()=>{if(mode==='client')return;const people=state.players.map(p=>({id:p.id,name:p.name}));state=init();people.forEach(p=>add(p.id,p.name));$('end').classList.add('hidden');$('upgrades').classList.add('hidden');upgradeView=''};
 $('invite').onclick=async()=>{const url=new URL(location.href);url.searchParams.set('room',room);try{await navigator.clipboard.writeText(url.href);announce('MEGHÍVÓ KIMÁSOLVA')}catch{prompt('Meghívólink:',url.href)}};
-addEventListener('keydown',e=>{let k=e.key.toLowerCase();if(['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright'].includes(k)&&mode!=='menu'){e.preventDefault();keys.add(k.replace('arrowup','w').replace('arrowdown','s').replace('arrowleft','a').replace('arrowright','d'))}});
+addEventListener('keydown',e=>{let k=e.key.toLowerCase();if(['w','a','s','d','q','arrowup','arrowdown','arrowleft','arrowright'].includes(k)&&mode!=='menu'){e.preventDefault();keys.add(k.replace('arrowup','w').replace('arrowdown','s').replace('arrowleft','a').replace('arrowright','d'))}});
 addEventListener('keyup',e=>keys.delete(e.key.toLowerCase().replace('arrowup','w').replace('arrowdown','s').replace('arrowleft','a').replace('arrowright','d')));
 $('c').onpointerdown=()=>fire=true;addEventListener('pointerup',()=>fire=false);addEventListener('blur',()=>{keys.clear();fire=false});
 $('c').onpointermove=e=>{const mouse=new THREE.Vector2(e.clientX/innerWidth*2-1,1-e.clientY/innerHeight*2),ray=new THREE.Raycaster();ray.setFromCamera(mouse,camera);const point=new THREE.Vector3();if(ray.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0,1,0),0),point)){aim.x=lim(point.x,-25,25);aim.z=lim(point.z,-25,25)}};
 for(const b of document.querySelectorAll('[data-k]')){const k=b.dataset.k;b.onpointerdown=e=>{e.preventDefault();keys.add(k);b.setPointerCapture(e.pointerId)};b.onpointerup=()=>keys.delete(k);b.onpointercancel=()=>keys.delete(k)}
 $('fire').onpointerdown=e=>{fire=true;$('fire').setPointerCapture(e.pointerId)};$('fire').onpointerup=()=>fire=false;
+$('useAbility').onclick=()=>{castTap=.35};
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
 const q=new URLSearchParams(location.search).get('room');if(q&&/^[A-Z2-9]{6}$/i.test(q)){$('room').value=q.toUpperCase();$('status').textContent='Meghívót kaptál. Add meg a neved, majd csatlakozz!'}
 </script></html>
