@@ -108,6 +108,14 @@ for(let i=0;i<4;i++){let wall=new THREE.Mesh(new THREE.BoxGeometry(i%2?1:54,1,i%
 const crystal=new THREE.Mesh(new THREE.OctahedronGeometry(1.5),mat(0x43eeff,3));crystal.position.y=2.4;scene.add(crystal);
 const pedestal=new THREE.Mesh(new THREE.CylinderGeometry(2,2.6,.7,8),mat(0x1762a3,.7));pedestal.position.y=.35;scene.add(pedestal);
 const light=new THREE.PointLight(0x35eeff,65,20);light.position.y=3;scene.add(light);
+// Anime-style magic circles, glowing starlight and outlined arena details
+for(const [radius,tint,iy] of [[3.2,0xff7bc9,.035],[4.05,0x866df7,.045],[5.35,0x5fe7fb,.055]]){
+const geom=new THREE.RingGeometry(radius-.035,radius+.035,72);
+const mesh=new THREE.Mesh(geom,new THREE.MeshBasicMaterial({color:tint,side:THREE.DoubleSide,transparent:true,opacity:.5}));mesh.rotation.x=-Math.PI/2;mesh.position.y=iy;scene.add(mesh)}
+for(let n=0;n<12;n++){const theta=n*Math.PI/6,rad=6.4;
+const star=new THREE.Mesh(new THREE.OctahedronGeometry(n%3===0?.24:.12),new THREE.MeshBasicMaterial({color:n%2?0xff9dda:0x87eafd}));
+star.position.set(Math.cos(theta)*rad,.22,Math.sin(theta)*rad);scene.add(star)}
+
 const models=new Map(),lasers=[],particles=[],colors=[0x52eaff,0xb988ff,0x7affc1,0xffcb71,0xff78a6,0x8eabff];
 let coreFlash=0,upgradeView='',shake=0;
 const UPGRADES={
@@ -255,15 +263,47 @@ if(state.remaining===0&&state.enemies.length===0)enterUpgrade()}
 function makeLabel(name){const cvs=document.createElement('canvas');cvs.width=512;cvs.height=128;const tex=new THREE.CanvasTexture(cvs);const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,depthTest:false,transparent:true}));sprite.scale.set(3.3,.83,1);sprite.position.y=3.35;return{cvs,tex,sprite,last:''}}
 function updateLabel(label,p){const health=Math.ceil(p.hp),key=p.name+'|'+health+'|'+p.maxHp;if(label.last===key)return;label.last=key;const c=label.cvs.getContext('2d');c.clearRect(0,0,512,128);c.fillStyle='#041327e8';c.fillRect(14,4,484,118);c.strokeStyle='#46e9ff';c.lineWidth=3;c.strokeRect(14,4,484,118);c.font='bold 37px sans-serif';c.textAlign='center';c.fillStyle='#efffff';c.fillText(p.name,256,48);c.fillStyle='#612134';c.fillRect(40,69,432,31);c.fillStyle=health>p.maxHp*.35?'#44f8a7':'#ff5264';c.fillRect(40,69,432*Math.max(0,p.hp/p.maxHp),31);c.font='bold 24px sans-serif';c.fillStyle='#ffffff';c.fillText(health+' / '+p.maxHp,256,94);label.tex.needsUpdate=true}
 function makeModel(enemy,i,o){const g=new THREE.Group(),kind=o.kind||'normal',t=ENEMY_TYPES[kind],color=enemy?t.color:colors[i%6];
-if(enemy){const r=t.radius;const body=new THREE.Mesh(kind==='boss'?new THREE.DodecahedronGeometry(r,1):kind==='tank'?new THREE.DodecahedronGeometry(r):new THREE.IcosahedronGeometry(r,1),mat(color,kind==='boss'?2:1.4));body.position.y=r+.25;g.add(body);const eye=new THREE.Mesh(new THREE.SphereGeometry(r*.35,10,8),mat(0xffffff,2));eye.position.set(0,r+.25,r*.83);g.add(eye);
+if(enemy){const r=t.radius;const shape=kind==='boss'?new THREE.DodecahedronGeometry(r,1):kind==='tank'?new THREE.DodecahedronGeometry(r):new THREE.IcosahedronGeometry(r,1);const body=new THREE.Mesh(shape,new THREE.MeshToonMaterial({color,emissive:color,emissiveIntensity:kind==='boss'?.55:.23}));body.position.y=r+.25;g.add(body);const outline=new THREE.Mesh(shape,new THREE.MeshBasicMaterial({color:0x1b0e36,side:THREE.BackSide}));outline.position.copy(body.position);outline.scale.setScalar(1.09);g.add(outline);const eye=new THREE.Mesh(new THREE.SphereGeometry(r*.35,10,8),mat(0xffffff,2));eye.position.set(0,r+.25,r*.83);g.add(eye);
 if(kind==='boss'){const halo=new THREE.Mesh(new THREE.TorusGeometry(2.7,.07,8,64),mat(0xff58bf,1.9));halo.position.y=2.5;halo.rotation.x=Math.PI/2.5;g.add(halo);g.userData.halo=halo;for(let j=0;j<7;j++){const a=j*Math.PI*2/7;const spike=new THREE.Mesh(new THREE.ConeGeometry(.42,1.65,4),mat(0xe178ff,1.6));spike.position.set(Math.cos(a)*1.9,2.5,Math.sin(a)*1.9);spike.rotation.z=Math.PI/2;g.add(spike)}const glow=new THREE.PointLight(0xa24fff,22,10);glow.position.y=2;g.add(glow)}
 else{const wing=new THREE.Mesh(new THREE.TorusGeometry(r*1.2,.065,6,16),mat(color,2));wing.position.y=r+.22;wing.rotation.x=Math.PI/2;g.add(wing);g.userData.halo=wing}}
-else{const body=new THREE.Mesh(new THREE.CylinderGeometry(.44,.63,1.3,6),mat(color,1.3));body.position.y=1;g.add(body);const head=new THREE.Mesh(new THREE.SphereGeometry(.4,14,10),mat(color,1));head.position.y=1.95;g.add(head);const visor=new THREE.Mesh(new THREE.BoxGeometry(.52,.12,.13),mat(0xffffff,2.5));visor.position.set(0,1.97,.37);g.add(visor);const gun=new THREE.Mesh(new THREE.BoxGeometry(.22,.22,1.05),mat(0xdafaff,.8));gun.position.set(.25,1.26,.73);g.add(gun);const label=makeLabel(o.name);g.userData.label=label;g.add(label.sprite)}
+else{
+const style=SKINS[o.skin]||SKINS.sunny,shade=0x170b29;
+const toon=(c,glow=0)=>new THREE.MeshToonMaterial({color:c,emissive:c,emissiveIntensity:glow,side:THREE.FrontSide});
+const create=(geometry,color,position,outlines=true)=>{const mesh=new THREE.Mesh(geometry,toon(color));mesh.position.set(...position);g.add(mesh);
+if(outlines){const line=new THREE.Mesh(geometry,new THREE.MeshBasicMaterial({color:shade,side:THREE.BackSide}));line.position.copy(mesh.position);line.scale.setScalar(1.065);g.add(line)}return mesh};
+const body=create(new THREE.BoxGeometry(.85,.89,.48),style.outfit,[0,1.35,0]);
+create(new THREE.CylinderGeometry(.50,.81,.73,12),style.outfit,[0,.71,0]);
+create(new THREE.CylinderGeometry(.82,.83,.10,12),style.trim,[0,.35,0],false);
+create(new THREE.BoxGeometry(.75,.13,.5),style.trim,[0,1.79,0],false);
+for(const dir of [-1,1]){create(new THREE.CylinderGeometry(.13,.14,.58,8),style.skin,[dir*.26,.38,0]);
+create(new THREE.BoxGeometry(.33,.18,.53),0x281a41,[dir*.26,.105,.14]);
+create(new THREE.CylinderGeometry(.15,.13,.73,8),style.outfit,[dir*.6,1.29,.03],false);
+create(new THREE.SphereGeometry(.16,8,7),style.skin,[dir*.6, .89,.02],false)}
+create(new THREE.CylinderGeometry(.16,.17,.28,8),style.skin,[0,1.84,0],false);
+const head=create(new THREE.SphereGeometry(.48,22,18),style.skin,[0,2.14,0]);
+for(const side of [-1,1]){create(new THREE.SphereGeometry(.115,10,8),0xffffff,[side*.2,2.17,.424],false);
+create(new THREE.SphereGeometry(.062,10,8),0x302144,[side*.2,2.17,.513],false);
+create(new THREE.SphereGeometry(.025,8,8),0xffffff,[side*.22,2.195,.567],false);
+create(new THREE.SphereGeometry(.065,8,8),0xff9ab9,[side*.31,2.03,.383],false)}
+create(new THREE.SphereGeometry(.045,8,8),0x8d4878,[0,1.995,.442],false);
+const hairGeometry=new THREE.SphereGeometry(.53,20,12,0,Math.PI*2,0,Math.PI*.48);
+create(hairGeometry,style.hair,[0,2.34,0],true);
+for(let b=0;b<3;b++){const fringe=create(new THREE.ConeGeometry(.18,.47,6),style.hair,[-.28+b*.26,2.365,.35],false);fringe.rotation.z=-.16+b*.19}
+const hairLength=o.skin==='goth'?.92:o.skin==='sunny'?.8:o.skin==='idol'?.68:.52;
+for(const side of [-1,1]){const lock=create(new THREE.CylinderGeometry(.22,.13,hairLength,8),style.hair,[side*.45,2.06-hairLength*.26,-.07]);lock.rotation.z=side*.11}
+if(o.skin==='idol')for(const side of [-1,1]){create(new THREE.SphereGeometry(.25,12,10),style.hair,[side*.72,2.48,-.12]);create(new THREE.ConeGeometry(.2,.58,9),style.hair,[side*.78,2.14,-.12])}
+if(o.skin==='goth'){create(new THREE.ConeGeometry(.17,.54,7),style.trim,[-.30,2.6,-.1],false);create(new THREE.ConeGeometry(.17,.54,7),style.trim,[.30,2.6,-.1],false)}
+const frontRibbon=create(new THREE.OctahedronGeometry(.17),style.trim,[0,1.63,.3],false);frontRibbon.scale.set(1.6,.65,.56);
+const weapon=create(new THREE.BoxGeometry(.18,.19,.91),style.accent,[.32,1.18,.72]);weapon.rotation.x=-.15;
+const rune=new THREE.Mesh(new THREE.TorusGeometry(.83,.035,6,48),new THREE.MeshBasicMaterial({color:(POWERS[o.power]||POWERS.purple).color,transparent:true,opacity:.68}));
+rune.rotation.x=-Math.PI/2;rune.position.y=.085;g.add(rune);g.userData.rune=rune;
+const label=makeLabel(o.name);g.userData.label=label;g.userData.skin=o.skin;g.add(label.sprite)}
 scene.add(g);return g}
-function drawState(){if(!state)return;const active=new Set();for(const[enemy,arr]of [[false,state.players],[true,state.enemies]])arr.forEach((o,i)=>{const key=(enemy?'e':'p')+o.id;active.add(key);let m=models.get(key);if(!m){m=makeModel(enemy,i,o);models.set(key,m);m.position.set(o.x,0,o.z)}
+function drawState(){if(!state)return;const active=new Set();for(const[enemy,arr]of [[false,state.players],[true,state.enemies]])arr.forEach((o,i)=>{const key=(enemy?'e':'p')+o.id;active.add(key);let m=models.get(key);if(m&&!enemy&&m.userData.skin!==o.skin){removeModel(m);models.delete(key);m=null}
+if(!m){m=makeModel(enemy,i,o);models.set(key,m);m.position.set(o.x,0,o.z)}
 m.position.x+=(o.x-m.position.x)*.3;m.position.z+=(o.z-m.position.z)*.3;m.rotation.y=enemy?Math.atan2(-o.x,-o.z):o.angle||0;
 if(enemy){const kind=o.kind||'normal';m.position.y=Math.sin(performance.now()*.004+i)*.14;if(m.userData.halo)m.userData.halo.rotation.z+=.035;if(kind==='boss')m.scale.setScalar(1+Math.sin(performance.now()*.003)*.045)}
-else{m.position.y=0;updateLabel(m.userData.label,o)}m.visible=enemy||o.hp>0});
+else{m.position.y=0;updateLabel(m.userData.label,o);if(m.userData.rune){m.userData.rune.rotation.z+=.008;m.userData.rune.material.opacity=.45+Math.sin(performance.now()*.003)*.18}}m.visible=enemy||o.hp>0});
 for(const[k,m]of models)if(!active.has(k)){removeModel(m);models.delete(k)}
 const me=state.players.find(p=>p.id===localId);if(me){camera.position.x+=(me.x-camera.position.x)*.045;camera.position.z+=(me.z+28-camera.position.z)*.045;camera.lookAt(camera.position.x,0,camera.position.z-28)}}
 
