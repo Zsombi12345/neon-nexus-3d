@@ -173,6 +173,13 @@ for(let n=0;n<12;n++){const theta=n*Math.PI/6,rad=6.4;
 const star=new THREE.Mesh(new THREE.OctahedronGeometry(n%3===0?.24:.12),new THREE.MeshBasicMaterial({color:n%2?0xff9dda:0x87eafd}));
 star.position.set(Math.cos(theta)*rad,.22,Math.sin(theta)*rad);scene.add(star)}
 
+const loadedCharacters=new Map();
+const missingCharacters=new Set();
+const gltfLoader=new GLTFLoader();
+function loadedStatus(){const el=$('assetStatus');if(!el)return;const count=loadedCharacters.size;el.textContent=count===3?'✓ Mindhárom 3D modell betöltve':count+'/3 eredeti 3D modell betöltve'+(missingCharacters.size?' • hiányzó fájlhoz átmeneti modell látható':'')}
+for(const [key,skin] of Object.entries(SKINS)){
+gltfLoader.load(skin.model,asset=>{loadedCharacters.set(key,asset);missingCharacters.delete(key);loadedStatus()},undefined,err=>{missingCharacters.add(key);loadedStatus();console.warn('3D modell hiányzik vagy hibás:',skin.model,err?.message||err)})
+}
 const models=new Map(),lasers=[],particles=[],colors=[0x52eaff,0xb988ff,0x7affc1,0xffcb71,0xff78a6,0x8eabff];
 let coreFlash=0,upgradeView='',shake=0;
 const UPGRADES={
@@ -233,7 +240,9 @@ function enterUpgrade(){state.phase='upgrade';state.breakId++;for(const p of sta
 function spawnEnemy(kind,angle){const t=ENEMY_TYPES[kind],factor=kind==='boss'?1+Math.max(0,state.wave-10)*.07:1+Math.floor(state.wave/7)*.45;const hp=Math.max(1,Math.round(t.hp*factor));state.enemies.push({id:++state.next,kind,x:Math.cos(angle)*24,z:Math.sin(angle)*24,hp,maxHp:hp,cool:0})}
 
 function show(){ $('menu').classList.add('hidden');if(!state?.over)$('end').classList.add('hidden');for(const x of ['hud','team','tips','touch','perks','abilityHud'])$(x).classList.remove('hidden');$('code').textContent=room||'SOLO';$('invite').style.display=room?'':'none';$('again').style.display=mode==='client'?'none':''}
-function removeModel(g){scene.remove(g);g.traverse(o=>{o.geometry?.dispose();if(o.material){for(const m of (Array.isArray(o.material)?o.material:[o.material])){m.map?.dispose();m.dispose()}}})}
+function removeModel(g){scene.remove(g);
+if(g.userData.externalModel){for(const o of g.children){if(o.isSprite){o.material.map?.dispose();o.material.dispose()}else if(o.userData?.abilityRune){o.geometry?.dispose();o.material?.dispose()}}return}
+g.traverse(o=>{o.geometry?.dispose();if(o.material){for(const m of (Array.isArray(o.material)?o.material:[o.material])){m.map?.dispose();m.dispose()}}})}
 function clearEffects(){for(const e of [...lasers,...particles]){scene.remove(e.obj);e.obj.geometry?.dispose();e.obj.material?.dispose()}lasers.length=0;particles.length=0}
 function reset(){if(conn)try{conn.close()}catch{};if(peer)try{peer.destroy()}catch{};conn=null;peer=null;clients.clear();state=null;mode='menu';room='';localId='';for(const m of models.values())removeModel(m);models.clear();clearEffects();$('menu').classList.remove('hidden');for(const x of ['hud','team','tips','touch','end','upgrades','perks','bossbar','abilityHud'])$(x).classList.add('hidden');$('create').disabled=false;$('join').disabled=false;$('status').textContent='';upgradeView='';coreFlash=0;castTap=0;keys.clear();fire=false}
 
@@ -371,7 +380,28 @@ if(state.remaining===0&&state.enemies.length===0)enterUpgrade()}
 
 function makeLabel(name){const cvs=document.createElement('canvas');cvs.width=512;cvs.height=128;const tex=new THREE.CanvasTexture(cvs);const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,depthTest:false,transparent:true}));sprite.scale.set(3.3,.83,1);sprite.position.y=3.35;return{cvs,tex,sprite,last:''}}
 function updateLabel(label,p){const health=Math.ceil(p.hp),key=p.name+'|'+health+'|'+p.maxHp;if(label.last===key)return;label.last=key;const c=label.cvs.getContext('2d');c.clearRect(0,0,512,128);c.fillStyle='#041327e8';c.fillRect(14,4,484,118);c.strokeStyle='#46e9ff';c.lineWidth=3;c.strokeRect(14,4,484,118);c.font='bold 37px sans-serif';c.textAlign='center';c.fillStyle='#efffff';c.fillText(p.name,256,48);c.fillStyle='#612134';c.fillRect(40,69,432,31);c.fillStyle=health>p.maxHp*.35?'#44f8a7':'#ff5264';c.fillRect(40,69,432*Math.max(0,p.hp/p.maxHp),31);c.font='bold 24px sans-serif';c.fillStyle='#ffffff';c.fillText(health+' / '+p.maxHp,256,94);label.tex.needsUpdate=true}
-function makeModel(enemy,i,o){const g=new THREE.Group(),kind=o.kind||'normal',t=ENEMY_TYPES[kind],color=enemy?t.color:colors[i%6];
+function makeExternalCharacter(o){
+const file=loadedCharacters.get(o.skin);if(!file)return null;
+const root=new THREE.Group(),model=cloneSkeleton(file.scene),skin=SKINS[o.skin]||SKINS.sunny;
+if(skin.flipX)model.rotation.x=Math.PI/2;
+model.updateMatrixWorld(true);
+let bounds=new THREE.Box3().setFromObject(model),span=new THREE.Vector3();bounds.getSize(span);
+if(!Number.isFinite(span.y)||span.y<.001)return null;
+const height=o.skin==='idol'?2.75:3.0,scale=height/span.y;model.scale.multiplyScalar(scale);model.updateMatrixWorld(true);
+bounds=new THREE.Box3().setFromObject(model);
+model.position.x-=(bounds.min.x+bounds.max.x)/2;
+model.position.y-=bounds.min.y;
+model.position.z-=(bounds.min.z+bounds.max.z)/2;
+model.traverse(node=>{if(node.isMesh){node.frustumCulled=false;node.castShadow=false;node.receiveShadow=false}});
+root.add(model);
+const label=makeLabel(o.name);root.add(label.sprite);
+label.sprite.position.y=o.skin==='idol'?3.55:3.68;
+const rune=new THREE.Mesh(new THREE.TorusGeometry(.88,.045,7,48),new THREE.MeshBasicMaterial({color:(POWERS[o.power]||POWERS.purple).color,transparent:true,opacity:.65}));
+rune.rotation.x=-Math.PI/2;rune.position.y=.08;rune.userData.abilityRune=true;root.add(rune);
+root.userData={externalModel:true,skin:o.skin,label,rune};
+scene.add(root);return root
+}
+function makeModel(enemy,i,o){if(!enemy&&loadedCharacters.has(o.skin)){const hero=makeExternalCharacter(o);if(hero)return hero}const g=new THREE.Group(),kind=o.kind||'normal',t=ENEMY_TYPES[kind],color=enemy?t.color:colors[i%6];
 if(enemy){const r=t.radius;const shape=kind==='boss'?new THREE.DodecahedronGeometry(r,1):kind==='tank'?new THREE.DodecahedronGeometry(r):new THREE.IcosahedronGeometry(r,1);const body=new THREE.Mesh(shape,new THREE.MeshToonMaterial({color,emissive:color,emissiveIntensity:kind==='boss'?.55:.23}));body.position.y=r+.25;g.add(body);const outline=new THREE.Mesh(shape,new THREE.MeshBasicMaterial({color:0x1b0e36,side:THREE.BackSide}));outline.position.copy(body.position);outline.scale.setScalar(1.09);g.add(outline);const eye=new THREE.Mesh(new THREE.SphereGeometry(r*.35,10,8),mat(0xffffff,2));eye.position.set(0,r+.25,r*.83);g.add(eye);
 if(kind==='boss'){const halo=new THREE.Mesh(new THREE.TorusGeometry(2.7,.07,8,64),mat(0xff58bf,1.9));halo.position.y=2.5;halo.rotation.x=Math.PI/2.5;g.add(halo);g.userData.halo=halo;for(let j=0;j<7;j++){const a=j*Math.PI*2/7;const spike=new THREE.Mesh(new THREE.ConeGeometry(.42,1.65,4),mat(0xe178ff,1.6));spike.position.set(Math.cos(a)*1.9,2.5,Math.sin(a)*1.9);spike.rotation.z=Math.PI/2;g.add(spike)}const glow=new THREE.PointLight(0xa24fff,22,10);glow.position.y=2;g.add(glow)}
 else{const wing=new THREE.Mesh(new THREE.TorusGeometry(r*1.2,.065,6,16),mat(color,2));wing.position.y=r+.22;wing.rotation.x=Math.PI/2;g.add(wing);g.userData.halo=wing}}
@@ -477,7 +507,7 @@ const weapon=create(cube(.16,.19,.72),style.accent,[.36,1.35,.71],true,[-.18,0,0
 const label=makeLabel(o.name);g.userData.label=label;g.userData.skin=o.skin;g.add(label.sprite);
 }
 scene.add(g);return g}
-function drawState(){if(!state)return;const active=new Set();for(const[enemy,arr]of [[false,state.players],[true,state.enemies]])arr.forEach((o,i)=>{const key=(enemy?'e':'p')+o.id;active.add(key);let m=models.get(key);if(m&&!enemy&&m.userData.skin!==o.skin){removeModel(m);models.delete(key);m=null}
+function drawState(){if(!state)return;const active=new Set();for(const[enemy,arr]of [[false,state.players],[true,state.enemies]])arr.forEach((o,i)=>{const key=(enemy?'e':'p')+o.id;active.add(key);let m=models.get(key);if(m&&!enemy&&(m.userData.skin!==o.skin||(!m.userData.externalModel&&loadedCharacters.has(o.skin)))){removeModel(m);models.delete(key);m=null}
 if(!m){m=makeModel(enemy,i,o);models.set(key,m);m.position.set(o.x,0,o.z)}
 m.position.x+=(o.x-m.position.x)*.3;m.position.z+=(o.z-m.position.z)*.3;m.rotation.y=enemy?Math.atan2(-o.x,-o.z):o.angle||0;
 if(enemy){const kind=o.kind||'normal';m.position.y=Math.sin(performance.now()*.004+i)*.14;if(m.userData.halo)m.userData.halo.rotation.z+=.035;if(kind==='boss')m.scale.setScalar(1+Math.sin(performance.now()*.003)*.045)}
