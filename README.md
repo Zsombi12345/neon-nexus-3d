@@ -1,4 +1,4 @@
-# NEON NEXUS 3D — Heroes Edition v3.3.0
+# NEON NEXUS 3D — Combat Edition v3.4.0
 
 **Játék:** https://zsombi12345.github.io/neon-nexus-3d/
 
@@ -13,12 +13,22 @@ A belépés előtt választható 3 karakter:
 
 A játékkód már tudja betölteni mindhárom GLB-t, és a választás a többi játékosnak is látható. **A modellfájlokat külön fel kell tölteni a GitHubra**: töltsd le a ChatGPT mellékelt ZIP-csomagját, csomagold ki, majd a `models` mappába töltsd fel a három `.glb`-t az **Add file → Upload files** segítségével. Amíg hiányoznak, a játék átmeneti rajzfilmszerű karaktereket mutat. Az állapotról a belépési menü tájékoztat.
 
+## Combat Edition v3.4 – fő változások
+
+- **Mana**: amíg akár egy farkas vagy nyuszi él, a mana egyáltalán nem töltődik. Az utolsó idézett halála után indul a visszatöltés, amely a hiányzó mana teljes pótlásához **120 másodpercig** tart. Újabb idézés leállítja és később újrakezdi a folyamatot.
+- **Fekete villanás**: **170 alapéleterő**, közeli ökölharc bal kattintásra. Jó Q-időzítés: 15 sebzés, elrontott: 3 sebzés, mindkettő közelharci.
+- **Fordított energia**: legfeljebb **9,5 játékbeli egységre** gyógyítja a játékosokat és a közelében lévő kristályt.
+- **Árnyékidézés**: az idézettek továbbra is önállóan harcolnak, az idéző bal kattintásra karddal vagy lándzsával támad. **T-vel lehet fegyvert váltani**, a lándzsa messzebb ér el, a kard nagyobbat sebez.
+- **Skinek**: Po jelenlegi tartalék modellje változatlan. Makima tartalék modellje sötét nadrágot, fehér inget, piros nyakkendőt, rézszínű fonott hajat és különleges szemeket kapott.
+
+**Fontos az eredeti skinekhez:** a GitHubon jelenleg még nincs fent a három bináris modellfájl. A modellcsomagból a main ág models/ mappájába töltsd fel pontosan marin.glb, makima.glb és po.glb néven. A models/README.md fájlban részletes útmutató és licencinformációk találhatók.
+
 ## Képességek
 
 - **Lila energiatörés** — egyenes, átütő energiacsapás.
 - **Végtelen mező** — a közeli ellenfeleket ellöki és erősen lassítja; a hatás alatt **folyamatosan sebez**.
-- **Árnyékidézés** — harcoló társakat idéz. `R`-rel válthatsz **farkas** (4 mana) és **nyuszi** (2 mana) között, `Q`-val idézel. Az idézettek addig harcolnak, amíg van életerejük. A farkas erősebb és több HP-val rendelkezik; a nyuszi olcsóbb és gyorsabb. Mana regenerálódik, alap idézési limit 2.
-- **Fekete villanás** — amikor feltöltött, `Q`-ra megjelenik egy fel-le mozgó időzítősáv. Újra `Q` a kis zöld sávon: **piros-fekete, 15 sebzés**. Mellényomás: **kék-fekete, 3 sebzés**, azaz ötször gyengébb.
+- **Árnyékidézés** — harcoló társakat idéz. `R`-rel válthatsz **farkas** (4 mana) és **nyuszi** (2 mana) között, `Q`-val idézel. Az idézettek addig harcolnak, amíg van életerejük. A farkas erősebb és több HP-val rendelkezik; a nyuszi olcsóbb és gyorsabb. A mana csak akkor regenerálódik, ha az összes idézett meghalt; a hiányzó mana teljes feltöltése 120 másodperc. Az alap idézési limit 2.
+- **Fekete villanás** — amikor feltöltött, `Q`-ra megjelenik egy fel-le mozgó időzítősáv. Újra `Q` a kis zöld sávon: **piros-fekete, közelharci 15 sebzés**. Mellényomás: **kék-fekete, közelharci 3 sebzés**, azaz ötször gyengébb.
 - **Fordított energia** — gyógyítja a csapatot és a kristályt.
 
 Ha Árnyékidézést választasz, hullámok végén kaphatsz speciális fejlesztéseket: **Falka vezető** (+1 idézési hely), **Mana forrás** (+4 maximális mana és gyorsabb regeneráció), **Falka erő** (+HP és sebzés az idézetteknek).
@@ -31,6 +41,7 @@ Az összes képesség és az idézettek állapota multiplayerben a házigazda fe
 - **Egér + bal kattintás** — célzás és plazmalövés
 - **Q** — képesség; Fekete villanásnál első és második nyomás az időzítéshez
 - **R** — farkas és nyuszi közti váltás (Árnyékidézés esetén)
+- **T** — kard és lándzsa közti váltás (Árnyékidézés esetén)
 - Érintőképernyőn külön gombok: lövés, képesség, idézettváltás
 
 ## Többjátékos mód
