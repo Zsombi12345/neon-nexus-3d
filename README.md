@@ -1,5 +1,24 @@
 # NEON NEXUS 3D — Combat Edition v3.4.0
 
+## Két külön játékmód (az eredeti játék megmaradt)
+
+- **Eredeti, külső nézetes NEON NEXUS:** https://zsombi12345.github.io/neon-nexus-3d/
+- **ÚJ FPS / belső nézetes NEON NEXUS:** https://zsombi12345.github.io/neon-nexus-3d/fps.html
+
+Az FPS mód külön `fps.html` fájlban található, és nem írja felül az eredeti `index.html`-t. Az FPS-ben ugyanaz a kristályvédelem, a hullámok, a főellenségek, a fegyverek, a képességek és a szobakódos multiplayer működik, mint az eredeti változatban. A két nézethez külön multiplayer szobák tartoznak, így külön indíthatók.
+
+**FPS irányítás:**
+- **W, A, S, D** — mozgás a kamera irányához képest
+- **Egér mozgatása** — körbenézés
+- **Bal egérgomb** — plazmalövés vagy a választott közelharci támadás
+- **Első kattintás a játéktéren** — az egér rögzítése a belső nézethez
+- **Esc** — egérkurzor felszabadítása
+- **Q** — különleges képesség, Fekete villanásnál a második Q-val időzítés
+- **R** — farkas/nyuszi váltás Árnyékidézésnél
+- **T** — kard/lándzsa váltás Árnyékidézésnél
+
+Hullámvégi fejlesztésválasztáskor az egér felszabadul. A következő harcban kattints ismét a pályára a körbenézés folytatásához. Az FPS mód külön célkeresztet, 3D-s fegyvert és radart is tartalmaz. Érintőkijelzőn a pályán húzással lehet körbenézni.
+
 **Játék:** https://zsombi12345.github.io/neon-nexus-3d/
 
 3D, legfeljebb 6 fős kooperatív kristályvédős böngészős játék. Minden hullám után 3 fejlesztés közül lehet választani. **Minden 10. hullámon boss** jelenik meg.
