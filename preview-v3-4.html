@@ -1,4 +1,4 @@
-<!doctype html><html lang="hu"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NEON NEXUS 3D | Heroes Edition v3.3</title><style>
+<!doctype html><html lang="hu"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NEON NEXUS 3D | Combat Edition v3.4</title><style>
 *{box-sizing:border-box}body{margin:0;background:#050a1b;color:#e7fbff;font:15px system-ui;overflow:hidden}canvas{display:block}button,input{font:inherit;border:1px solid #4fdcf7;border-radius:9px;background:#0c203b;color:white;padding:12px}button{cursor:pointer}button:hover{background:#14436a}.primary{background:#3be3f5;color:#031020;font-weight:800}#menu,#end{position:fixed;inset:0;background:#02091de8;display:grid;place-items:center}section{width:min(460px,94vw);padding:32px;border:1px solid #43ddf78a;border-radius:20px;background:#09152e;box-shadow:0 0 80px #008ff62b;text-align:center}h1{font-size:52px;line-height:.95;color:#65edff;text-shadow:0 0 30px #15b4ff}p{color:#9ebcd2}input{width:100%;margin:6px 0 12px}section button{width:100%;margin:5px 0}.row{display:flex;gap:8px}.row input{flex:1;min-width:0}.row button{width:auto}.hidden{display:none!important}#hud{position:fixed;top:15px;left:15px;right:15px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}#hud>div{padding:12px 16px;background:#071b36dd;border:1px solid #4fe6f866;border-radius:12px;pointer-events:auto}#hud b{color:#62f6ff}#hud button{padding:5px 9px}#team{position:fixed;left:15px;top:100px;padding:12px;background:#071b36dd;border-radius:12px;min-width:165px}#tips{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);padding:10px 20px;background:#071b36dd;border-radius:10px;white-space:nowrap}#announce{position:fixed;top:28%;left:50%;transform:translateX(-50%);font-size:32px;font-weight:900;text-shadow:0 0 20px cyan;pointer-events:none}#touch{position:fixed;bottom:20px;left:15px;right:15px;display:none;justify-content:space-between;pointer-events:none}#touch button{pointer-events:auto}#fire{border-radius:50%;width:80px;height:80px}@media(pointer:coarse){#touch:not(.hidden){display:flex}#tips{display:none}#team{top:auto;bottom:145px}}@media(max-width:600px){#hud{font-size:11px}#hud>div{padding:7px}h1{font-size:40px}}
 
 #perks{position:fixed;right:15px;top:105px;width:230px;max-height:55vh;overflow:auto;border:1px solid #5adff666;background:#07182de8;border-radius:12px;padding:13px;pointer-events:none}
@@ -140,7 +140,7 @@ radial-gradient(ellipse 60% 70% at 85% 90%,#ff70af22,transparent 70%),#050719eb}
 <p id="assetStatus">3D karaktermodellek betöltése…</p><p class="character-tip">✦ Választásaid megmaradnak a böngésződben • Hullámok után további fejlesztéseket kapsz</p>
 </div>
 <input id="name" maxlength="14" placeholder="Játékosneved" value="Játékos"><button class="primary" id="create">MULTIPLAYER SZOBA LÉTREHOZÁSA</button><div class="row"><input id="room" maxlength="6" placeholder="SZOBAKÓD"><button id="join">CSATLAKOZÁS</button></div><button id="solo">EGYJÁTÉKOS DEMO</button><p id="status"></p></section></div>
-<div id="hud" class="hidden"><div><strong>NEON NEXUS</strong><br>SZOBA: <b id="code">SOLO</b></div><div>HULLÁM <b id="wave">1</b> • KRISTÁLY <b id="health">100%</b><br>ÉLETERŐ <b id="hp">100</b></div><div><button id="invite">MEGHÍVÁS</button><button id="leave">KILÉPÉS</button></div></div><div id="version-badge" aria-label="Játékverzió">◆ NEON NEXUS • v3.3.0 HEROES EDITION</div>
+<div id="hud" class="hidden"><div><strong>NEON NEXUS</strong><br>SZOBA: <b id="code">SOLO</b></div><div>HULLÁM <b id="wave">1</b> • KRISTÁLY <b id="health">100%</b><br>ÉLETERŐ <b id="hp">100</b></div><div><button id="invite">MEGHÍVÁS</button><button id="leave">KILÉPÉS</button></div></div><div id="version-badge" aria-label="Játékverzió">◆ NEON NEXUS • v3.4.0 COMBAT EDITION</div>
 <div id="abilityHud" class="hidden"><button id="useAbility" title="Különleges képesség: Q"><span id="abilitySymbol">✦</span><span class="ability-meta"><strong id="abilityName">Képesség</strong><small id="abilityTimer">Q • KÉSZ</small></span><strong>Q</strong></button><div id="abilityBar"><div id="abilityFill"></div></div></div>
 <div id="summonHud" class="hidden"><strong id="summonLabel">🐺 Farkas (4 mana)</strong><div id="manaTrack"><div id="manaFill"></div></div><small id="manaText">Mana: 12/12</small><button id="toggleSummon">R • Nyuszi / Farkas váltás</button><small id="summonCount">Idézettek: 0/2</small></div>
 <div id="flashOverlay" class="hidden"><div id="flashPrompt"><h3>⚡ FEKETE VILLANÁS</h3><p>Nyomj újra Q-t a zöld zónában!</p><div id="flashTrack"><div id="flashZone"></div><div id="flashMarker"></div></div><button id="flashStop">Q • IDŐZÍTÉS</button></div></div>
@@ -189,7 +189,7 @@ regen:{icon:'✨',name:'Nanobot regeneráció',desc:'Folyamatosan visszatöltő 
 pierce:{icon:'🔱',name:'Átütő plazma',desc:'A lövés további ellenfeleken is áthatol.'},
 repair:{icon:'💎',name:'Kristályvédelem',desc:'Megjavítja és megerősíti a kristályt.'},
 summonSlots:{icon:'🐺',name:'Falka vezető',desc:'Árnyékidézőként eggyel több lényt tarthatsz életben.'},
-manaWell:{icon:'🔮',name:'Mana forrás',desc:'+4 maximális mana és gyorsabb töltődés.'},
+manaWell:{icon:'🔮',name:'Mana forrás',desc:'+4 maximális mana (csak az összes idézett eltűnése után, 120 másodperc alatt tölt vissza).'},
 summonFangs:{icon:'🐾',name:'Falka erő',desc:'Idézett farkasaid és nyulaid több életet és sebzést kapnak.'}
 };
 const ENEMY_TYPES={
@@ -238,9 +238,9 @@ function init(){return{players:[],enemies:[],summons:[],nextSummon:0,core:100,co
 function rollChoices(p){const standard=Object.keys(UPGRADES).filter(k=>!['summonSlots','manaWell','summonFangs'].includes(k));
 const special=p?.power==='shadow'?['summonSlots','manaWell','summonFangs']:[];const pool=standard.sort(()=>Math.random()-.5);
 if(special.length)return[special[Math.floor(Math.random()*special.length)],...pool.slice(0,2)].sort(()=>Math.random()-.5);return pool.slice(0,3)}
-function add(id,name,skin='sunny',power='purple'){if(state.players.some(p=>p.id===id))return;const waiting=state.phase==='upgrade';state.players.push({id,name:safe(name),skin:Object.hasOwn(SKINS,skin)?skin:'sunny',power:Object.hasOwn(POWERS,power)?power:'purple',powerCool:0,mana:12,maxMana:12,summonType:'wolf',x:rnd(-5,5),z:rnd(-5,5),angle:0,hp:100,maxHp:100,kills:0,cool:0,revive:0,perks:{},choices:waiting?rollChoices({power}):[],picked:!waiting,input:{x:0,z:0,ax:0,az:0,fire:false,special:false,summonType:'wolf'}})}
+function add(id,name,skin='sunny',power='purple'){if(state.players.some(p=>p.id===id))return;const waiting=state.phase==='upgrade';state.players.push({id,name:safe(name),skin:Object.hasOwn(SKINS,skin)?skin:'sunny',power:Object.hasOwn(POWERS,power)?power:'purple',powerCool:0,mana:12,maxMana:12,manaRecharge:0,manaRecoverStart:null,summonType:'wolf',x:rnd(-5,5),z:rnd(-5,5),angle:0,hp:power==='flash'?170:100,maxHp:power==='flash'?170:100,kills:0,cool:0,revive:0,perks:{},choices:waiting?rollChoices({power}):[],picked:!waiting,input:{x:0,z:0,ax:0,az:0,fire:false,special:false,summonType:'wolf'}})}
 function pack(){return{players:state.players.map(({input,cool,revive,...p})=>p),enemies:state.enemies,summons:state.summons,core:state.core,coreMax:state.coreMax,wave:state.wave,over:state.over,phase:state.phase,breakId:state.breakId}}
-function applyUpgrade(id,index){if(!state||state.phase!=='upgrade')return;const p=state.players.find(x=>x.id===id);if(!p||p.picked||!Number.isInteger(index)||index<0||index>2)return;const key=p.choices[index];if(!UPGRADES[key])return;p.perks[key]=(p.perks[key]||0)+1;p.picked=true;p.choices=[];if(key==='heal'){p.maxHp+=25;p.hp=Math.min(p.maxHp,p.hp+45)}if(key==='repair'){state.coreMax+=8;state.core=Math.min(state.coreMax,state.core+24)}if(key==='multi')p.perks[key]=Math.min(3,p.perks[key]);if(key==='manaWell'){p.maxMana+=4;p.mana=Math.min(p.maxMana,p.mana+4)}if(key==='summonSlots')p.perks[key]=Math.min(8,p.perks[key]);if(mode==='host')broadcast({type:'state',data:pack()})}
+function applyUpgrade(id,index){if(!state||state.phase!=='upgrade')return;const p=state.players.find(x=>x.id===id);if(!p||p.picked||!Number.isInteger(index)||index<0||index>2)return;const key=p.choices[index];if(!UPGRADES[key])return;p.perks[key]=(p.perks[key]||0)+1;p.picked=true;p.choices=[];if(key==='heal'){p.maxHp+=25;p.hp=Math.min(p.maxHp,p.hp+45)}if(key==='repair'){state.coreMax+=8;state.core=Math.min(state.coreMax,state.core+24)}if(key==='multi')p.perks[key]=Math.min(3,p.perks[key]);if(key==='manaWell'){p.maxMana+=4;if(p.manaRecoverStart!==null)p.manaRecoverStart=Math.min(p.manaRecoverStart,p.mana)}if(key==='summonSlots')p.perks[key]=Math.min(8,p.perks[key]);if(mode==='host')broadcast({type:'state',data:pack()})}
 function beginWave(){state.phase='fight';state.wave++;state.remaining=Math.min(8+state.wave*3,65);state.timer=1;for(const p of state.players){p.picked=true;p.choices=[];p.hp=Math.min(p.maxHp,p.hp+15)}if(state.wave%10===0){const a=rnd(0,Math.PI*2);spawnEnemy('boss',a);announce('☠ BOSS HULLÁM '+state.wave+' ☠')}else announce('HULLÁM '+state.wave)}
 function enterUpgrade(){state.phase='upgrade';state.breakId++;for(const p of state.players){p.choices=rollChoices(p);p.picked=false;p.input.fire=false}announce('✓ '+state.wave+'. HULLÁM TELJESÍTVE!');if(mode==='host')broadcast({type:'state',data:pack()})}
 function spawnEnemy(kind,angle){const t=ENEMY_TYPES[kind],factor=kind==='boss'?1+Math.max(0,state.wave-10)*.07:1+Math.floor(state.wave/7)*.45;const hp=Math.max(1,Math.round(t.hp*factor));state.enemies.push({id:++state.next,kind,x:Math.cos(angle)*24,z:Math.sin(angle)*24,hp,maxHp:hp,cool:0})}
@@ -348,7 +348,7 @@ const buff=p.perks.summonFangs||0,baseHp=valid==='wolf'?52:19;
 const hp=baseHp*(1+buff*.35),angle=p.angle+rnd(-.7,.7);
 const creature={id:++state.nextSummon,owner:p.id,kind:valid,x:lim(p.x+Math.sin(angle)*2,-24,24),z:lim(p.z+Math.cos(angle)*2,-24,24),
 hp,maxHp:hp,damage:(valid==='wolf'?6:2.2)*(1+buff*.32),speed:valid==='wolf'?4.2:5.6,cool:.3};
-state.summons.push(creature);
+state.summons.push(creature);p.manaRecharge=0;p.manaRecoverStart=null;
 const fx={type:'shadow',x:creature.x,z:creature.z,kind:valid,targets:[]};
 powerVisual(fx);if(mode==='host')broadcast({type:'powerfx',effect:fx});
 if(p.id===localId)announce((valid==='wolf'?'🐺 ÁRNYÉKFARKAS':'🐇 ÁRNYÉKNYUSZI')+' MEGIDÉZVE');
@@ -402,7 +402,17 @@ state.timer-=dt;
 if(state.remaining>0&&state.timer<=0){const roll=Math.random(),kind=roll<.35?'runner':roll<.68?'normal':'tank';spawnEnemy(kind,rnd(0,Math.PI*2));state.remaining--;state.timer=Math.max(.2,.65-state.wave*.008)}
 for(const p of state.players){const i=p.id===localId?input():p.input;
 if(p.hp<=0){p.powerCool=Math.max(0,p.powerCool-dt);p.revive=(p.revive||0)+dt;if(p.revive>=3){p.hp=p.maxHp;p.x=rnd(-5,5);p.z=rnd(-5,5);p.revive=0}continue}
-p.revive=0;p.powerCool=Math.max(0,p.powerCool-dt);p.mana=Math.min(p.maxMana,p.mana+dt*(.85+(p.perks.manaWell||0)*.40));p.x=lim(p.x+i.x*8*Math.pow(1.14,p.perks.speed||0)*dt,-25,25);p.z=lim(p.z+i.z*8*Math.pow(1.14,p.perks.speed||0)*dt,-25,25);p.angle=Math.atan2(i.ax-p.x,i.az-p.z);if(p.power==='shadow')p.summonType=i.summonType==='rabbit'?'rabbit':'wolf';p.cool=Math.max(0,p.cool-dt);
+p.revive=0;p.powerCool=Math.max(0,p.powerCool-dt);
+if(p.power==='shadow'){
+const owned=(state.summons||[]).some(s=>s.owner===p.id&&s.hp>0);
+if(owned){p.manaRecharge=0;p.manaRecoverStart=null}
+else if(p.mana<p.maxMana){
+if(p.manaRecoverStart===null){p.manaRecoverStart=p.mana;p.manaRecharge=0}
+p.manaRecharge=Math.min(120,p.manaRecharge+dt);
+p.mana=Math.min(p.maxMana,p.manaRecoverStart+(p.maxMana-p.manaRecoverStart)*(p.manaRecharge/120))
+}else{p.manaRecharge=0;p.manaRecoverStart=null}
+}
+p.x=lim(p.x+i.x*8*Math.pow(1.14,p.perks.speed||0)*dt,-25,25);p.z=lim(p.z+i.z*8*Math.pow(1.14,p.perks.speed||0)*dt,-25,25);p.angle=Math.atan2(i.ax-p.x,i.az-p.z);if(p.power==='shadow')p.summonType=i.summonType==='rabbit'?'rabbit':'wolf';p.cool=Math.max(0,p.cool-dt);
 if(i.special&&p.powerCool<=0&&state.phase==='fight')castPower(p);
 if(p.perks.regen)p.hp=Math.min(p.maxHp,p.hp+dt*p.perks.regen*1.4);
 if(i.fire&&p.cool===0){p.cool=Math.max(.055,.22*Math.pow(.84,p.perks.rapid||0));const shots=1+Math.min(3,p.perks.multi||0),damage=1+(p.perks.damage||0),penetration=1+(p.perks.pierce||0),color=colors[state.players.indexOf(p)%6];
@@ -618,7 +628,9 @@ $('perklist').replaceChildren();if(me){const items=Object.entries(me.perks||{});
 if(me){const activeShadow=me.power==='shadow';$('summonHud').classList.toggle('hidden',!activeShadow);
 if(activeShadow){const kind=summonChoice,cost=kind==='wolf'?4:2,alive=(state.summons||[]).filter(p=>p.owner===me.id&&p.hp>0).length,limit=2+(me.perks.summonSlots||0);
 $('summonLabel').textContent=(kind==='wolf'?'🐺 Farkas':'🐇 Nyuszi')+' ('+cost+' mana)';
-$('manaFill').style.width=(100*me.mana/me.maxMana)+'%';$('manaText').textContent='Mana: '+me.mana.toFixed(1)+' / '+me.maxMana;
+$('manaFill').style.width=(100*me.mana/me.maxMana)+'%';
+const recovering=alive===0&&me.mana<me.maxMana;
+$('manaText').textContent='Mana: '+me.mana.toFixed(1)+' / '+me.maxMana+(alive>0?' • NEM TÖLTŐDIK':recovering?' • '+Math.ceil(120-(me.manaRecharge||0))+' mp a feltöltésig':' • TELE');
 $('summonCount').textContent='Idézettek: '+alive+' / '+limit}
 const power=POWERS[me.power]||POWERS.purple,remain=Math.max(0,me.powerCool||0);
 $('abilitySymbol').textContent=power.icon;$('abilityName').textContent=power.name;
