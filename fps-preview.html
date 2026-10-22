@@ -276,7 +276,7 @@ function removeModel(g){scene.remove(g);
 if(g.userData.externalModel){if(g.userData.weaponGroup)g.userData.weaponGroup.traverse(o=>{o.geometry?.dispose();o.material?.dispose()});for(const o of g.children){if(o.isSprite){o.material.map?.dispose();o.material.dispose()}else if(o.userData?.abilityRune){o.geometry?.dispose();o.material?.dispose()}}return}
 g.traverse(o=>{o.geometry?.dispose();if(o.material){for(const m of (Array.isArray(o.material)?o.material:[o.material])){m.map?.dispose();m.dispose()}}})}
 function clearEffects(){for(const e of [...lasers,...particles]){scene.remove(e.obj);e.obj.geometry?.dispose();e.obj.material?.dispose()}lasers.length=0;particles.length=0}
-function reset(){fpsReleaseMouse();fpsGunRig.visible=false;fpsViewType='';fpsLastPos=null;if(conn)try{conn.close()}catch{};if(peer)try{peer.destroy()}catch{};conn=null;peer=null;clients.clear();state=null;mode='menu';room='';localId='';for(const m of models.values())removeModel(m);models.clear();clearEffects();$('menu').classList.remove('hidden');for(const x of ['hud','team','tips','touch','end','upgrades','perks','bossbar','abilityHud'])$(x).classList.add('hidden');$('create').disabled=false;$('join').disabled=false;$('status').textContent='';upgradeView='';coreFlash=0;castTap=0;flashActive=false;$('flashOverlay').classList.add('hidden');$('summonHud').classList.add('hidden');keys.clear();fire=false;fpsUi()}
+function reset(){fpsReleaseMouse();fpsGunRig.visible=false;fpsViewType='';fpsLastPos=null;fpsTouchLook=null;if(conn)try{conn.close()}catch{};if(peer)try{peer.destroy()}catch{};conn=null;peer=null;clients.clear();state=null;mode='menu';room='';localId='';for(const m of models.values())removeModel(m);models.clear();clearEffects();$('menu').classList.remove('hidden');for(const x of ['hud','team','tips','touch','end','upgrades','perks','bossbar','abilityHud'])$(x).classList.add('hidden');$('create').disabled=false;$('join').disabled=false;$('status').textContent='';upgradeView='';coreFlash=0;castTap=0;flashActive=false;$('flashOverlay').classList.add('hidden');$('summonHud').classList.add('hidden');keys.clear();fire=false;fpsUi()}
 
 function fail(t){reset();$('status').textContent=t}
 function send(c,o){if(c?.open)try{c.send(o)}catch{}}
@@ -838,10 +838,17 @@ if(k==='r'&&mode!=='menu'){e.preventDefault();if(!e.repeat)toggleSummonChoice();
 if(k==='t'&&mode!=='menu'){e.preventDefault();if(!e.repeat)toggleShadowWeapon();return}
 if(['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright'].includes(k)&&mode!=='menu'){e.preventDefault();keys.add(k.replace('arrowup','w').replace('arrowdown','s').replace('arrowleft','a').replace('arrowright','d'))}});
 addEventListener('keyup',e=>keys.delete(e.key.toLowerCase().replace('arrowup','w').replace('arrowdown','s').replace('arrowleft','a').replace('arrowright','d')));
-$('c').onpointerdown=()=>fire=true;addEventListener('pointerup',()=>fire=false);addEventListener('blur',()=>{keys.clear();fire=false});
-$('c').onpointermove=e=>{const mouse=new THREE.Vector2(e.clientX/innerWidth*2-1,1-e.clientY/innerHeight*2),ray=new THREE.Raycaster();ray.setFromCamera(mouse,camera);const point=new THREE.Vector3();if(ray.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0,1,0),0),point)){aim.x=lim(point.x,-25,25);aim.z=lim(point.z,-25,25)}};
+$('c').onpointerdown=e=>{if(mode==='menu')return;
+if(e.pointerType==='touch'){fpsTouchLook={id:e.pointerId,x:e.clientX,y:e.clientY};try{$('c').setPointerCapture(e.pointerId)}catch{}return}
+if(!fpsPointerActive()){fpsLockMouse();return}fire=true;fpsKick=.16};
+addEventListener('pointerup',()=>{fire=false;fpsTouchLook=null});
+addEventListener('blur',()=>{keys.clear();fire=false;fpsTouchLook=null});
+$('c').onpointermove=e=>{if(e.pointerType==='touch'&&fpsTouchLook&&fpsTouchLook.id===e.pointerId){
+const dx=e.clientX-fpsTouchLook.x,dy=e.clientY-fpsTouchLook.y;
+fpsYaw+=dx*.007;fpsPitch=lim(fpsPitch-dy*.006,-1.15,1.1);
+fpsTouchLook.x=e.clientX;fpsTouchLook.y=e.clientY}};
 for(const b of document.querySelectorAll('[data-k]')){const k=b.dataset.k;b.onpointerdown=e=>{e.preventDefault();keys.add(k);b.setPointerCapture(e.pointerId)};b.onpointerup=()=>keys.delete(k);b.onpointercancel=()=>keys.delete(k)}
-$('fire').onpointerdown=e=>{fire=true;$('fire').setPointerCapture(e.pointerId)};$('fire').onpointerup=()=>fire=false;
+$('fire').onpointerdown=e=>{fire=true;fpsKick=.16;$('fire').setPointerCapture(e.pointerId)};$('fire').onpointerup=()=>fire=false;
 $('useAbility').onclick=handleAbilityTap;$('flashStop').onclick=handleAbilityTap;$('toggleSummon').onclick=toggleSummonChoice;$('toggleWeapon').onclick=toggleShadowWeapon;
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
 const q=new URLSearchParams(location.search).get('room');if(q&&/^[A-Z2-9]{6}$/i.test(q)){$('room').value=q.toUpperCase();$('status').textContent='Meghívót kaptál. Add meg a neved, majd csatlakozz!'}
