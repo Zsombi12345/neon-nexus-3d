@@ -20,8 +20,77 @@
 #damageFlash{position:fixed;inset:0;pointer-events:none;border:0 solid #ff234f;box-shadow:inset 0 0 120px 35px #ff174b;opacity:0;z-index:3}
 #announce{z-index:5;text-align:center;width:min(90vw,700px);white-space:normal;pointer-events:none}
 @media(max-width:650px){#options{grid-template-columns:1fr}.option{min-height:92px;padding:10px;flex-direction:row;flex-wrap:wrap}.option .emblem{font-size:25px}.option small{width:100%}#perks{top:auto;bottom:115px;right:10px;max-height:30vh;width:155px;padding:9px}#bossbar{top:105px}#team{font-size:11px}}
-</style><canvas id="c"></canvas><div id="menu"><section><small>3D ONLINE CO-OP SURVIVAL</small><h1>NEON<br>NEXUS</h1><p>Védd meg a kristályt a drónoktól a barátaiddal! Maximum 6 játékos, közös hullámok, pontszámok.</p><input id="name" maxlength="14" placeholder="Játékosneved" value="Játékos"><button class="primary" id="create">MULTIPLAYER SZOBA LÉTREHOZÁSA</button><div class="row"><input id="room" maxlength="6" placeholder="SZOBAKÓD"><button id="join">CSATLAKOZÁS</button></div><button id="solo">EGYJÁTÉKOS DEMO</button><p id="status"></p></section></div>
-<div id="hud" class="hidden"><div><strong>NEON NEXUS</strong><br>SZOBA: <b id="code">SOLO</b></div><div>HULLÁM <b id="wave">1</b> • KRISTÁLY <b id="health">100%</b><br>ÉLETERŐ <b id="hp">100</b></div><div><button id="invite">MEGHÍVÁS</button><button id="leave">KILÉPÉS</button></div></div><div id="team" class="hidden"></div><div id="tips" class="hidden">WASD: MOZGÁS • EGÉR: CÉLZÁS • KATTINTÁS: LÖVÉS</div><div id="announce"></div><div id="touch" class="hidden"><div><button data-k="w">▲</button><br><button data-k="a">◀</button><button data-k="s">▼</button><button data-k="d">▶</button></div><button id="fire">LŐ</button></div><div id="end" class="hidden"><section><h1>VÉGE</h1><p id="result"></p><button id="again" class="primary">ÚJRAINDÍTÁS</button><button id="back">MENÜ</button></section></div>
+
+/* ANIME EDITION v3 — original cosplay-inspired art direction */
+:root{--anime-ink:#1a103b;--anime-violet:#a77dff;--anime-rose:#ff77c8;--anime-sky:#61eaff}
+body{font-family:system-ui,"Segoe UI",sans-serif}
+#menu{overflow-y:auto;display:flex;align-items:flex-start;justify-content:center;padding:26px 14px 70px;background:
+radial-gradient(ellipse 68% 72% at 20% 15%,#9f5de034,transparent 80%),
+radial-gradient(ellipse 60% 70% at 85% 90%,#ff70af22,transparent 70%),#050719eb}
+#menu section{width:min(100%,970px);max-width:970px;padding:26px clamp(16px,4vw,34px);margin:auto;border:2px solid #ac8dff;background:linear-gradient(145deg,#161636ee,#0b112be9);box-shadow:8px 8px 0 #190d40,0 0 85px #b77bff27;text-align:center;position:relative;overflow:hidden}
+#menu section:before{content:"";position:absolute;right:-100px;top:-120px;width:310px;height:310px;border-radius:50%;background:repeating-radial-gradient(circle,#ff6cba18 0 4px,transparent 5px 19px);pointer-events:none}
+#menu h1{font-weight:950;letter-spacing:1px;transform:skew(-5deg);text-shadow:4px 4px 0 #aa40cf,8px 8px 0 #2c196c;color:#f0faff;font-size:clamp(37px,6vw,65px);line-height:.9;margin:12px 0 18px}
+#menu p{color:#d4c9ea}
+#menu .primary{background:linear-gradient(100deg,#ff7abc,#8edfff);border:2px solid #fce6ff;color:#211033;box-shadow:0 5px 0 #63269d}
+#menu .primary:hover{background:linear-gradient(100deg,#ffd1ea,#b9f2ff);transform:translateY(-2px)}
+#menu input{background:#0d1331;border:1px solid #9c87e2;text-align:center}
+#selector{position:relative;margin:19px auto;max-width:890px}
+#selector h2{font-size:16px;color:#ffb5e4;letter-spacing:2.5px;margin:18px 0 6px;text-align:left}
+#selector .select-subtitle{font-size:12px;color:#c5b7e4;text-align:left;margin:0 0 9px}
+.selection-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+#selector .pick{width:100%;margin:0;min-height:152px;border:2px solid #564889;position:relative;padding:11px 9px;display:flex;flex-direction:column;align-items:center;gap:6px;background:linear-gradient(160deg,#211942,#10152e);color:#fff;border-radius:13px;overflow:hidden;transition:transform .16s,box-shadow .16s,border-color .16s}
+#selector .pick:hover{transform:translateY(-3px);border-color:#ffd0f1}
+#selector .pick.selected{border-color:#ffb2e3;background:linear-gradient(155deg,#5f347e,#17204b);box-shadow:0 0 0 2px #f7e4ff42,inset 0 0 33px #ff61c33c}
+#selector .pick.selected:after{content:"✓";position:absolute;right:7px;top:5px;background:#ffbde8;color:#3b1246;font-weight:900;border-radius:50%;width:22px;height:22px;line-height:22px}
+#selector .pick strong{font-size:13px;color:#fff;text-shadow:0 1px 3px #110c26}
+#selector .pick small{font-size:10px;line-height:1.3;color:#cdb9ec}
+#selector .pick .spell-icon{font-size:31px;margin:7px 0;filter:drop-shadow(0 0 10px #cf8dff)}
+#selector .pick .spell-cd{font-size:10px;color:#7eeefa;text-transform:uppercase;letter-spacing:1px;font-weight:700}
+.cosplay-portrait{height:75px;width:75px;position:relative;display:block;background:linear-gradient(160deg,#aa8bfc,#e8afff);border-radius:50%;box-shadow:0 0 0 3px #ffe5ff42,inset 0 -9px 15px #1e18333f;overflow:hidden}
+.cosplay-portrait .hair-back{position:absolute;left:16px;top:11px;width:45px;height:62px;background:var(--hair);border:2px solid #33224a;border-radius:25px 25px 13px 13px}
+.cosplay-portrait .neck{position:absolute;left:31px;top:38px;width:15px;height:26px;background:var(--skin)}
+.cosplay-portrait .face{position:absolute;left:23px;top:15px;width:31px;height:36px;background:var(--skin);border:1.5px solid #714f66;border-radius:43% 43% 45% 45%}
+.cosplay-portrait .fringe{position:absolute;left:20px;top:11px;width:37px;height:19px;background:var(--hair);border-radius:60% 80% 20% 50%;transform:rotate(-6deg)}
+.cosplay-portrait .eyes{position:absolute;left:29px;top:30px;width:19px;height:6px;border-left:5px solid #3b3173;border-right:5px solid #3b3173}
+.cosplay-portrait .outfit{position:absolute;left:15px;top:57px;width:48px;height:29px;background:var(--outfit);border-top:7px solid var(--trim);border-radius:40% 40% 0 0}
+.cosplay-portrait .ribbon{position:absolute;left:30px;top:54px;width:17px;height:9px;background:var(--trim);clip-path:polygon(0 0,50% 35%,100% 0,87% 100%,50% 70%,13% 100%)}
+#menu .character-tip{text-align:center;margin:13px 0 7px;color:#e6d6ff;font-size:11px;letter-spacing:.5px}
+#hud>div,#team,#perks,#bossbar{background:linear-gradient(140deg,#271b4ae8,#0e1835e8);border:2px solid #a07fed;box-shadow:4px 4px 0 #150e35}
+#hud b,#perks h3{color:#ff9ce0}
+#upgrades section{border:2px solid #bc85ee;background:linear-gradient(145deg,#2a1d4b,#10142e);box-shadow:8px 8px 0 #100c22}
+.option{border:2px solid #72539c;background:linear-gradient(165deg,#382651,#141637)}
+.option:hover{border-color:#ffbbea;box-shadow:0 0 22px #ed6dde44}
+#version-badge{position:fixed;bottom:12px;left:12px;z-index:20;padding:7px 11px;background:#141027db;color:#d8c6ff;border:1px solid #c490ff88;border-radius:6px;font-size:11px;font-weight:800;letter-spacing:1px;pointer-events:none;box-shadow:2px 2px 0 #060615}
+#abilityHud{position:fixed;right:15px;bottom:20px;z-index:4;min-width:220px;max-width:270px}
+#abilityHud button{width:100%;padding:12px 14px;border:2px solid #ff9ddb;background:linear-gradient(135deg,#421c68,#19183e);box-shadow:4px 4px 0 #0e0925;display:flex;align-items:center;justify-content:space-between;gap:9px;color:#fff}
+#abilityHud button:disabled{filter:saturate(.55)}
+#abilityHud #abilitySymbol{font-size:24px}
+#abilityHud .ability-meta{display:flex;flex-direction:column;align-items:flex-start;line-height:1.4}
+#abilityHud #abilityName{font-weight:800;font-size:12px}
+#abilityHud #abilityTimer{font-size:10px;color:#c8b1f4}
+#abilityBar{height:5px;width:100%;background:#251643;border:1px solid #8d63c3;margin-top:6px;overflow:hidden}
+#abilityFill{height:100%;background:linear-gradient(90deg,#ba71ff,#65efff);width:100%;transition:width .12s}
+#tips{bottom:10px;max-width:calc(100vw - 510px);font-size:11px}
+#bossbar{background:#321336dd}
+#team{max-width:185px}
+@media(max-width:740px){.selection-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#selector .pick{min-height:133px}#menu section{padding:20px 12px}#menu h1{font-size:47px}#abilityHud{right:10px;bottom:120px;max-width:175px;min-width:160px}#abilityHud button{padding:7px}#tips{display:none}#perks{top:110px;bottom:auto;width:140px}#version-badge{bottom:8px;left:8px}}
+@media(max-width:380px){#selector .pick strong{font-size:11px}.cosplay-portrait{width:64px;height:64px}#menu section{padding:16px 8px}}
+@media(prefers-reduced-motion:reduce){#menu .primary,#selector .pick{transition:none}}
+
+</style><canvas id="c"></canvas><div id="menu"><section><small>3D ONLINE CO-OP SURVIVAL</small><h1>NEON<br>NEXUS</h1><p>Védd meg a kristályt a drónoktól a barátaiddal! Maximum 6 játékos, közös hullámok, pontszámok.</p>
+<div id="selector" aria-label="Anime karakter összeállítása">
+<h2>01 / COSPLAY SKIN</h2>
+<p class="select-subtitle">My Dress-Up Darling-ihlette, saját készítésű anime karakterek. A skinedet a többiek is látják.</p>
+<div class="selection-grid" id="skinChoices" role="group" aria-label="Skinválasztás"></div>
+<h2>02 / ÁTOKTECHNIKA</h2>
+<p class="select-subtitle">Jujutsu Kaisen ihlette különleges képesség. Játék közben Q-val aktiválható.</p>
+<div class="selection-grid" id="powerChoices" role="group" aria-label="Képességválasztás"></div>
+<p class="character-tip">✦ Választásaid megmaradnak a böngésződben • Hullámok után további fejlesztéseket kapsz</p>
+</div>
+<input id="name" maxlength="14" placeholder="Játékosneved" value="Játékos"><button class="primary" id="create">MULTIPLAYER SZOBA LÉTREHOZÁSA</button><div class="row"><input id="room" maxlength="6" placeholder="SZOBAKÓD"><button id="join">CSATLAKOZÁS</button></div><button id="solo">EGYJÁTÉKOS DEMO</button><p id="status"></p></section></div>
+<div id="hud" class="hidden"><div><strong>NEON NEXUS</strong><br>SZOBA: <b id="code">SOLO</b></div><div>HULLÁM <b id="wave">1</b> • KRISTÁLY <b id="health">100%</b><br>ÉLETERŐ <b id="hp">100</b></div><div><button id="invite">MEGHÍVÁS</button><button id="leave">KILÉPÉS</button></div></div><div id="version-badge" aria-label="Játékverzió">◆ NEON NEXUS • v3.0.0 ANIME EDITION</div>
+<div id="abilityHud" class="hidden"><button id="useAbility" title="Különleges képesség: Q"><span id="abilitySymbol">✦</span><span class="ability-meta"><strong id="abilityName">Képesség</strong><small id="abilityTimer">Q • KÉSZ</small></span><strong>Q</strong></button><div id="abilityBar"><div id="abilityFill"></div></div></div>
+<div id="team" class="hidden"></div><div id="tips" class="hidden">WASD: MOZGÁS • EGÉR: CÉLZÁS • KATTINTÁS: LÖVÉS • Q: ÁTOKTECHNIKA</div><div id="announce"></div><div id="touch" class="hidden"><div><button data-k="w">▲</button><br><button data-k="a">◀</button><button data-k="s">▼</button><button data-k="d">▶</button></div><button id="fire">LŐ</button></div><div id="end" class="hidden"><section><h1>VÉGE</h1><p id="result"></p><button id="again" class="primary">ÚJRAINDÍTÁS</button><button id="back">MENÜ</button></section></div>
 <div id="perks" class="hidden"><h3>⚡ FEJLESZTÉSEID</h3><div id="perklist">Az első hullám után választhatsz.</div></div>
 <div id="bossbar" class="hidden">☠ TITÁN BOSS • <span id="bosshp">100%</span><div id="bosstrack"><div id="bossfill"></div></div></div>
 <div id="damageFlash"></div>
