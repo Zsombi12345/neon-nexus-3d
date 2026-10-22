@@ -554,11 +554,36 @@ const weapon=create(cube(.16,.19,.72),style.accent,[.36,1.35,.71],true,[-.18,0,0
 const label=makeLabel(o.name);g.userData.label=label;g.userData.skin=o.skin;g.add(label.sprite);
 }
 scene.add(g);return g}
+function makeSummonModel(p){
+const g=new THREE.Group(),wolf=p.kind==='wolf',base=wolf?0x574188:0xe8eaff,glow=wolf?0xb889fa:0x8adfff,eyes=wolf?0xff8ce8:0x39457a;
+const mat1=new THREE.MeshToonMaterial({color:base,emissive:base,emissiveIntensity:.12});
+const face=new THREE.MeshToonMaterial({color:0xfafaff});
+const ink=new THREE.MeshBasicMaterial({color:eyes});
+const body=new THREE.Mesh(new THREE.SphereGeometry(wolf?.62:.43,16,12),mat1);body.position.y=wolf?.64:.48;body.scale.set(1, .75,1.35);g.add(body);
+const head=new THREE.Mesh(new THREE.SphereGeometry(wolf?.43:.37,16,12),face);head.position.set(0,wolf?1.02:.76,wolf?.48:.35);g.add(head);
+for(const side of [-1,1]){
+const ear=new THREE.Mesh(new THREE.ConeGeometry(wolf?.18:.135,wolf?.51:.81,9),mat1);ear.position.set(side*(wolf?.26:.21),wolf?1.46:1.40,wolf?.4:.3);g.add(ear);
+const eye=new THREE.Mesh(new THREE.SphereGeometry(.08,10,7),ink);eye.position.set(side*.19,wolf?1.075:.80,wolf?.81:.66);g.add(eye);
+for(const fore of [-1,1]){const leg=new THREE.Mesh(new THREE.CylinderGeometry(.105,.12,wolf?.38:.27,9),mat1);
+leg.position.set(side*(wolf?.36:.27),wolf?.27:.2,fore*(wolf?.45:.25));g.add(leg)}}
+const muzzle=new THREE.Mesh(new THREE.ConeGeometry(wolf?.18:.11,wolf?.42:.21,8),face);muzzle.position.set(0,wolf?.92:.70,wolf?.85:.70);muzzle.rotation.x=Math.PI/2;g.add(muzzle);
+if(wolf){const tail=new THREE.Mesh(new THREE.ConeGeometry(.18,.74,9),mat1);tail.position.set(0,.75,-.82);tail.rotation.x=-Math.PI/3;g.add(tail)}
+else{const tail=new THREE.Mesh(new THREE.SphereGeometry(.21,12,10),face);tail.position.set(0,.40,-.52);g.add(tail)}
+const aura=new THREE.Mesh(new THREE.RingGeometry(wolf?.88:.67,wolf?1.01:.79,32),new THREE.MeshBasicMaterial({color:glow,transparent:true,opacity:.7,side:THREE.DoubleSide}));aura.rotation.x=-Math.PI/2;aura.position.y=.08;g.add(aura);
+const hpBack=new THREE.Mesh(new THREE.BoxGeometry(1.22,.12,.035),new THREE.MeshBasicMaterial({color:0x171027}));hpBack.position.set(0,wolf?1.9:1.73,.1);g.add(hpBack);
+const hp=new THREE.Mesh(new THREE.BoxGeometry(1.16,.09,.04),new THREE.MeshBasicMaterial({color:wolf?0xd9a6ff:0x74fff0}));hp.position.set(0,wolf?1.9:1.73,.13);g.add(hp);
+g.userData={pet:true,hp,aura};scene.add(g);return g}
 function drawState(){if(!state)return;const active=new Set();for(const[enemy,arr]of [[false,state.players],[true,state.enemies]])arr.forEach((o,i)=>{const key=(enemy?'e':'p')+o.id;active.add(key);let m=models.get(key);if(m&&!enemy&&(m.userData.skin!==o.skin||(!m.userData.externalModel&&loadedCharacters.has(o.skin)))){removeModel(m);models.delete(key);m=null}
 if(!m){m=makeModel(enemy,i,o);models.set(key,m);m.position.set(o.x,0,o.z)}
 m.position.x+=(o.x-m.position.x)*.3;m.position.z+=(o.z-m.position.z)*.3;m.rotation.y=enemy?Math.atan2(-o.x,-o.z):o.angle||0;
 if(enemy){const kind=o.kind||'normal';m.position.y=Math.sin(performance.now()*.004+i)*.14;if(m.userData.halo)m.userData.halo.rotation.z+=.035;if(kind==='boss')m.scale.setScalar(1+Math.sin(performance.now()*.003)*.045)}
 else{m.position.y=0;updateLabel(m.userData.label,o);if(m.userData.rune){m.userData.rune.rotation.z+=.008;m.userData.rune.material.opacity=.45+Math.sin(performance.now()*.003)*.18}}m.visible=enemy||o.hp>0});
+for(const pet of state.summons||[]){const key='s'+pet.id;active.add(key);let m=models.get(key);
+if(!m){m=makeSummonModel(pet);m.position.set(pet.x,0,pet.z);models.set(key,m)}
+m.position.x+=(pet.x-m.position.x)*.36;m.position.z+=(pet.z-m.position.z)*.36;
+m.position.y=Math.sin(performance.now()*.005+pet.id)*.08;
+const proportion=Math.max(.02,Math.min(1,pet.hp/pet.maxHp));m.userData.hp.scale.x=proportion;m.userData.hp.position.x=-(1-proportion)*.58;
+m.userData.aura.rotation.z+=.04}
 for(const[k,m]of models)if(!active.has(k)){removeModel(m);models.delete(k)}
 const me=state.players.find(p=>p.id===localId);if(me){camera.position.x+=(me.x-camera.position.x)*.045;camera.position.z+=(me.z+28-camera.position.z)*.045;camera.lookAt(camera.position.x,0,camera.position.z-28)}}
 
