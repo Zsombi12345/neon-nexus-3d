@@ -1,5 +1,34 @@
 # NEON NEXUS 3D — Combat Edition v3.4.0
 
+## FPS Animated Arsenal v1.2 — új karakterek és animációk
+
+**FPS játék:** https://zsombi12345.github.io/neon-nexus-3d/fps.html  
+**Eredeti külső nézetes játék:** https://zsombi12345.github.io/neon-nexus-3d/ (változatlan)
+
+Az FPS változatban három **beépített** procedurális 3D skin választható, külön GLB feltöltése nélkül:
+- **Nova Reaper:** saját tervezésű, sötét-lila cyber-nindzsa, energiamaszk, fénylő páncélzat és köpeny.
+- **Astra Sentinel:** saját tervezésű, fehér/arany futurisztikus őrző, kék energia-kristályok és fénykorona.
+- **Po:** a korábban használt pandás 3D skin **változatlanul megmaradt**.
+
+### Fegyverdizájn és támadóanimációk
+
+A fegyvermodellek saját Three.js geometriából készülnek:
+- **Plazmapuska:** új sci-fi Photon AR, világító energiamag, réteges páncélzat, részletes cső, optika, lövésre visszarúgás és torkolati fény.
+- **Kard:** kristályos, világító penge, fémes él és részletes markolat; többfázisú kardlendítés fénycsík-effekttel.
+- **Lándzsa:** díszített markolat, arany energia-gyűrűk és kristályhegy; előreszúró animáció.
+- **Ökölharc:** két külön mozgó 3D energiapáncélos kéz váltott ütésekkel.
+
+Az animációkat a játék valóban megtörtént támadásai indítják, a házigazdáról szinkronizált támadásszámlálóval. Nincs szükség új modellfájlokra.
+
+### Közelharci fejlesztések
+
+**Fekete villanás** és **Árnyékidézés** esetén a hullámok utáni normál fejlesztésválasztásból kikerült a **Többszörös lövés** és az **Átütő plazma** (közelharcosként nem hasznosak). Helyettük:
+
+- **Hosszabb ütés és csapás:** +0,75 játékbeli egység a támadási hatótávhoz, legfeljebb négy fejlesztésszinten.
+- **Szélesebb támadóív:** több ellenfelet érhetsz el a fegyver lendítésének irányában, legfeljebb öt fejlesztésszinten.
+
+A távolsági karakterek továbbra is kaphatnak Többszörös lövést és Átütő plazmát. Az 5 hullámonkénti boss, a ritka bossjutalmak, az idézéses mana és a multiplayer változatlanul megmaradnak.
+
 ## FPS Boss Hunter v1.1 — új funkciók (csak az FPS változatban)
 
 Az eredeti, külső nézetes játék változatlan: https://zsombi12345.github.io/neon-nexus-3d/
