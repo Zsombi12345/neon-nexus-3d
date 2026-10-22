@@ -164,7 +164,7 @@ radial-gradient(ellipse 60% 70% at 85% 90%,#ff70af22,transparent 70%),#050719eb}
 <div class="fps-entry"><span>🎯 Egér: körbenézés</span><span>⌨ WASD: mozgás</span><span>🖱 Kattintás: támadás</span><span>Esc: kurzor</span></div><input id="name" maxlength="14" placeholder="Játékosneved" value="Játékos"><button class="primary" id="create">FPS MULTIPLAYER SZOBA</button><div class="row"><input id="room" maxlength="6" placeholder="SZOBAKÓD"><button id="join">CSATLAKOZÁS</button></div><button id="solo">EGYJÁTÉKOS FPS JÁTÉK</button><p id="status"></p><p class="fps-original-link"><a href="./index.html">← Vissza az eredeti, külső nézetes játékhoz</a></p></section></div>
 <div id="hud" class="hidden"><div><strong>NEON NEXUS</strong><br>SZOBA: <b id="code">SOLO</b></div><div>HULLÁM <b id="wave">1</b> • KRISTÁLY <b id="health">100%</b><br>ÉLETERŐ <b id="hp">100</b></div><div><button id="invite">MEGHÍVÁS</button><button id="leave">KILÉPÉS</button></div></div><div id="fpsCrosshair" class="hidden" aria-hidden="true"><span class="cross-h"></span><span class="cross-v"></span><span class="cross-dot"></span></div>
 <div id="fpsLockHint" class="hidden">KATTINTS A PÁLYÁRA AZ EGÉR RÖGZÍTÉSÉHEZ <small>Esc: egér felszabadítása • Q: képesség • R/T: váltás</small></div>
-<div id="fpsRadar" class="hidden"><canvas id="radarCanvas" width="144" height="144"></canvas><span>ARENA RADAR</span></div><div id="version-badge" aria-label="Játékverzió">◆ NEON NEXUS • FPS v1.0 • v3.4 ALAP</div>
+<div id="fpsRadar" class="hidden"><canvas id="radarCanvas" width="144" height="144"></canvas><span>ARENA RADAR</span></div><div id="version-badge" aria-label="Játékverzió">◆ NEON NEXUS • FPS v1.0.1 • v3.4 ALAP</div>
 <div id="abilityHud" class="hidden"><button id="useAbility" title="Különleges képesség: Q"><span id="abilitySymbol">✦</span><span class="ability-meta"><strong id="abilityName">Képesség</strong><small id="abilityTimer">Q • KÉSZ</small></span><strong>Q</strong></button><div id="abilityBar"><div id="abilityFill"></div></div></div>
 <div id="summonHud" class="hidden"><strong id="summonLabel">🐺 Farkas (4 mana)</strong><div id="manaTrack"><div id="manaFill"></div></div><small id="manaText">Mana: 12/12</small><button id="toggleSummon">R • Nyuszi / Farkas váltás</button><small id="summonCount">Idézettek: 0/2</small><button id="toggleWeapon">T • Lándzsa / kard</button></div>
 <div id="flashOverlay" class="hidden"><div id="flashPrompt"><h3>⚡ FEKETE VILLANÁS</h3><p>Nyomj újra Q-t a zöld zónában!</p><div id="flashTrack"><div id="flashZone"></div><div id="flashMarker"></div></div><button id="flashStop">Q • IDŐZÍTÉS</button></div></div>
@@ -312,7 +312,7 @@ $('fpsRadar').classList.toggle('hidden',!playing);
 const me=state?.players?.find(p=>p.id===localId);$('fpsCrosshair').classList.toggle('aim-melee',!!me&&(me.power==='flash'||me.power==='shadow'))}
 addEventListener('pointerlockchange',fpsUi);
 addEventListener('mousemove',e=>{if(!fpsPointerActive()||mode==='menu'||state?.phase==='upgrade'||flashActive)return;
-fpsYaw+=e.movementX*.00235;fpsPitch=lim(fpsPitch-e.movementY*.0021,-1.15,1.1)});
+fpsYaw-=e.movementX*.00235;fpsPitch=lim(fpsPitch-e.movementY*.0021,-1.15,1.1)});
 function fpsMakeWeapon(me){
 const type=me?.power==='shadow'?(me.weapon==='sword'?'sword':'spear'):me?.power==='flash'?'fists':'rifle';
 if(type===fpsViewType)return;fpsViewType=type;
@@ -360,7 +360,7 @@ const dx=Math.sin(fpsYaw),dy=Math.cos(fpsYaw),sx=Math.cos(fpsYaw),sy=-Math.sin(f
 ctx.fillStyle='#eaffff';ctx.beginPath();ctx.moveTo(c+dx*10,c+dy*10);ctx.lineTo(c+sx*5-dx*4,c+sy*5-dy*4);ctx.lineTo(c-sx*5-dx*4,c-sy*5-dy*4);ctx.closePath();ctx.fill();
 }
 function input(){const f=Number(keys.has('w'))-Number(keys.has('s')),a=Number(keys.has('d'))-Number(keys.has('a'));
-let x=f*Math.sin(fpsYaw)+a*Math.cos(fpsYaw),z=f*Math.cos(fpsYaw)-a*Math.sin(fpsYaw);
+let x=f*Math.sin(fpsYaw)-a*Math.cos(fpsYaw),z=f*Math.cos(fpsYaw)+a*Math.sin(fpsYaw);
 const d=Math.hypot(x,z)||1,p=state?.players?.find(p=>p.id===localId)||{x:0,z:0};
 return{x:x/d,z:z/d,ax:p.x+Math.sin(fpsYaw)*20,az:p.z+Math.cos(fpsYaw)*20,fire,special:castTap>0,summonType:summonChoice,weapon:shadowWeaponChoice}}
 function chooseUpgrade(n){if(!state||state.phase!=='upgrade'||!localId)return;if(mode==='client'){send(conn,{type:'upgrade',breakId:state.breakId,index:n});$('upgradeHint').textContent='Választás elküldve a házigazdának…';for(const b of $('options').querySelectorAll('button'))b.disabled=true}else applyUpgrade(localId,n)}
@@ -845,7 +845,7 @@ addEventListener('pointerup',()=>{fire=false;fpsTouchLook=null});
 addEventListener('blur',()=>{keys.clear();fire=false;fpsTouchLook=null});
 $('c').onpointermove=e=>{if(e.pointerType==='touch'&&fpsTouchLook&&fpsTouchLook.id===e.pointerId){
 const dx=e.clientX-fpsTouchLook.x,dy=e.clientY-fpsTouchLook.y;
-fpsYaw+=dx*.007;fpsPitch=lim(fpsPitch-dy*.006,-1.15,1.1);
+fpsYaw-=dx*.007;fpsPitch=lim(fpsPitch-dy*.006,-1.15,1.1);
 fpsTouchLook.x=e.clientX;fpsTouchLook.y=e.clientY}};
 for(const b of document.querySelectorAll('[data-k]')){const k=b.dataset.k;b.onpointerdown=e=>{e.preventDefault();keys.add(k);b.setPointerCapture(e.pointerId)};b.onpointerup=()=>keys.delete(k);b.onpointercancel=()=>keys.delete(k)}
 $('fire').onpointerdown=e=>{fire=true;fpsKick=.16;$('fire').setPointerCapture(e.pointerId)};$('fire').onpointerup=()=>fire=false;
