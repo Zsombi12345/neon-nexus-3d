@@ -1,7 +1,31 @@
 <!doctype html><html lang="hu"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NEON NEXUS 3D</title><style>
 *{box-sizing:border-box}body{margin:0;background:#050a1b;color:#e7fbff;font:15px system-ui;overflow:hidden}canvas{display:block}button,input{font:inherit;border:1px solid #4fdcf7;border-radius:9px;background:#0c203b;color:white;padding:12px}button{cursor:pointer}button:hover{background:#14436a}.primary{background:#3be3f5;color:#031020;font-weight:800}#menu,#end{position:fixed;inset:0;background:#02091de8;display:grid;place-items:center}section{width:min(460px,94vw);padding:32px;border:1px solid #43ddf78a;border-radius:20px;background:#09152e;box-shadow:0 0 80px #008ff62b;text-align:center}h1{font-size:52px;line-height:.95;color:#65edff;text-shadow:0 0 30px #15b4ff}p{color:#9ebcd2}input{width:100%;margin:6px 0 12px}section button{width:100%;margin:5px 0}.row{display:flex;gap:8px}.row input{flex:1;min-width:0}.row button{width:auto}.hidden{display:none!important}#hud{position:fixed;top:15px;left:15px;right:15px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}#hud>div{padding:12px 16px;background:#071b36dd;border:1px solid #4fe6f866;border-radius:12px;pointer-events:auto}#hud b{color:#62f6ff}#hud button{padding:5px 9px}#team{position:fixed;left:15px;top:100px;padding:12px;background:#071b36dd;border-radius:12px;min-width:165px}#tips{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);padding:10px 20px;background:#071b36dd;border-radius:10px;white-space:nowrap}#announce{position:fixed;top:28%;left:50%;transform:translateX(-50%);font-size:32px;font-weight:900;text-shadow:0 0 20px cyan;pointer-events:none}#touch{position:fixed;bottom:20px;left:15px;right:15px;display:none;justify-content:space-between;pointer-events:none}#touch button{pointer-events:auto}#fire{border-radius:50%;width:80px;height:80px}@media(pointer:coarse){#touch:not(.hidden){display:flex}#tips{display:none}#team{top:auto;bottom:145px}}@media(max-width:600px){#hud{font-size:11px}#hud>div{padding:7px}h1{font-size:40px}}
+
+#perks{position:fixed;right:15px;top:105px;width:230px;max-height:55vh;overflow:auto;border:1px solid #5adff666;background:#07182de8;border-radius:12px;padding:13px;pointer-events:none}
+#perks h3{margin:0 0 8px;color:#85f8ff;font-size:13px;letter-spacing:2px}
+.perk{margin:5px 0;font-size:12px;display:flex;justify-content:space-between;gap:10px;color:#d8faff}
+.perk span{color:#69ecfa;font-weight:800}
+#upgrades{position:fixed;inset:0;background:#020817ed;display:grid;place-items:center;z-index:10;backdrop-filter:blur(6px)}
+#upgrades section{width:min(780px,95vw);max-height:92vh;overflow-y:auto}
+#upgrades h2{font-size:clamp(25px,5vw,38px);margin:10px;color:#68f5ff}
+#options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:24px 0 10px}
+.option{min-height:210px;padding:20px 12px;background:linear-gradient(160deg,#123054,#091428);border:1px solid #2c779b;border-radius:15px;color:white;display:flex;align-items:center;flex-direction:column;justify-content:center;gap:9px;transition:transform .12s,border-color .12s}
+.option:hover{transform:translateY(-5px);border-color:#6cf8ff}
+.option .emblem{font-size:39px;filter:drop-shadow(0 0 12px #35e5ff)}
+.option strong{font-size:16px;color:#93f8ff}
+.option small{line-height:1.4;color:#b0cee2}
+#bossbar{position:fixed;top:90px;left:50%;transform:translateX(-50%);width:min(400px,70vw);padding:9px 15px;background:#180926e8;border:1px solid #ff55b8;border-radius:12px;text-align:center;font-weight:900;color:#ff88e6;text-shadow:0 0 14px #db2199}
+#bosstrack{margin-top:8px;height:12px;background:#35152d;border:1px solid #ff65bd;border-radius:20px;overflow:hidden}
+#bossfill{height:100%;width:100%;background:linear-gradient(90deg,#a744ff,#ff366e);transition:width .15s}
+#damageFlash{position:fixed;inset:0;pointer-events:none;border:0 solid #ff234f;box-shadow:inset 0 0 120px 35px #ff174b;opacity:0;z-index:3}
+#announce{z-index:5;text-align:center;width:min(90vw,700px);white-space:normal;pointer-events:none}
+@media(max-width:650px){#options{grid-template-columns:1fr}.option{min-height:92px;padding:10px;flex-direction:row;flex-wrap:wrap}.option .emblem{font-size:25px}.option small{width:100%}#perks{top:auto;bottom:115px;right:10px;max-height:30vh;width:155px;padding:9px}#bossbar{top:105px}#team{font-size:11px}}
 </style><canvas id="c"></canvas><div id="menu"><section><small>3D ONLINE CO-OP SURVIVAL</small><h1>NEON<br>NEXUS</h1><p>Védd meg a kristályt a drónoktól a barátaiddal! Maximum 6 játékos, közös hullámok, pontszámok.</p><input id="name" maxlength="14" placeholder="Játékosneved" value="Játékos"><button class="primary" id="create">MULTIPLAYER SZOBA LÉTREHOZÁSA</button><div class="row"><input id="room" maxlength="6" placeholder="SZOBAKÓD"><button id="join">CSATLAKOZÁS</button></div><button id="solo">EGYJÁTÉKOS DEMO</button><p id="status"></p></section></div>
 <div id="hud" class="hidden"><div><strong>NEON NEXUS</strong><br>SZOBA: <b id="code">SOLO</b></div><div>HULLÁM <b id="wave">1</b> • KRISTÁLY <b id="health">100%</b><br>ÉLETERŐ <b id="hp">100</b></div><div><button id="invite">MEGHÍVÁS</button><button id="leave">KILÉPÉS</button></div></div><div id="team" class="hidden"></div><div id="tips" class="hidden">WASD: MOZGÁS • EGÉR: CÉLZÁS • KATTINTÁS: LÖVÉS</div><div id="announce"></div><div id="touch" class="hidden"><div><button data-k="w">▲</button><br><button data-k="a">◀</button><button data-k="s">▼</button><button data-k="d">▶</button></div><button id="fire">LŐ</button></div><div id="end" class="hidden"><section><h1>VÉGE</h1><p id="result"></p><button id="again" class="primary">ÚJRAINDÍTÁS</button><button id="back">MENÜ</button></section></div>
+<div id="perks" class="hidden"><h3>⚡ FEJLESZTÉSEID</h3><div id="perklist">Az első hullám után választhatsz.</div></div>
+<div id="bossbar" class="hidden">☠ TITÁN BOSS • <span id="bosshp">100%</span><div id="bosstrack"><div id="bossfill"></div></div></div>
+<div id="damageFlash"></div>
+<div id="upgrades" class="hidden"><section><small>HULLÁM TELJESÍTVE</small><h2 id="upgradeTitle">VÁLASSZ FEJLESZTÉST!</h2><p id="upgradeHint">Válassz egyet a három lehetőség közül.</p><div id="options"></div></section></div>
 <script src="https://unpkg.com/peerjs@1.5.5/dist/peerjs.min.js"></script><script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js';
 const $=s=>document.getElementById(s),scene=new THREE.Scene();scene.background=new THREE.Color(0x050b1b);scene.fog=new THREE.FogExp2(0x050b1b,.013);
@@ -15,15 +39,41 @@ for(let i=0;i<4;i++){let wall=new THREE.Mesh(new THREE.BoxGeometry(i%2?1:54,1,i%
 const crystal=new THREE.Mesh(new THREE.OctahedronGeometry(1.5),mat(0x43eeff,3));crystal.position.y=2.4;scene.add(crystal);
 const pedestal=new THREE.Mesh(new THREE.CylinderGeometry(2,2.6,.7,8),mat(0x1762a3,.7));pedestal.position.y=.35;scene.add(pedestal);
 const light=new THREE.PointLight(0x35eeff,65,20);light.position.y=3;scene.add(light);
-const models=new Map(),lasers=[],colors=[0x52eaff,0xb988ff,0x7affc1,0xffcb71,0xff78a6,0x8eabff];
+const models=new Map(),lasers=[],particles=[],colors=[0x52eaff,0xb988ff,0x7affc1,0xffcb71,0xff78a6,0x8eabff];
+let coreFlash=0,upgradeView='',shake=0;
+const UPGRADES={
+rapid:{icon:'⚡',name:'Plazma gyorsító',desc:'16%-kal gyorsabb lövés minden szinten.'},
+damage:{icon:'💥',name:'Erősebb lövedék',desc:'+1 sebzés minden találatra.'},
+speed:{icon:'👟',name:'Turbó hajtómű',desc:'+14% mozgási sebesség.'},
+multi:{icon:'🎯',name:'Többszörös lövés',desc:'Még egy lézersugár egyszerre (max. 4).'},
+heal:{icon:'❤️',name:'Páncélfejlesztés',desc:'+25 maximális életerő, azonnali gyógyulással.'},
+regen:{icon:'✨',name:'Nanobot regeneráció',desc:'Folyamatosan visszatöltő életerő.'},
+pierce:{icon:'🔱',name:'Átütő plazma',desc:'A lövés további ellenfeleken is áthatol.'},
+repair:{icon:'💎',name:'Kristályvédelem',desc:'Megjavítja és megerősíti a kristályt.'}
+};
+const ENEMY_TYPES={
+normal:{color:0xff457d,speed:2.7,hp:2,damage:4,period:1.25,radius:.72},
+runner:{color:0x39e9fb,speed:4.9,hp:1,damage:2,period:.85,radius:.53},
+tank:{color:0xffb44e,speed:1.75,hp:4,damage:7,period:1.65,radius:.95},
+boss:{color:0xb760ff,speed:1.35,hp:65,damage:17,period:1.8,radius:2.15}
+};
 let mode='menu',peer,conn,clients=new Map(),state,room='',localId='',myName='',last=performance.now(),sendClock=0,hudClock=0,fire=false,aim={x:0,z:0},keys=new Set(),announcement=0;
 const code=()=>Array.from(crypto.getRandomValues(new Uint8Array(6)),n=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[n%32]).join('');
 const rnd=(a,b)=>a+Math.random()*(b-a),lim=(v,a,b)=>Math.max(a,Math.min(b,v)),safe=s=>String(s||'Játékos').trim().slice(0,14).replace(/[<>]/g,'')||'Játékos';
-function init(){return{players:[],enemies:[],core:100,wave:0,remaining:0,timer:1,over:false,next:0}}
-function add(id,name){if(state.players.some(p=>p.id===id))return;state.players.push({id,name:safe(name),x:rnd(-5,5),z:rnd(-5,5),angle:0,hp:100,kills:0,cool:0,input:{x:0,z:0,ax:0,az:0,fire:false}})}
-function pack(){return{players:state.players.map(({input,cool,...p})=>p),enemies:state.enemies,core:state.core,wave:state.wave,over:state.over}}
-function show(){for(const x of ['menu','end'])$(x).classList.add('hidden');for(const x of ['hud','team','tips','touch'])$(x).classList.remove('hidden');$('code').textContent=room||'SOLO';$('invite').style.display=room?'':'none';$('again').style.display=mode==='client'?'none':''}
-function reset(){if(conn)try{conn.close()}catch{};if(peer)try{peer.destroy()}catch{};conn=null;peer=null;clients.clear();state=null;mode='menu';room='';localId='';for(const m of models.values())scene.remove(m);models.clear();$('menu').classList.remove('hidden');for(const x of ['hud','team','tips','touch','end'])$(x).classList.add('hidden');$('create').disabled=false;$('join').disabled=false;$('status').textContent=''}
+function init(){return{players:[],enemies:[],core:100,coreMax:100,wave:0,remaining:0,timer:0,over:false,next:0,phase:'fight',breakId:0}}
+function rollChoices(){return Object.keys(UPGRADES).sort(()=>Math.random()-.5).slice(0,3)}
+function add(id,name){if(state.players.some(p=>p.id===id))return;const waiting=state.phase==='upgrade';state.players.push({id,name:safe(name),x:rnd(-5,5),z:rnd(-5,5),angle:0,hp:100,maxHp:100,kills:0,cool:0,revive:0,perks:{},choices:waiting?rollChoices():[],picked:!waiting,input:{x:0,z:0,ax:0,az:0,fire:false}})}
+function pack(){return{players:state.players.map(({input,cool,revive,...p})=>p),enemies:state.enemies,core:state.core,coreMax:state.coreMax,wave:state.wave,over:state.over,phase:state.phase,breakId:state.breakId}}
+function applyUpgrade(id,index){if(!state||state.phase!=='upgrade')return;const p=state.players.find(x=>x.id===id);if(!p||p.picked||!Number.isInteger(index)||index<0||index>2)return;const key=p.choices[index];if(!UPGRADES[key])return;p.perks[key]=(p.perks[key]||0)+1;p.picked=true;p.choices=[];if(key==='heal'){p.maxHp+=25;p.hp=Math.min(p.maxHp,p.hp+45)}if(key==='repair'){state.coreMax+=8;state.core=Math.min(state.coreMax,state.core+24)}if(key==='multi')p.perks[key]=Math.min(3,p.perks[key]);if(mode==='host')broadcast({type:'state',data:pack()})}
+function beginWave(){state.phase='fight';state.wave++;state.remaining=Math.min(8+state.wave*3,65);state.timer=1;for(const p of state.players){p.picked=true;p.choices=[];p.hp=Math.min(p.maxHp,p.hp+15)}if(state.wave%10===0){const a=rnd(0,Math.PI*2);spawnEnemy('boss',a);announce('☠ BOSS HULLÁM '+state.wave+' ☠')}else announce('HULLÁM '+state.wave)}
+function enterUpgrade(){state.phase='upgrade';state.breakId++;for(const p of state.players){p.choices=rollChoices();p.picked=false;p.input.fire=false}announce('✓ '+state.wave+'. HULLÁM TELJESÍTVE!');if(mode==='host')broadcast({type:'state',data:pack()})}
+function spawnEnemy(kind,angle){const t=ENEMY_TYPES[kind],factor=kind==='boss'?1+Math.max(0,state.wave-10)*.07:1+Math.floor(state.wave/7)*.45;const hp=Math.max(1,Math.round(t.hp*factor));state.enemies.push({id:++state.next,kind,x:Math.cos(angle)*24,z:Math.sin(angle)*24,hp,maxHp:hp,cool:0})}
+
+function show(){ $('menu').classList.add('hidden');if(!state?.over)$('end').classList.add('hidden');for(const x of ['hud','team','tips','touch','perks'])$(x).classList.remove('hidden');$('code').textContent=room||'SOLO';$('invite').style.display=room?'':'none';$('again').style.display=mode==='client'?'none':''}
+function removeModel(g){scene.remove(g);g.traverse(o=>{o.geometry?.dispose();if(o.material){for(const m of (Array.isArray(o.material)?o.material:[o.material])){m.map?.dispose();m.dispose()}}})}
+function clearEffects(){for(const e of [...lasers,...particles]){scene.remove(e.obj);e.obj.geometry?.dispose();e.obj.material?.dispose()}lasers.length=0;particles.length=0}
+function reset(){if(conn)try{conn.close()}catch{};if(peer)try{peer.destroy()}catch{};conn=null;peer=null;clients.clear();state=null;mode='menu';room='';localId='';for(const m of models.values())removeModel(m);models.clear();clearEffects();$('menu').classList.remove('hidden');for(const x of ['hud','team','tips','touch','end','upgrades','perks','bossbar'])$(x).classList.add('hidden');$('create').disabled=false;$('join').disabled=false;$('status').textContent='';upgradeView='';coreFlash=0;keys.clear();fire=false}
+
 function fail(t){reset();$('status').textContent=t}
 function send(c,o){if(c?.open)try{c.send(o)}catch{}}
 function broadcast(o){for(const c of clients.values())send(c,o)}
@@ -32,13 +82,14 @@ function startHost(){reset();if(typeof Peer!=='function'){fail('A hálózati kö
 peer.on('open',()=>{state=init();add(localId,myName);show()});
 peer.on('connection',c=>{let joined=false;c.on('data',m=>{if(!m||mode!=='host'||!state)return;
 if(m.type==='hello'&&!joined){if(state.players.length>=6){send(c,{type:'reject',message:'A szoba megtelt.'});setTimeout(()=>c.close(),150);return}joined=true;clients.set(c.peer,c);add(c.peer,m.name);send(c,{type:'welcome',id:c.peer,room});send(c,{type:'state',data:pack()})}
+if(m.type==='upgrade'&&joined&&m.breakId===state.breakId){applyUpgrade(c.peer,m.index)}
 if(m.type==='input'&&joined){const p=state.players.find(p=>p.id===c.peer);if(p)p.input={x:lim(+m.x||0,-1,1),z:lim(+m.z||0,-1,1),ax:lim(+m.ax||0,-25,25),az:lim(+m.az||0,-25,25),fire:!!m.fire}}});
 c.on('close',()=>{clients.delete(c.peer);if(state)state.players=state.players.filter(p=>p.id!==c.peer)})});
 peer.on('error',e=>fail('Nem sikerült megnyitni: '+e.type))}
 function startJoin(){const code=$('room').value.trim().toUpperCase();if(!/^[A-Z2-9]{6}$/.test(code)){$('status').textContent='Adj meg 6 karakteres szobakódot.';return}
 reset();mode='client';room=code;myName=safe($('name').value);$('join').disabled=true;$('status').textContent='Csatlakozás…';peer=new Peer();
 peer.on('open',()=>{conn=peer.connect('nnx3d-'+room.toLowerCase(),{reliable:true});conn.on('open',()=>send(conn,{type:'hello',name:myName}));
-conn.on('data',m=>{if(m.type==='reject')fail(m.message);if(m.type==='welcome'){localId=m.id;show()}if(m.type==='state'){state=m.data;if(localId)show()}if(m.type==='laser')laser(m.a,m.b,m.color)});
+conn.on('data',m=>{if(m.type==='reject')fail(m.message);if(m.type==='welcome'){localId=m.id;show()}if(m.type==='state'){state=m.data;if(localId)show()}if(m.type==='laser')laser(m.a,m.b,m.color,m.hit);if(m.type==='corehit')coreImpact(m.x,m.z,m.boss)});
 conn.on('close',()=>{if(mode==='client')fail('A házigazda kilépett.')})});peer.on('error',e=>fail(e.type==='peer-unavailable'?'Nem található aktív szoba.':'Hálózati hiba: '+e.type))}
 function input(){let x=+keys.has('d')-+keys.has('a'),z=+keys.has('s')-+keys.has('w');let d=Math.hypot(x,z)||1;return{x:x/d,z:z/d,ax:aim.x,az:aim.z,fire}}
 function laser(a,b,color){const line=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(a.x,1.2,a.z),new THREE.Vector3(b.x,1,b.z)]),new THREE.LineBasicMaterial({color,transparent:true}));scene.add(line);lasers.push({line,t:.14})}
