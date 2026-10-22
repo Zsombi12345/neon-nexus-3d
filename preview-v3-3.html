@@ -344,19 +344,49 @@ fxPetals(x,z,0x85ffdf,31);
 for(const p of effect.targets||[]){fxSphere(p.x,p.z,0x85ffb2,.62,.46);fxPetals(p.x,p.z,0xa7ffe3,5)}
 shake=Math.max(shake,.20)}
 }
-function castPower(p){if(!state||state.phase!=='fight'||p.hp<=0||p.powerCool>0)return;
+function spawnSummon(p,kind){
+if(!state||p.power!=='shadow'||state.phase!=='fight')return false;
+const valid=kind==='rabbit'?'rabbit':'wolf',cost=valid==='wolf'?4:2,limit=2+(p.perks.summonSlots||0);
+if(p.mana<cost||state.summons.filter(x=>x.owner===p.id&&x.hp>0).length>=limit)return false;
+p.mana-=cost;p.powerCool=1.05;
+const buff=p.perks.summonFangs||0,baseHp=valid==='wolf'?52:19;
+const hp=baseHp*(1+buff*.35),angle=p.angle+rnd(-.7,.7);
+const creature={id:++state.nextSummon,owner:p.id,kind:valid,x:lim(p.x+Math.sin(angle)*2,-24,24),z:lim(p.z+Math.cos(angle)*2,-24,24),
+hp,maxHp:hp,damage:(valid==='wolf'?6:2.2)*(1+buff*.32),speed:valid==='wolf'?4.2:5.6,cool:.3};
+state.summons.push(creature);
+const fx={type:'shadow',x:creature.x,z:creature.z,kind:valid,targets:[]};
+powerVisual(fx);if(mode==='host')broadcast({type:'powerfx',effect:fx});
+if(p.id===localId)announce((valid==='wolf'?'🐺 ÁRNYÉKFARKAS':'🐇 ÁRNYÉKNYUSZI')+' MEGIDÉZVE');
+return true}
+function tickSummons(dt){
+if(!state.summons)return;
+for(const creature of state.summons){
+if(creature.hp<=0)continue;const owner=state.players.find(p=>p.id===creature.owner);if(!owner||owner.hp<=0){creature.hp=0;continue}
+creature.cool=Math.max(0,creature.cool-dt);
+const target=[...state.enemies].sort((a,b)=>Math.hypot(a.x-creature.x,a.z-creature.z)-Math.hypot(b.x-creature.x,b.z-creature.z))[0];
+const attackTarget=target&&Math.hypot(target.x-creature.x,target.z-creature.z)<18?target:null;
+const aim=attackTarget||{x:owner.x+Math.sin(owner.angle)*1.5,z:owner.z+Math.cos(owner.angle)*1.5};
+const dx=aim.x-creature.x,dz=aim.z-creature.z,dist=Math.hypot(dx,dz)||1;
+if(dist>(attackTarget?(creature.kind==='wolf'?1.22:1.1):1.6)){
+creature.x=lim(creature.x+dx/dist*creature.speed*dt,-25,25);creature.z=lim(creature.z+dz/dist*creature.speed*dt,-25,25)}
+if(attackTarget&&dist<1.7&&creature.cool<=0){creature.cool=creature.kind==='wolf'?.68:.47;
+const hit=attackTarget;const color=creature.kind==='wolf'?0xd19cff:0x93e9ff;
+burst(hit.x,hit.z,color,4,.55);damageEnemy(hit,creature.damage,owner)}
+}
+state.summons=state.summons.filter(p=>p.hp>0&&state.players.some(owner=>owner.id===p.owner))}
+function castPower(p,flashPerfect){if(!state||state.phase!=='fight'||p.hp<=0||p.powerCool>0)return false;
 const type=Object.hasOwn(POWERS,p.power)?p.power:'purple',power=POWERS[type],x=p.x,z=p.z,fx={type,x,z,targets:[]};
+if(type==='shadow')return spawnSummon(p,p.summonType);
+if(type==='flash'&&typeof flashPerfect!=='boolean')return false;
 p.powerCool=power.cooldown;
 if(type==='purple'){const dx=Math.sin(p.angle),dz=Math.cos(p.angle);fx.to={x:lim(x+dx*22,-25,25),z:lim(z+dz*22,-25,25)};
 for(const e of [...state.enemies]){const ex=e.x-x,ez=e.z-z,forward=ex*dx+ez*dz,perp=Math.abs(ex*dz-ez*dx);if(forward>0&&forward<22&&perp<2.1)damageEnemy(e,13,p)}}
-if(type==='infinity'){for(const e of [...state.enemies]){const dist=Math.hypot(e.x-x,e.z-z);if(dist<8){damageEnemy(e,4,p);const length=Math.max(.2,dist);e.x=lim(e.x+(e.x-x)/length*3,-24,24);e.z=lim(e.z+(e.z-z)/length*3,-24,24);e.slow=4}}}
-if(type==='shadow'){const nearest=[...state.enemies].filter(e=>Math.hypot(e.x-x,e.z-z)<20).sort((a,b)=>Math.hypot(a.x-x,a.z-z)-Math.hypot(b.x-x,b.z-z)).slice(0,5);
-for(const e of nearest){fx.targets.push({x:e.x,z:e.z});damageEnemy(e,8,p)}}
-if(type==='flash'){for(const e of [...state.enemies])if(Math.hypot(e.x-x,e.z-z)<6.7)damageEnemy(e,12,p)}
+if(type==='infinity'){for(const e of [...state.enemies]){const dist=Math.hypot(e.x-x,e.z-z);if(dist<8){damageEnemy(e,1,p);if(state.enemies.includes(e)){const length=Math.max(.2,dist);e.x=lim(e.x+(e.x-x)/length*2,-24,24);e.z=lim(e.z+(e.z-z)/length*2,-24,24);e.slow=5.5;e.dot=5.5;e.dotOwner=p.id}}}}
+if(type==='flash'){fx.perfect=flashPerfect;for(const e of [...state.enemies])if(Math.hypot(e.x-x,e.z-z)<6.7)damageEnemy(e,flashPerfect?15:3,p)}
 if(type==='reverse'){p.hp=Math.min(p.maxHp,p.hp+48);for(const ally of state.players){if(Math.hypot(ally.x-x,ally.z-z)<13){ally.hp=Math.min(ally.maxHp,ally.hp+40);fx.targets.push({x:ally.x,z:ally.z})}}state.core=Math.min(state.coreMax,state.core+18)}
 powerVisual(fx);if(mode==='host')broadcast({type:'powerfx',effect:fx});
-if(p.id===localId)announce(power.name.toUpperCase()+' ✦')}
-
+if(p.id===localId)announce(type==='flash'?(flashPerfect?'🔴 FEKETE VILLANÁS!':'🔵 GYENGE TALÁLAT'):(power.name.toUpperCase()+' ✦'));
+return true}
 function announce(s){$('announce').textContent=s;announcement=performance.now()+1900}
 function tick(dt){if(!state||state.over)return;
 if(state.wave===0)beginWave();
@@ -365,7 +395,7 @@ state.timer-=dt;
 if(state.remaining>0&&state.timer<=0){const roll=Math.random(),kind=roll<.35?'runner':roll<.68?'normal':'tank';spawnEnemy(kind,rnd(0,Math.PI*2));state.remaining--;state.timer=Math.max(.2,.65-state.wave*.008)}
 for(const p of state.players){const i=p.id===localId?input():p.input;
 if(p.hp<=0){p.powerCool=Math.max(0,p.powerCool-dt);p.revive=(p.revive||0)+dt;if(p.revive>=3){p.hp=p.maxHp;p.x=rnd(-5,5);p.z=rnd(-5,5);p.revive=0}continue}
-p.revive=0;p.powerCool=Math.max(0,p.powerCool-dt);p.x=lim(p.x+i.x*8*Math.pow(1.14,p.perks.speed||0)*dt,-25,25);p.z=lim(p.z+i.z*8*Math.pow(1.14,p.perks.speed||0)*dt,-25,25);p.angle=Math.atan2(i.ax-p.x,i.az-p.z);p.cool=Math.max(0,p.cool-dt);
+p.revive=0;p.powerCool=Math.max(0,p.powerCool-dt);p.mana=Math.min(p.maxMana,p.mana+dt*(.85+(p.perks.manaWell||0)*.40));p.x=lim(p.x+i.x*8*Math.pow(1.14,p.perks.speed||0)*dt,-25,25);p.z=lim(p.z+i.z*8*Math.pow(1.14,p.perks.speed||0)*dt,-25,25);p.angle=Math.atan2(i.ax-p.x,i.az-p.z);if(p.power==='shadow')p.summonType=i.summonType==='rabbit'?'rabbit':'wolf';p.cool=Math.max(0,p.cool-dt);
 if(i.special&&p.powerCool<=0&&state.phase==='fight')castPower(p);
 if(p.perks.regen)p.hp=Math.min(p.maxHp,p.hp+dt*p.perks.regen*1.4);
 if(i.fire&&p.cool===0){p.cool=Math.max(.055,.22*Math.pow(.84,p.perks.rapid||0));const shots=1+Math.min(3,p.perks.multi||0),damage=1+(p.perks.damage||0),penetration=1+(p.perks.pierce||0),color=colors[state.players.indexOf(p)%6];
@@ -375,12 +405,17 @@ hits.sort((a,b)=>a.along-b.along);const struck=hits.slice(0,penetration),last=st
 laser(from,to,color,!!last);if(mode==='host')broadcast({type:'laser',a:from,b:to,color,hit:!!last});
 for(const h of struck)damageEnemy(h.e,damage,p)
 }}}
-for(const e of state.enemies){const type=ENEMY_TYPES[e.kind||'normal'];let target=null,dist=Infinity;
+tickSummons(dt);
+for(const e of [...state.enemies]){if(!state.enemies.includes(e))continue;const type=ENEMY_TYPES[e.kind||'normal'];
+if(e.dot>0){e.dot=Math.max(0,e.dot-dt);const owner=state.players.find(p=>p.id===e.dotOwner);if(owner)damageEnemy(e,dt*2.2,owner);if(!state.enemies.includes(e))continue}
+let target=null,dist=Infinity;
 for(const p of state.players){const d=Math.hypot(p.x-e.x,p.z-e.z);if(p.hp>0&&d<dist){dist=d;target=p}}
+for(const friend of state.summons){if(friend.hp<=0)continue;const d=Math.hypot(friend.x-e.x,friend.z-e.z);if(d<dist){dist=d;target=friend}}
 if(dist>4.5)target=null;const tx=target?target.x:0,tz=target?target.z:0,dx=tx-e.x,dz=tz-e.z,d=Math.hypot(dx,dz)||1;
-if(d>(target?1.5:type.radius+1.5)){e.x+=dx/d*(type.speed+Math.min(state.wave*.06,1.2))*dt*(e.slow>0?.45:1);e.z+=dz/d*(type.speed+Math.min(state.wave*.06,1.2))*dt*(e.slow>0?.45:1)}
+if(d>(target?1.5:type.radius+1.5)){e.x+=dx/d*(type.speed+Math.min(state.wave*.06,1.2))*dt*(e.slow>0?.23:1);e.z+=dz/d*(type.speed+Math.min(state.wave*.06,1.2))*dt*(e.slow>0?.45:1)}
 e.cool-=dt;e.slow=Math.max(0,(e.slow||0)-dt);
-if(d< (target?1.7:type.radius+1.7)&&e.cool<=0){if(target){target.hp=Math.max(0,target.hp-type.damage*2.4)}else{state.core=Math.max(0,state.core-type.damage);coreImpact(e.x,e.z,e.kind==='boss');if(mode==='host')broadcast({type:'corehit',x:e.x,z:e.z,boss:e.kind==='boss'})}e.cool=type.period}}
+if(d< (target?1.7:type.radius+1.7)&&e.cool<=0){if(target){target.hp=Math.max(0,target.hp-type.damage*(target.kind==='wolf'||target.kind==='rabbit'?2:2.4))}else{state.core=Math.max(0,state.core-type.damage);coreImpact(e.x,e.z,e.kind==='boss');if(mode==='host')broadcast({type:'corehit',x:e.x,z:e.z,boss:e.kind==='boss'})}e.cool=type.period}}
+state.summons=state.summons.filter(x=>x.hp>0);
 if(state.core<=0){state.over=true;state.phase='over';if(mode==='host')broadcast({type:'state',data:pack()});return}
 if(state.remaining===0&&state.enemies.length===0)enterUpgrade()}
 
