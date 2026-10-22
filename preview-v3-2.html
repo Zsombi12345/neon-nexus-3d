@@ -1,0 +1,348 @@
+<!doctype html><html lang="hu"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NEON NEXUS 3D | Anime Edition v3.0</title><style>
+*{box-sizing:border-box}body{margin:0;background:#050a1b;color:#e7fbff;font:15px system-ui;overflow:hidden}canvas{display:block}button,input{font:inherit;border:1px solid #4fdcf7;border-radius:9px;background:#0c203b;color:white;padding:12px}button{cursor:pointer}button:hover{background:#14436a}.primary{background:#3be3f5;color:#031020;font-weight:800}#menu,#end{position:fixed;inset:0;background:#02091de8;display:grid;place-items:center}section{width:min(460px,94vw);padding:32px;border:1px solid #43ddf78a;border-radius:20px;background:#09152e;box-shadow:0 0 80px #008ff62b;text-align:center}h1{font-size:52px;line-height:.95;color:#65edff;text-shadow:0 0 30px #15b4ff}p{color:#9ebcd2}input{width:100%;margin:6px 0 12px}section button{width:100%;margin:5px 0}.row{display:flex;gap:8px}.row input{flex:1;min-width:0}.row button{width:auto}.hidden{display:none!important}#hud{position:fixed;top:15px;left:15px;right:15px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}#hud>div{padding:12px 16px;background:#071b36dd;border:1px solid #4fe6f866;border-radius:12px;pointer-events:auto}#hud b{color:#62f6ff}#hud button{padding:5px 9px}#team{position:fixed;left:15px;top:100px;padding:12px;background:#071b36dd;border-radius:12px;min-width:165px}#tips{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);padding:10px 20px;background:#071b36dd;border-radius:10px;white-space:nowrap}#announce{position:fixed;top:28%;left:50%;transform:translateX(-50%);font-size:32px;font-weight:900;text-shadow:0 0 20px cyan;pointer-events:none}#touch{position:fixed;bottom:20px;left:15px;right:15px;display:none;justify-content:space-between;pointer-events:none}#touch button{pointer-events:auto}#fire{border-radius:50%;width:80px;height:80px}@media(pointer:coarse){#touch:not(.hidden){display:flex}#tips{display:none}#team{top:auto;bottom:145px}}@media(max-width:600px){#hud{font-size:11px}#hud>div{padding:7px}h1{font-size:40px}}
+
+#perks{position:fixed;right:15px;top:105px;width:230px;max-height:55vh;overflow:auto;border:1px solid #5adff666;background:#07182de8;border-radius:12px;padding:13px;pointer-events:none}
+#perks h3{margin:0 0 8px;color:#85f8ff;font-size:13px;letter-spacing:2px}
+.perk{margin:5px 0;font-size:12px;display:flex;justify-content:space-between;gap:10px;color:#d8faff}
+.perk span{color:#69ecfa;font-weight:800}
+#upgrades{position:fixed;inset:0;background:#020817ed;display:grid;place-items:center;z-index:10;backdrop-filter:blur(6px)}
+#upgrades section{width:min(780px,95vw);max-height:92vh;overflow-y:auto}
+#upgrades h2{font-size:clamp(25px,5vw,38px);margin:10px;color:#68f5ff}
+#options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:24px 0 10px}
+.option{min-height:210px;padding:20px 12px;background:linear-gradient(160deg,#123054,#091428);border:1px solid #2c779b;border-radius:15px;color:white;display:flex;align-items:center;flex-direction:column;justify-content:center;gap:9px;transition:transform .12s,border-color .12s}
+.option:hover{transform:translateY(-5px);border-color:#6cf8ff}
+.option .emblem{font-size:39px;filter:drop-shadow(0 0 12px #35e5ff)}
+.option strong{font-size:16px;color:#93f8ff}
+.option small{line-height:1.4;color:#b0cee2}
+#bossbar{position:fixed;top:90px;left:50%;transform:translateX(-50%);width:min(400px,70vw);padding:9px 15px;background:#180926e8;border:1px solid #ff55b8;border-radius:12px;text-align:center;font-weight:900;color:#ff88e6;text-shadow:0 0 14px #db2199}
+#bosstrack{margin-top:8px;height:12px;background:#35152d;border:1px solid #ff65bd;border-radius:20px;overflow:hidden}
+#bossfill{height:100%;width:100%;background:linear-gradient(90deg,#a744ff,#ff366e);transition:width .15s}
+#damageFlash{position:fixed;inset:0;pointer-events:none;border:0 solid #ff234f;box-shadow:inset 0 0 120px 35px #ff174b;opacity:0;z-index:3}
+#announce{z-index:5;text-align:center;width:min(90vw,700px);white-space:normal;pointer-events:none}
+@media(max-width:650px){#options{grid-template-columns:1fr}.option{min-height:92px;padding:10px;flex-direction:row;flex-wrap:wrap}.option .emblem{font-size:25px}.option small{width:100%}#perks{top:auto;bottom:115px;right:10px;max-height:30vh;width:155px;padding:9px}#bossbar{top:105px}#team{font-size:11px}}
+
+/* ANIME EDITION v3 — original cosplay-inspired art direction */
+:root{--anime-ink:#1a103b;--anime-violet:#a77dff;--anime-rose:#ff77c8;--anime-sky:#61eaff}
+body{font-family:system-ui,"Segoe UI",sans-serif}
+#menu{overflow-y:auto;display:flex;align-items:flex-start;justify-content:center;padding:26px 14px 70px;background:
+radial-gradient(ellipse 68% 72% at 20% 15%,#9f5de034,transparent 80%),
+radial-gradient(ellipse 60% 70% at 85% 90%,#ff70af22,transparent 70%),#050719eb}
+#menu section{width:min(100%,970px);max-width:970px;padding:26px clamp(16px,4vw,34px);margin:auto;border:2px solid #ac8dff;background:linear-gradient(145deg,#161636ee,#0b112be9);box-shadow:8px 8px 0 #190d40,0 0 85px #b77bff27;text-align:center;position:relative;overflow:hidden}
+#menu section:before{content:"";position:absolute;right:-100px;top:-120px;width:310px;height:310px;border-radius:50%;background:repeating-radial-gradient(circle,#ff6cba18 0 4px,transparent 5px 19px);pointer-events:none}
+#menu h1{font-weight:950;letter-spacing:1px;transform:skew(-5deg);text-shadow:4px 4px 0 #aa40cf,8px 8px 0 #2c196c;color:#f0faff;font-size:clamp(37px,6vw,65px);line-height:.9;margin:12px 0 18px}
+#menu p{color:#d4c9ea}
+#menu .primary{background:linear-gradient(100deg,#ff7abc,#8edfff);border:2px solid #fce6ff;color:#211033;box-shadow:0 5px 0 #63269d}
+#menu .primary:hover{background:linear-gradient(100deg,#ffd1ea,#b9f2ff);transform:translateY(-2px)}
+#menu input{background:#0d1331;border:1px solid #9c87e2;text-align:center}
+#selector{position:relative;margin:19px auto;max-width:890px}
+#selector h2{font-size:16px;color:#ffb5e4;letter-spacing:2.5px;margin:18px 0 6px;text-align:left}
+#selector .select-subtitle{font-size:12px;color:#c5b7e4;text-align:left;margin:0 0 9px}
+.selection-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+#selector .pick{width:100%;margin:0;min-height:152px;border:2px solid #564889;position:relative;padding:11px 9px;display:flex;flex-direction:column;align-items:center;gap:6px;background:linear-gradient(160deg,#211942,#10152e);color:#fff;border-radius:13px;overflow:hidden;transition:transform .16s,box-shadow .16s,border-color .16s}
+#selector .pick:hover{transform:translateY(-3px);border-color:#ffd0f1}
+#selector .pick.selected{border-color:#ffb2e3;background:linear-gradient(155deg,#5f347e,#17204b);box-shadow:0 0 0 2px #f7e4ff42,inset 0 0 33px #ff61c33c}
+#selector .pick.selected:after{content:"✓";position:absolute;right:7px;top:5px;background:#ffbde8;color:#3b1246;font-weight:900;border-radius:50%;width:22px;height:22px;line-height:22px}
+#selector .pick strong{font-size:13px;color:#fff;text-shadow:0 1px 3px #110c26}
+#selector .pick small{font-size:10px;line-height:1.3;color:#cdb9ec}
+#selector .pick .spell-icon{font-size:31px;margin:7px 0;filter:drop-shadow(0 0 10px #cf8dff)}
+#selector .pick .spell-cd{font-size:10px;color:#7eeefa;text-transform:uppercase;letter-spacing:1px;font-weight:700}
+.cosplay-portrait{height:75px;width:75px;position:relative;display:block;background:linear-gradient(160deg,#aa8bfc,#e8afff);border-radius:50%;box-shadow:0 0 0 3px #ffe5ff42,inset 0 -9px 15px #1e18333f;overflow:hidden}
+.cosplay-portrait .hair-back{position:absolute;left:16px;top:11px;width:45px;height:62px;background:var(--hair);border:2px solid #33224a;border-radius:25px 25px 13px 13px}
+.cosplay-portrait .neck{position:absolute;left:31px;top:38px;width:15px;height:26px;background:var(--skin)}
+.cosplay-portrait .face{position:absolute;left:23px;top:15px;width:31px;height:36px;background:var(--skin);border:1.5px solid #714f66;border-radius:43% 43% 45% 45%}
+.cosplay-portrait .fringe{position:absolute;left:20px;top:11px;width:37px;height:19px;background:var(--hair);border-radius:60% 80% 20% 50%;transform:rotate(-6deg)}
+.cosplay-portrait .eyes{position:absolute;left:29px;top:30px;width:19px;height:6px;border-left:5px solid #3b3173;border-right:5px solid #3b3173}
+.cosplay-portrait .outfit{position:absolute;left:15px;top:57px;width:48px;height:29px;background:var(--outfit);border-top:7px solid var(--trim);border-radius:40% 40% 0 0}
+.cosplay-portrait .ribbon{position:absolute;left:30px;top:54px;width:17px;height:9px;background:var(--trim);clip-path:polygon(0 0,50% 35%,100% 0,87% 100%,50% 70%,13% 100%)}
+#menu .character-tip{text-align:center;margin:13px 0 7px;color:#e6d6ff;font-size:11px;letter-spacing:.5px}
+#hud>div,#team,#perks,#bossbar{background:linear-gradient(140deg,#271b4ae8,#0e1835e8);border:2px solid #a07fed;box-shadow:4px 4px 0 #150e35}
+#hud b,#perks h3{color:#ff9ce0}
+#upgrades section{border:2px solid #bc85ee;background:linear-gradient(145deg,#2a1d4b,#10142e);box-shadow:8px 8px 0 #100c22}
+.option{border:2px solid #72539c;background:linear-gradient(165deg,#382651,#141637)}
+.option:hover{border-color:#ffbbea;box-shadow:0 0 22px #ed6dde44}
+#version-badge{position:fixed;bottom:12px;left:12px;z-index:20;padding:7px 11px;background:#141027db;color:#d8c6ff;border:1px solid #c490ff88;border-radius:6px;font-size:11px;font-weight:800;letter-spacing:1px;pointer-events:none;box-shadow:2px 2px 0 #060615}
+#abilityHud{position:fixed;right:15px;bottom:20px;z-index:4;min-width:220px;max-width:270px}
+#abilityHud button{width:100%;padding:12px 14px;border:2px solid #ff9ddb;background:linear-gradient(135deg,#421c68,#19183e);box-shadow:4px 4px 0 #0e0925;display:flex;align-items:center;justify-content:space-between;gap:9px;color:#fff}
+#abilityHud button:disabled{filter:saturate(.55)}
+#abilityHud #abilitySymbol{font-size:24px}
+#abilityHud .ability-meta{display:flex;flex-direction:column;align-items:flex-start;line-height:1.4}
+#abilityHud #abilityName{font-weight:800;font-size:12px}
+#abilityHud #abilityTimer{font-size:10px;color:#c8b1f4}
+#abilityBar{height:5px;width:100%;background:#251643;border:1px solid #8d63c3;margin-top:6px;overflow:hidden}
+#abilityFill{height:100%;background:linear-gradient(90deg,#ba71ff,#65efff);width:100%;transition:width .12s}
+#tips{bottom:10px;max-width:calc(100vw - 510px);font-size:11px}
+#bossbar{background:#321336dd}
+#team{max-width:185px}
+@media(max-width:740px){.selection-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#selector .pick{min-height:133px}#menu section{padding:20px 12px}#menu h1{font-size:47px}#abilityHud{right:10px;bottom:120px;max-width:175px;min-width:160px}#abilityHud button{padding:7px}#tips{display:none}#perks{top:110px;bottom:auto;width:140px}#version-badge{bottom:8px;left:8px}}
+@media(max-width:380px){#selector .pick strong{font-size:11px}.cosplay-portrait{width:64px;height:64px}#menu section{padding:16px 8px}}
+@media(prefers-reduced-motion:reduce){#menu .primary,#selector .pick{transition:none}}
+
+</style><canvas id="c"></canvas><div id="menu"><section><small>ANIME EDITION • 3D ONLINE CO-OP</small><h1>NEON<br>NEXUS</h1><p>Védd meg a kristályt a drónoktól a barátaiddal! Maximum 6 játékos, közös hullámok, pontszámok.</p>
+<div id="selector" aria-label="Anime karakter összeállítása">
+<h2>01 / COSPLAY SKIN</h2>
+<p class="select-subtitle">My Dress-Up Darling-ihlette, saját készítésű anime karakterek. A skinedet a többiek is látják.</p>
+<div class="selection-grid" id="skinChoices" role="group" aria-label="Skinválasztás"></div>
+<h2>02 / ÁTOKTECHNIKA</h2>
+<p class="select-subtitle">Jujutsu Kaisen ihlette különleges képesség. Játék közben Q-val aktiválható.</p>
+<div class="selection-grid" id="powerChoices" role="group" aria-label="Képességválasztás"></div>
+<p class="character-tip">✦ Választásaid megmaradnak a böngésződben • Hullámok után további fejlesztéseket kapsz</p>
+</div>
+<input id="name" maxlength="14" placeholder="Játékosneved" value="Játékos"><button class="primary" id="create">MULTIPLAYER SZOBA LÉTREHOZÁSA</button><div class="row"><input id="room" maxlength="6" placeholder="SZOBAKÓD"><button id="join">CSATLAKOZÁS</button></div><button id="solo">EGYJÁTÉKOS DEMO</button><p id="status"></p></section></div>
+<div id="hud" class="hidden"><div><strong>NEON NEXUS</strong><br>SZOBA: <b id="code">SOLO</b></div><div>HULLÁM <b id="wave">1</b> • KRISTÁLY <b id="health">100%</b><br>ÉLETERŐ <b id="hp">100</b></div><div><button id="invite">MEGHÍVÁS</button><button id="leave">KILÉPÉS</button></div></div><div id="version-badge" aria-label="Játékverzió">◆ NEON NEXUS • v3.0.0 ANIME EDITION</div>
+<div id="abilityHud" class="hidden"><button id="useAbility" title="Különleges képesség: Q"><span id="abilitySymbol">✦</span><span class="ability-meta"><strong id="abilityName">Képesség</strong><small id="abilityTimer">Q • KÉSZ</small></span><strong>Q</strong></button><div id="abilityBar"><div id="abilityFill"></div></div></div>
+<div id="team" class="hidden"></div><div id="tips" class="hidden">WASD: MOZGÁS • EGÉR: CÉLZÁS • KATTINTÁS: LÖVÉS • Q: ÁTOKTECHNIKA</div><div id="announce"></div><div id="touch" class="hidden"><div><button data-k="w">▲</button><br><button data-k="a">◀</button><button data-k="s">▼</button><button data-k="d">▶</button></div><button id="fire">LŐ</button></div><div id="end" class="hidden"><section><h1>VÉGE</h1><p id="result"></p><button id="again" class="primary">ÚJRAINDÍTÁS</button><button id="back">MENÜ</button></section></div>
+<div id="perks" class="hidden"><h3>⚡ FEJLESZTÉSEID</h3><div id="perklist">Az első hullám után választhatsz.</div></div>
+<div id="bossbar" class="hidden">☠ TITÁN BOSS • <span id="bosshp">100%</span><div id="bosstrack"><div id="bossfill"></div></div></div>
+<div id="damageFlash"></div>
+<div id="upgrades" class="hidden"><section><small>HULLÁM TELJESÍTVE</small><h2 id="upgradeTitle">VÁLASSZ FEJLESZTÉST!</h2><p id="upgradeHint">Válassz egyet a három lehetőség közül.</p><div id="options"></div></section></div>
+<script src="https://unpkg.com/peerjs@1.5.5/dist/peerjs.min.js"></script><script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js';
+const $=s=>document.getElementById(s),scene=new THREE.Scene();scene.background=new THREE.Color(0x050b1b);scene.fog=new THREE.FogExp2(0x050b1b,.013);
+const renderer=new THREE.WebGLRenderer({canvas:$('c'),antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);
+const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,160);camera.position.set(0,27,28);camera.lookAt(0,0,0);
+scene.add(new THREE.HemisphereLight(0xb5efff,0x102039,2));const sun=new THREE.DirectionalLight(0xffffff,2);sun.position.set(-10,20,8);scene.add(sun);
+const mat=(c,e=.6)=>new THREE.MeshStandardMaterial({color:c,emissive:c,emissiveIntensity:e,metalness:.4,roughness:.4});
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(54,54),mat(0x0a1930,.1));floor.rotation.x=-Math.PI/2;scene.add(floor);
+const grid=new THREE.GridHelper(54,27,0x13517d,0x17436a);grid.position.y=.02;scene.add(grid);
+for(let i=0;i<4;i++){let wall=new THREE.Mesh(new THREE.BoxGeometry(i%2?1:54,1,i%2?54:1),mat(0x103b66,.4));wall.position.set(i===1?-27:i===3?27:0,.5,i===0?-27:i===2?27:0);scene.add(wall)}
+const crystal=new THREE.Mesh(new THREE.OctahedronGeometry(1.5),mat(0x43eeff,3));crystal.position.y=2.4;scene.add(crystal);
+const pedestal=new THREE.Mesh(new THREE.CylinderGeometry(2,2.6,.7,8),mat(0x1762a3,.7));pedestal.position.y=.35;scene.add(pedestal);
+const light=new THREE.PointLight(0x35eeff,65,20);light.position.y=3;scene.add(light);
+// Anime-style magic circles, glowing starlight and outlined arena details
+for(const [radius,tint,iy] of [[3.2,0xff7bc9,.035],[4.05,0x866df7,.045],[5.35,0x5fe7fb,.055]]){
+const geom=new THREE.RingGeometry(radius-.035,radius+.035,72);
+const mesh=new THREE.Mesh(geom,new THREE.MeshBasicMaterial({color:tint,side:THREE.DoubleSide,transparent:true,opacity:.5}));mesh.rotation.x=-Math.PI/2;mesh.position.y=iy;scene.add(mesh)}
+for(let n=0;n<12;n++){const theta=n*Math.PI/6,rad=6.4;
+const star=new THREE.Mesh(new THREE.OctahedronGeometry(n%3===0?.24:.12),new THREE.MeshBasicMaterial({color:n%2?0xff9dda:0x87eafd}));
+star.position.set(Math.cos(theta)*rad,.22,Math.sin(theta)*rad);scene.add(star)}
+
+const models=new Map(),lasers=[],particles=[],colors=[0x52eaff,0xb988ff,0x7affc1,0xffcb71,0xff78a6,0x8eabff];
+let coreFlash=0,upgradeView='',shake=0;
+const UPGRADES={
+rapid:{icon:'⚡',name:'Plazma gyorsító',desc:'16%-kal gyorsabb lövés minden szinten.'},
+damage:{icon:'💥',name:'Erősebb lövedék',desc:'+1 sebzés minden találatra.'},
+speed:{icon:'👟',name:'Turbó hajtómű',desc:'+14% mozgási sebesség.'},
+multi:{icon:'🎯',name:'Többszörös lövés',desc:'Még egy lézersugár egyszerre (max. 4).'},
+heal:{icon:'❤️',name:'Páncélfejlesztés',desc:'+25 maximális életerő, azonnali gyógyulással.'},
+regen:{icon:'✨',name:'Nanobot regeneráció',desc:'Folyamatosan visszatöltő életerő.'},
+pierce:{icon:'🔱',name:'Átütő plazma',desc:'A lövés további ellenfeleken is áthatol.'},
+repair:{icon:'💎',name:'Kristályvédelem',desc:'Megjavítja és megerősíti a kristályt.'}
+};
+const ENEMY_TYPES={
+normal:{color:0xff457d,speed:2.7,hp:2,damage:4,period:1.25,radius:.72},
+runner:{color:0x39e9fb,speed:4.9,hp:1,damage:2,period:.85,radius:.53},
+tank:{color:0xffb44e,speed:1.75,hp:4,damage:7,period:1.65,radius:.95},
+boss:{color:0xb760ff,speed:1.35,hp:65,damage:17,period:1.8,radius:2.15}
+};
+const SKINS={
+sunny:{name:'Marin-ihlette gyaru',desc:'Szőke haj • rózsaszín masni • iskolai cosplay',hair:0xffd17b,skin:0xffdfbf,outfit:0x243568,trim:0xff7db4,accent:0xfaf0fc},
+goth:{name:'Shizuku-ihlette gótikus',desc:'Lila-fekete ruha • elegáns cosplay',hair:0x35224c,skin:0xffd4c5,outfit:0x271736,trim:0xbe85eb,accent:0xf1deff},
+idol:{name:'Rizu-ihlette anime idol',desc:'Csillagos popfellépő • aqua kiegészítők',hair:0x8edcf3,skin:0xf4d6cd,outfit:0xffffff,trim:0x5fbbe8,accent:0x5f7de5},
+street:{name:'Marin-ihlette streetwear',desc:'Divatos kabát • világos haj',hair:0xe5b18d,skin:0xffd8b9,outfit:0xf19dbf,trim:0x6f3b9c,accent:0xffec9a}
+};
+const POWERS={
+purple:{name:'Lila energiatörés',desc:'Erős, egyenes energiacsapás, több drónt eltalál.',icon:'🟣',cooldown:9,color:0xb069ff},
+infinity:{name:'Végtelen mező',desc:'Eltaszítja és lelassítja a körülötted lévő ellenségeket.',icon:'🔵',cooldown:12,color:0x64caff},
+shadow:{name:'Árnyékidézés',desc:'Árnyékfarkasokkal megtámadja az 5 legközelebbi célpontot.',icon:'🐺',cooldown:10,color:0xb38eff},
+flash:{name:'Fekete villanás',desc:'Közeli ellenségekre pusztító villámcsapás.',icon:'⚡',cooldown:8,color:0xfa8dff},
+reverse:{name:'Fordított energia',desc:'Gyógyítja a csapatot és a központi kristályt.',icon:'💚',cooldown:17,color:0x64ffcb}
+};
+const savedChoice=(key,fallback,options)=>{try{const v=localStorage.getItem('neon-nexus-'+key);return Object.hasOwn(options,v)?v:fallback}catch{return fallback}};
+let selectedSkin=savedChoice('skin','sunny',SKINS),selectedPower=savedChoice('power','purple',POWERS),castTap=0;
+function renderCharacterChoices(){
+const hex=n=>'#'+n.toString(16).padStart(6,'0');
+const skinRoot=$('skinChoices'),powerRoot=$('powerChoices');skinRoot.replaceChildren();powerRoot.replaceChildren();
+for(const [key,skin] of Object.entries(SKINS)){
+const button=document.createElement('button');button.type='button';button.className='pick'+(selectedSkin===key?' selected':'');button.setAttribute('aria-pressed',String(selectedSkin===key));
+const portrait=document.createElement('span');portrait.className='cosplay-portrait';portrait.style.setProperty('--hair',hex(skin.hair));portrait.style.setProperty('--skin',hex(skin.skin));portrait.style.setProperty('--outfit',hex(skin.outfit));portrait.style.setProperty('--trim',hex(skin.trim));
+for(const cls of ['hair-back','neck','face','fringe','eyes','outfit','ribbon']){const elem=document.createElement('i');elem.className=cls;portrait.append(elem)}
+const name=document.createElement('strong');name.textContent=skin.name;const desc=document.createElement('small');desc.textContent=skin.desc;button.append(portrait,name,desc);
+button.onclick=()=>{selectedSkin=key;try{localStorage.setItem('neon-nexus-skin',key)}catch{}renderCharacterChoices()};skinRoot.append(button)}
+for(const [key,power] of Object.entries(POWERS)){
+const button=document.createElement('button');button.type='button';button.className='pick'+(selectedPower===key?' selected':'');button.setAttribute('aria-pressed',String(selectedPower===key));
+const icon=document.createElement('span');icon.className='spell-icon';icon.textContent=power.icon;const title=document.createElement('strong');title.textContent=power.name;const desc=document.createElement('small');desc.textContent=power.desc;const cd=document.createElement('span');cd.className='spell-cd';cd.textContent=power.cooldown+' mp újratöltés';
+button.append(icon,title,desc,cd);button.onclick=()=>{selectedPower=key;try{localStorage.setItem('neon-nexus-power',key)}catch{}renderCharacterChoices()};powerRoot.append(button)}
+}
+renderCharacterChoices();
+let mode='menu',peer,conn,clients=new Map(),state,room='',localId='',myName='',last=performance.now(),sendClock=0,hudClock=0,fire=false,aim={x:0,z:0},keys=new Set(),announcement=0;
+const code=()=>Array.from(crypto.getRandomValues(new Uint8Array(6)),n=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[n%32]).join('');
+const rnd=(a,b)=>a+Math.random()*(b-a),lim=(v,a,b)=>Math.max(a,Math.min(b,v)),safe=s=>String(s||'Játékos').trim().slice(0,14).replace(/[<>]/g,'')||'Játékos';
+function init(){return{players:[],enemies:[],core:100,coreMax:100,wave:0,remaining:0,timer:0,over:false,next:0,phase:'fight',breakId:0}}
+function rollChoices(){return Object.keys(UPGRADES).sort(()=>Math.random()-.5).slice(0,3)}
+function add(id,name,skin='sunny',power='purple'){if(state.players.some(p=>p.id===id))return;const waiting=state.phase==='upgrade';state.players.push({id,name:safe(name),skin:Object.hasOwn(SKINS,skin)?skin:'sunny',power:Object.hasOwn(POWERS,power)?power:'purple',powerCool:0,x:rnd(-5,5),z:rnd(-5,5),angle:0,hp:100,maxHp:100,kills:0,cool:0,revive:0,perks:{},choices:waiting?rollChoices():[],picked:!waiting,input:{x:0,z:0,ax:0,az:0,fire:false,special:false}})}
+function pack(){return{players:state.players.map(({input,cool,revive,...p})=>p),enemies:state.enemies,core:state.core,coreMax:state.coreMax,wave:state.wave,over:state.over,phase:state.phase,breakId:state.breakId}}
+function applyUpgrade(id,index){if(!state||state.phase!=='upgrade')return;const p=state.players.find(x=>x.id===id);if(!p||p.picked||!Number.isInteger(index)||index<0||index>2)return;const key=p.choices[index];if(!UPGRADES[key])return;p.perks[key]=(p.perks[key]||0)+1;p.picked=true;p.choices=[];if(key==='heal'){p.maxHp+=25;p.hp=Math.min(p.maxHp,p.hp+45)}if(key==='repair'){state.coreMax+=8;state.core=Math.min(state.coreMax,state.core+24)}if(key==='multi')p.perks[key]=Math.min(3,p.perks[key]);if(mode==='host')broadcast({type:'state',data:pack()})}
+function beginWave(){state.phase='fight';state.wave++;state.remaining=Math.min(8+state.wave*3,65);state.timer=1;for(const p of state.players){p.picked=true;p.choices=[];p.hp=Math.min(p.maxHp,p.hp+15)}if(state.wave%10===0){const a=rnd(0,Math.PI*2);spawnEnemy('boss',a);announce('☠ BOSS HULLÁM '+state.wave+' ☠')}else announce('HULLÁM '+state.wave)}
+function enterUpgrade(){state.phase='upgrade';state.breakId++;for(const p of state.players){p.choices=rollChoices();p.picked=false;p.input.fire=false}announce('✓ '+state.wave+'. HULLÁM TELJESÍTVE!');if(mode==='host')broadcast({type:'state',data:pack()})}
+function spawnEnemy(kind,angle){const t=ENEMY_TYPES[kind],factor=kind==='boss'?1+Math.max(0,state.wave-10)*.07:1+Math.floor(state.wave/7)*.45;const hp=Math.max(1,Math.round(t.hp*factor));state.enemies.push({id:++state.next,kind,x:Math.cos(angle)*24,z:Math.sin(angle)*24,hp,maxHp:hp,cool:0})}
+
+function show(){ $('menu').classList.add('hidden');if(!state?.over)$('end').classList.add('hidden');for(const x of ['hud','team','tips','touch','perks','abilityHud'])$(x).classList.remove('hidden');$('code').textContent=room||'SOLO';$('invite').style.display=room?'':'none';$('again').style.display=mode==='client'?'none':''}
+function removeModel(g){scene.remove(g);g.traverse(o=>{o.geometry?.dispose();if(o.material){for(const m of (Array.isArray(o.material)?o.material:[o.material])){m.map?.dispose();m.dispose()}}})}
+function clearEffects(){for(const e of [...lasers,...particles]){scene.remove(e.obj);e.obj.geometry?.dispose();e.obj.material?.dispose()}lasers.length=0;particles.length=0}
+function reset(){if(conn)try{conn.close()}catch{};if(peer)try{peer.destroy()}catch{};conn=null;peer=null;clients.clear();state=null;mode='menu';room='';localId='';for(const m of models.values())removeModel(m);models.clear();clearEffects();$('menu').classList.remove('hidden');for(const x of ['hud','team','tips','touch','end','upgrades','perks','bossbar','abilityHud'])$(x).classList.add('hidden');$('create').disabled=false;$('join').disabled=false;$('status').textContent='';upgradeView='';coreFlash=0;castTap=0;keys.clear();fire=false}
+
+function fail(t){reset();$('status').textContent=t}
+function send(c,o){if(c?.open)try{c.send(o)}catch{}}
+function broadcast(o){for(const c of clients.values())send(c,o)}
+function startSolo(){reset();mode='solo';localId='solo';state=init();add(localId,$('name').value,selectedSkin,selectedPower);show()}
+function startHost(){reset();if(typeof Peer!=='function'){fail('A hálózati könyvtár nem töltődött be.');return}mode='host';room=code();localId='host';myName=safe($('name').value);$('create').disabled=true;$('status').textContent='Szoba létrehozása…';peer=new Peer('nnx3d-'+room.toLowerCase());
+peer.on('open',()=>{state=init();add(localId,myName,selectedSkin,selectedPower);show()});
+peer.on('connection',c=>{let joined=false;c.on('data',m=>{if(!m||mode!=='host'||!state)return;
+if(m.type==='hello'&&!joined){if(state.players.length>=6){send(c,{type:'reject',message:'A szoba megtelt.'});setTimeout(()=>c.close(),150);return}joined=true;clients.set(c.peer,c);add(c.peer,m.name,m.skin,m.power);send(c,{type:'welcome',id:c.peer,room});send(c,{type:'state',data:pack()})}
+if(m.type==='upgrade'&&joined&&m.breakId===state.breakId){applyUpgrade(c.peer,m.index)}
+if(m.type==='input'&&joined){const p=state.players.find(p=>p.id===c.peer);if(p)p.input={x:lim(+m.x||0,-1,1),z:lim(+m.z||0,-1,1),ax:lim(+m.ax||0,-25,25),az:lim(+m.az||0,-25,25),fire:!!m.fire,special:!!m.special}}});
+c.on('close',()=>{clients.delete(c.peer);if(state)state.players=state.players.filter(p=>p.id!==c.peer)})});
+peer.on('error',e=>fail('Nem sikerült megnyitni: '+e.type))}
+function startJoin(){const code=$('room').value.trim().toUpperCase();if(!/^[A-Z2-9]{6}$/.test(code)){$('status').textContent='Adj meg 6 karakteres szobakódot.';return}
+reset();mode='client';room=code;myName=safe($('name').value);$('join').disabled=true;$('status').textContent='Csatlakozás…';peer=new Peer();
+peer.on('open',()=>{conn=peer.connect('nnx3d-'+room.toLowerCase(),{reliable:true});conn.on('open',()=>send(conn,{type:'hello',name:myName,skin:selectedSkin,power:selectedPower}));
+conn.on('data',m=>{if(m.type==='reject')fail(m.message);if(m.type==='welcome'){localId=m.id;show()}if(m.type==='state'){state=m.data;if(localId)show()}if(m.type==='laser')laser(m.a,m.b,m.color,m.hit);if(m.type==='corehit')coreImpact(m.x,m.z,m.boss);if(m.type==='powerfx')powerVisual(m.effect)});
+conn.on('close',()=>{if(mode==='client')fail('A házigazda kilépett.')})});peer.on('error',e=>fail(e.type==='peer-unavailable'?'Nem található aktív szoba.':'Hálózati hiba: '+e.type))}
+function input(){let x=+keys.has('d')-+keys.has('a'),z=+keys.has('s')-+keys.has('w');let d=Math.hypot(x,z)||1;return{x:x/d,z:z/d,ax:aim.x,az:aim.z,fire,special:keys.has('q')||castTap>0}}
+function chooseUpgrade(n){if(!state||state.phase!=='upgrade'||!localId)return;if(mode==='client'){send(conn,{type:'upgrade',breakId:state.breakId,index:n});$('upgradeHint').textContent='Választás elküldve a házigazdának…';for(const b of $('options').querySelectorAll('button'))b.disabled=true}else applyUpgrade(localId,n)}
+function burst(x,z,color,count=8,scale=1){if(particles.length>220)return;for(let j=0;j<count;j++){const o=new THREE.Mesh(new THREE.SphereGeometry(rnd(.045,.14)*scale,6,5),new THREE.MeshBasicMaterial({color,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false}));o.position.set(x+rnd(-.5,.5),rnd(.5,2.6),z+rnd(-.5,.5));scene.add(o);particles.push({obj:o,v:new THREE.Vector3(rnd(-5,5)*scale,rnd(1,5)*scale,rnd(-5,5)*scale),life:rnd(.28,.65),max:.65,type:'spark'})}}
+function ring(x,z,color,size=1){const geo=new THREE.RingGeometry(.82,1,40);const obj=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color,side:THREE.DoubleSide,transparent:true,opacity:.9,blending:THREE.AdditiveBlending,depthWrite:false}));obj.rotation.x=-Math.PI/2;obj.position.set(x,.16,z);obj.scale.setScalar(size);scene.add(obj);particles.push({obj,life:.5,max:.5,type:'ring'})}
+function coreImpact(x,z,boss=false){coreFlash=.95;shake=Math.max(shake,boss?.75:.34);burst(x,z,boss?0xffb34b:0xff3267,boss?24:11,boss?1.7:1);ring(0,0,boss?0xffb34b:0xff3267,boss?2.7:1.8);ring(x,z,0xff496f,boss?1.8:1);announce('⚠ KRISTÁLY TÁMADÁS ALATT!')}
+function laser(a,b,color,hit=false){const from=new THREE.Vector3(a.x,1.35,a.z),to=new THREE.Vector3(b.x,1.15,b.z),delta=new THREE.Vector3().subVectors(to,from),length=delta.length();if(length<.05)return;const direction=delta.clone().normalize();
+for(const [r,opacity]of [[.13,.25],[.045,.95]]){const obj=new THREE.Mesh(new THREE.CylinderGeometry(r,r,length,8,1),new THREE.MeshBasicMaterial({color:r<.05?0xffffff:color,transparent:true,opacity,depthWrite:false,blending:THREE.AdditiveBlending}));obj.position.copy(from).addScaledVector(delta,.5);obj.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),direction);scene.add(obj);lasers.push({obj,life:r<.05?.14:.21,max:r<.05?.14:.21,base:opacity})}
+burst(a.x,a.z,color,3,.45);if(hit){burst(b.x,b.z,color,7,.55);ring(b.x,b.z,color,.35)}}
+
+function damageEnemy(e,damage,owner){if(!state.enemies.includes(e))return;
+e.hp-=damage;
+if(e.hp<=0){state.enemies=state.enemies.filter(x=>x!==e);owner.kills++;
+if(e.kind==='boss'){ring(e.x,e.z,0xcf65ff,4);burst(e.x,e.z,0xff8bdf,40,1.8);announce('🏆 BOSS LEGYŐZVE!')}
+else burst(e.x,e.z,ENEMY_TYPES[e.kind||'normal'].color,8,.7)}}
+function powerVisual(effect){if(!effect||!POWERS[effect.type])return;
+const c=POWERS[effect.type].color,{x,z}=effect;
+if(effect.type==='purple'){const to=effect.to||{x:x+10,z};laser({x,z},to,c,true);for(let j=1;j<9;j++){const q=j/9;burst(x+(to.x-x)*q,z+(to.z-z)*q,j%2?0xcc88ff:0xffe8ff,3,.7)}ring(to.x,to.z,0xd09dff,2)}
+if(effect.type==='infinity'){for(const size of [1.2,2.4,4.3])ring(x,z,c,size);burst(x,z,0xa3ddff,30,1.4)}
+if(effect.type==='shadow'){ring(x,z,0x9650d7,1.5);burst(x,z,0x7b50b0,18,1);for(const q of effect.targets||[]){laser({x,z},q,0xa17bff,true);burst(q.x,q.z,0x8f72ff,6,.6)}}
+if(effect.type==='flash'){for(const size of [1.1,3.5,5.7])ring(x,z,0xf6a3ff,size);burst(x,z,0xf1b3ff,35,2)}
+if(effect.type==='reverse'){ring(x,z,0x7cfbd9,2);ring(0,0,0x87fbd2,2.3);burst(x,z,c,26,1.3);for(const t of effect.targets||[])burst(t.x,t.z,c,6,.6)}
+}
+function castPower(p){if(!state||state.phase!=='fight'||p.hp<=0||p.powerCool>0)return;
+const type=Object.hasOwn(POWERS,p.power)?p.power:'purple',power=POWERS[type],x=p.x,z=p.z,fx={type,x,z,targets:[]};
+p.powerCool=power.cooldown;
+if(type==='purple'){const dx=Math.sin(p.angle),dz=Math.cos(p.angle);fx.to={x:lim(x+dx*22,-25,25),z:lim(z+dz*22,-25,25)};
+for(const e of [...state.enemies]){const ex=e.x-x,ez=e.z-z,forward=ex*dx+ez*dz,perp=Math.abs(ex*dz-ez*dx);if(forward>0&&forward<22&&perp<2.1)damageEnemy(e,13,p)}}
+if(type==='infinity'){for(const e of [...state.enemies]){const dist=Math.hypot(e.x-x,e.z-z);if(dist<8){damageEnemy(e,4,p);const length=Math.max(.2,dist);e.x=lim(e.x+(e.x-x)/length*3,-24,24);e.z=lim(e.z+(e.z-z)/length*3,-24,24);e.slow=4}}}
+if(type==='shadow'){const nearest=[...state.enemies].filter(e=>Math.hypot(e.x-x,e.z-z)<20).sort((a,b)=>Math.hypot(a.x-x,a.z-z)-Math.hypot(b.x-x,b.z-z)).slice(0,5);
+for(const e of nearest){fx.targets.push({x:e.x,z:e.z});damageEnemy(e,8,p)}}
+if(type==='flash'){for(const e of [...state.enemies])if(Math.hypot(e.x-x,e.z-z)<6.7)damageEnemy(e,12,p)}
+if(type==='reverse'){p.hp=Math.min(p.maxHp,p.hp+48);for(const ally of state.players){if(Math.hypot(ally.x-x,ally.z-z)<13){ally.hp=Math.min(ally.maxHp,ally.hp+40);fx.targets.push({x:ally.x,z:ally.z})}}state.core=Math.min(state.coreMax,state.core+18)}
+powerVisual(fx);if(mode==='host')broadcast({type:'powerfx',effect:fx});
+if(p.id===localId)announce(power.name.toUpperCase()+' ✦')}
+
+function announce(s){$('announce').textContent=s;announcement=performance.now()+1900}
+function tick(dt){if(!state||state.over)return;
+if(state.wave===0)beginWave();
+if(state.phase==='upgrade'){if(state.players.length&&state.players.every(p=>p.picked))beginWave();return}
+state.timer-=dt;
+if(state.remaining>0&&state.timer<=0){const roll=Math.random(),kind=roll<.35?'runner':roll<.68?'normal':'tank';spawnEnemy(kind,rnd(0,Math.PI*2));state.remaining--;state.timer=Math.max(.2,.65-state.wave*.008)}
+for(const p of state.players){const i=p.id===localId?input():p.input;
+if(p.hp<=0){p.powerCool=Math.max(0,p.powerCool-dt);p.revive=(p.revive||0)+dt;if(p.revive>=3){p.hp=p.maxHp;p.x=rnd(-5,5);p.z=rnd(-5,5);p.revive=0}continue}
+p.revive=0;p.powerCool=Math.max(0,p.powerCool-dt);p.x=lim(p.x+i.x*8*Math.pow(1.14,p.perks.speed||0)*dt,-25,25);p.z=lim(p.z+i.z*8*Math.pow(1.14,p.perks.speed||0)*dt,-25,25);p.angle=Math.atan2(i.ax-p.x,i.az-p.z);p.cool=Math.max(0,p.cool-dt);
+if(i.special&&p.powerCool<=0&&state.phase==='fight')castPower(p);
+if(p.perks.regen)p.hp=Math.min(p.maxHp,p.hp+dt*p.perks.regen*1.4);
+if(i.fire&&p.cool===0){p.cool=Math.max(.055,.22*Math.pow(.84,p.perks.rapid||0));const shots=1+Math.min(3,p.perks.multi||0),damage=1+(p.perks.damage||0),penetration=1+(p.perks.pierce||0),color=colors[state.players.indexOf(p)%6];
+for(let j=0;j<shots;j++){const angle=p.angle+(j-(shots-1)/2)*.17,dx=Math.sin(angle),dz=Math.cos(angle),hits=[];
+for(const e of state.enemies){const ex=e.x-p.x,ez=e.z-p.z,along=ex*dx+ez*dz,dist=Math.abs(ex*dz-ez*dx),radius=ENEMY_TYPES[e.kind||'normal'].radius;if(along>0&&along<23&&dist<radius+.3)hits.push({e,along})}
+hits.sort((a,b)=>a.along-b.along);const struck=hits.slice(0,penetration),last=struck.at(-1),to=last?{x:last.e.x,z:last.e.z}:{x:p.x+dx*23,z:p.z+dz*23},from={x:p.x,z:p.z};
+laser(from,to,color,!!last);if(mode==='host')broadcast({type:'laser',a:from,b:to,color,hit:!!last});
+for(const h of struck)damageEnemy(h.e,damage,p)
+}}}
+for(const e of state.enemies){const type=ENEMY_TYPES[e.kind||'normal'];let target=null,dist=Infinity;
+for(const p of state.players){const d=Math.hypot(p.x-e.x,p.z-e.z);if(p.hp>0&&d<dist){dist=d;target=p}}
+if(dist>4.5)target=null;const tx=target?target.x:0,tz=target?target.z:0,dx=tx-e.x,dz=tz-e.z,d=Math.hypot(dx,dz)||1;
+if(d>(target?1.5:type.radius+1.5)){e.x+=dx/d*(type.speed+Math.min(state.wave*.06,1.2))*dt*(e.slow>0?.45:1);e.z+=dz/d*(type.speed+Math.min(state.wave*.06,1.2))*dt*(e.slow>0?.45:1)}
+e.cool-=dt;e.slow=Math.max(0,(e.slow||0)-dt);
+if(d< (target?1.7:type.radius+1.7)&&e.cool<=0){if(target){target.hp=Math.max(0,target.hp-type.damage*2.4)}else{state.core=Math.max(0,state.core-type.damage);coreImpact(e.x,e.z,e.kind==='boss');if(mode==='host')broadcast({type:'corehit',x:e.x,z:e.z,boss:e.kind==='boss'})}e.cool=type.period}}
+if(state.core<=0){state.over=true;state.phase='over';if(mode==='host')broadcast({type:'state',data:pack()});return}
+if(state.remaining===0&&state.enemies.length===0)enterUpgrade()}
+
+function makeLabel(name){const cvs=document.createElement('canvas');cvs.width=512;cvs.height=128;const tex=new THREE.CanvasTexture(cvs);const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,depthTest:false,transparent:true}));sprite.scale.set(3.3,.83,1);sprite.position.y=3.35;return{cvs,tex,sprite,last:''}}
+function updateLabel(label,p){const health=Math.ceil(p.hp),key=p.name+'|'+health+'|'+p.maxHp;if(label.last===key)return;label.last=key;const c=label.cvs.getContext('2d');c.clearRect(0,0,512,128);c.fillStyle='#041327e8';c.fillRect(14,4,484,118);c.strokeStyle='#46e9ff';c.lineWidth=3;c.strokeRect(14,4,484,118);c.font='bold 37px sans-serif';c.textAlign='center';c.fillStyle='#efffff';c.fillText(p.name,256,48);c.fillStyle='#612134';c.fillRect(40,69,432,31);c.fillStyle=health>p.maxHp*.35?'#44f8a7':'#ff5264';c.fillRect(40,69,432*Math.max(0,p.hp/p.maxHp),31);c.font='bold 24px sans-serif';c.fillStyle='#ffffff';c.fillText(health+' / '+p.maxHp,256,94);label.tex.needsUpdate=true}
+function makeModel(enemy,i,o){const g=new THREE.Group(),kind=o.kind||'normal',t=ENEMY_TYPES[kind],color=enemy?t.color:colors[i%6];
+if(enemy){const r=t.radius;const shape=kind==='boss'?new THREE.DodecahedronGeometry(r,1):kind==='tank'?new THREE.DodecahedronGeometry(r):new THREE.IcosahedronGeometry(r,1);const body=new THREE.Mesh(shape,new THREE.MeshToonMaterial({color,emissive:color,emissiveIntensity:kind==='boss'?.55:.23}));body.position.y=r+.25;g.add(body);const outline=new THREE.Mesh(shape,new THREE.MeshBasicMaterial({color:0x1b0e36,side:THREE.BackSide}));outline.position.copy(body.position);outline.scale.setScalar(1.09);g.add(outline);const eye=new THREE.Mesh(new THREE.SphereGeometry(r*.35,10,8),mat(0xffffff,2));eye.position.set(0,r+.25,r*.83);g.add(eye);
+if(kind==='boss'){const halo=new THREE.Mesh(new THREE.TorusGeometry(2.7,.07,8,64),mat(0xff58bf,1.9));halo.position.y=2.5;halo.rotation.x=Math.PI/2.5;g.add(halo);g.userData.halo=halo;for(let j=0;j<7;j++){const a=j*Math.PI*2/7;const spike=new THREE.Mesh(new THREE.ConeGeometry(.42,1.65,4),mat(0xe178ff,1.6));spike.position.set(Math.cos(a)*1.9,2.5,Math.sin(a)*1.9);spike.rotation.z=Math.PI/2;g.add(spike)}const glow=new THREE.PointLight(0xa24fff,22,10);glow.position.y=2;g.add(glow)}
+else{const wing=new THREE.Mesh(new THREE.TorusGeometry(r*1.2,.065,6,16),mat(color,2));wing.position.y=r+.22;wing.rotation.x=Math.PI/2;g.add(wing);g.userData.halo=wing}}
+else{
+const style=SKINS[o.skin]||SKINS.sunny,shade=0x170b29;
+const toon=(c,glow=0)=>new THREE.MeshToonMaterial({color:c,emissive:c,emissiveIntensity:glow,side:THREE.FrontSide});
+const create=(geometry,color,position,outlines=true)=>{const mesh=new THREE.Mesh(geometry,toon(color));mesh.position.set(...position);g.add(mesh);
+if(outlines){const line=new THREE.Mesh(geometry,new THREE.MeshBasicMaterial({color:shade,side:THREE.BackSide}));line.position.copy(mesh.position);line.scale.setScalar(1.065);g.add(line)}return mesh};
+const body=create(new THREE.BoxGeometry(.85,.89,.48),style.outfit,[0,1.35,0]);
+create(new THREE.CylinderGeometry(.50,.81,.73,12),style.outfit,[0,.71,0]);
+create(new THREE.CylinderGeometry(.82,.83,.10,12),style.trim,[0,.35,0],false);
+create(new THREE.BoxGeometry(.75,.13,.5),style.trim,[0,1.79,0],false);
+for(const dir of [-1,1]){create(new THREE.CylinderGeometry(.13,.14,.58,8),style.skin,[dir*.26,.38,0]);
+create(new THREE.BoxGeometry(.33,.18,.53),0x281a41,[dir*.26,.105,.14]);
+create(new THREE.CylinderGeometry(.15,.13,.73,8),style.outfit,[dir*.6,1.29,.03],false);
+create(new THREE.SphereGeometry(.16,8,7),style.skin,[dir*.6, .89,.02],false)}
+create(new THREE.CylinderGeometry(.16,.17,.28,8),style.skin,[0,1.84,0],false);
+const head=create(new THREE.SphereGeometry(.48,22,18),style.skin,[0,2.14,0]);
+for(const side of [-1,1]){create(new THREE.SphereGeometry(.115,10,8),0xffffff,[side*.2,2.17,.424],false);
+create(new THREE.SphereGeometry(.062,10,8),0x302144,[side*.2,2.17,.513],false);
+create(new THREE.SphereGeometry(.025,8,8),0xffffff,[side*.22,2.195,.567],false);
+create(new THREE.SphereGeometry(.065,8,8),0xff9ab9,[side*.31,2.03,.383],false)}
+create(new THREE.SphereGeometry(.045,8,8),0x8d4878,[0,1.995,.442],false);
+const hairGeometry=new THREE.SphereGeometry(.53,20,12,0,Math.PI*2,0,Math.PI*.48);
+create(hairGeometry,style.hair,[0,2.34,0],true);
+for(let b=0;b<3;b++){const fringe=create(new THREE.ConeGeometry(.18,.47,6),style.hair,[-.28+b*.26,2.365,.35],false);fringe.rotation.z=-.16+b*.19}
+const hairLength=o.skin==='goth'?.92:o.skin==='sunny'?.8:o.skin==='idol'?.68:.52;
+for(const side of [-1,1]){const lock=create(new THREE.CylinderGeometry(.22,.13,hairLength,8),style.hair,[side*.45,2.06-hairLength*.26,-.07]);lock.rotation.z=side*.11}
+if(o.skin==='idol')for(const side of [-1,1]){create(new THREE.SphereGeometry(.25,12,10),style.hair,[side*.72,2.48,-.12]);create(new THREE.ConeGeometry(.2,.58,9),style.hair,[side*.78,2.14,-.12])}
+if(o.skin==='goth'){create(new THREE.ConeGeometry(.17,.54,7),style.trim,[-.30,2.6,-.1],false);create(new THREE.ConeGeometry(.17,.54,7),style.trim,[.30,2.6,-.1],false)}
+const frontRibbon=create(new THREE.OctahedronGeometry(.17),style.trim,[0,1.63,.3],false);frontRibbon.scale.set(1.6,.65,.56);
+const weapon=create(new THREE.BoxGeometry(.18,.19,.91),style.accent,[.32,1.18,.72]);weapon.rotation.x=-.15;
+const rune=new THREE.Mesh(new THREE.TorusGeometry(.83,.035,6,48),new THREE.MeshBasicMaterial({color:(POWERS[o.power]||POWERS.purple).color,transparent:true,opacity:.68}));
+rune.rotation.x=-Math.PI/2;rune.position.y=.085;g.add(rune);g.userData.rune=rune;
+const label=makeLabel(o.name);g.userData.label=label;g.userData.skin=o.skin;g.add(label.sprite)}
+scene.add(g);return g}
+function drawState(){if(!state)return;const active=new Set();for(const[enemy,arr]of [[false,state.players],[true,state.enemies]])arr.forEach((o,i)=>{const key=(enemy?'e':'p')+o.id;active.add(key);let m=models.get(key);if(m&&!enemy&&m.userData.skin!==o.skin){removeModel(m);models.delete(key);m=null}
+if(!m){m=makeModel(enemy,i,o);models.set(key,m);m.position.set(o.x,0,o.z)}
+m.position.x+=(o.x-m.position.x)*.3;m.position.z+=(o.z-m.position.z)*.3;m.rotation.y=enemy?Math.atan2(-o.x,-o.z):o.angle||0;
+if(enemy){const kind=o.kind||'normal';m.position.y=Math.sin(performance.now()*.004+i)*.14;if(m.userData.halo)m.userData.halo.rotation.z+=.035;if(kind==='boss')m.scale.setScalar(1+Math.sin(performance.now()*.003)*.045)}
+else{m.position.y=0;updateLabel(m.userData.label,o);if(m.userData.rune){m.userData.rune.rotation.z+=.008;m.userData.rune.material.opacity=.45+Math.sin(performance.now()*.003)*.18}}m.visible=enemy||o.hp>0});
+for(const[k,m]of models)if(!active.has(k)){removeModel(m);models.delete(k)}
+const me=state.players.find(p=>p.id===localId);if(me){camera.position.x+=(me.x-camera.position.x)*.045;camera.position.z+=(me.z+28-camera.position.z)*.045;camera.lookAt(camera.position.x,0,camera.position.z-28)}}
+
+function refreshUpgradeUI(){if(!state||!localId){$('upgrades').classList.add('hidden');upgradeView='';return}
+const me=state.players.find(p=>p.id===localId);if(state.phase!=='upgrade'||!me){$('upgrades').classList.add('hidden');upgradeView='';return}
+const key=state.breakId+':'+localId+':'+me.picked;if(upgradeView!==key){upgradeView=key;$('options').replaceChildren();$('upgradeTitle').textContent=me.picked?'FEJLESZTÉS KIVÁLASZTVA':'VÁLASSZ 1 FEJLESZTÉST!';
+$('upgradeHint').textContent=me.picked?'Várakozás a többi játékosra…':'Válassz egyet a három fejlesztés közül. A következő hullám minden játékos választása után indul.';
+if(!me.picked)me.choices.forEach((id,i)=>{const perk=UPGRADES[id];if(!perk)return;const b=document.createElement('button');b.className='option';const icon=document.createElement('div');icon.className='emblem';icon.textContent=perk.icon;const strong=document.createElement('strong');strong.textContent=perk.name;const info=document.createElement('small');info.textContent=perk.desc;const lvl=document.createElement('small');lvl.textContent='Jelenlegi szint: '+(me.perks[id]||0);b.append(icon,strong,info,lvl);b.onclick=()=>chooseUpgrade(i);$('options').append(b)})}
+$('upgrades').classList.remove('hidden')}
+function hud(){if(!state)return;$('wave').textContent=state.wave;$('health').textContent=Math.ceil(state.core)+' / '+state.coreMax;const me=state.players.find(p=>p.id===localId);$('hp').textContent=me?Math.ceil(me.hp):0;
+$('team').replaceChildren();for(const p of state.players){const line=document.createElement('div');line.textContent=(p.id===localId?'◆ ':'')+p.name+' — '+p.kills+' ✦'+(state.phase==='upgrade'?(p.picked?' ✓':' …'):'');$('team').append(line)}
+$('perklist').replaceChildren();if(me){const items=Object.entries(me.perks||{});if(!items.length)$('perklist').textContent='Még nincs fejlesztésed.';for(const [id,lvl]of items){if(!UPGRADES[id])continue;const d=document.createElement('div');d.className='perk';const name=document.createElement('div');name.textContent=UPGRADES[id].icon+' '+UPGRADES[id].name;const level=document.createElement('span');level.textContent='Lv.'+lvl;d.append(name,level);$('perklist').append(d)}}
+if(me){const power=POWERS[me.power]||POWERS.purple,remain=Math.max(0,me.powerCool||0);
+$('abilitySymbol').textContent=power.icon;$('abilityName').textContent=power.name;
+$('abilityTimer').textContent=remain>0?remain.toFixed(1)+' mp újratöltés':'Q • AKTIVÁLHATÓ';
+$('abilityFill').style.width=(100*(1-remain/power.cooldown))+'%';$('useAbility').disabled=state.phase!=='fight'||remain>0||me.hp<=0}
+const boss=state.enemies.find(e=>e.kind==='boss');$('bossbar').classList.toggle('hidden',!boss);if(boss){const v=Math.max(0,boss.hp/boss.maxHp*100);$('bossfill').style.width=v+'%';$('bosshp').textContent=Math.ceil(v)+'%'}
+refreshUpgradeUI();if(state.over){$('upgrades').classList.add('hidden');$('end').classList.remove('hidden');$('result').textContent='Elért hullám: '+state.wave+' • Csapat pontszám: '+state.players.reduce((n,p)=>n+p.kills,0)}
+if(performance.now()>announcement)$('announce').textContent=''}
+
+function frame(t){requestAnimationFrame(frame);const dt=Math.min((t-last)/1000,.06);last=t;castTap=Math.max(0,castTap-dt);crystal.rotation.y+=dt;crystal.position.y=2.4+Math.sin(t*.002)*.3;coreFlash=Math.max(0,coreFlash-dt*1.7);
+crystal.material.emissive.setHex(coreFlash>.1?0xff315c:0x43eeff);crystal.material.emissiveIntensity=3+coreFlash*4;light.color.setHex(coreFlash>.1?0xff3658:0x35eeff);$('damageFlash').style.opacity=String(Math.min(coreFlash*.65,.48));
+if(mode==='solo'||mode==='host'){tick(dt);sendClock+=dt;if(mode==='host'&&sendClock>.085){broadcast({type:'state',data:pack()});sendClock=0}}
+if(mode==='client'){sendClock+=dt;if(sendClock>.06){send(conn,{type:'input',...input()});sendClock=0}}
+drawState();hudClock+=dt;if(hudClock>.12){hud();hudClock=0}
+for(let i=lasers.length-1;i>=0;i--){const l=lasers[i];l.life-=dt;if(l.life<=0){scene.remove(l.obj);l.obj.geometry.dispose();l.obj.material.dispose();lasers.splice(i,1)}else l.obj.material.opacity=l.base*l.life/l.max}
+for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.life-=dt;if(p.life<=0){scene.remove(p.obj);p.obj.geometry.dispose();p.obj.material.dispose();particles.splice(i,1)}else{p.obj.material.opacity=Math.min(1,p.life/p.max);if(p.type==='ring')p.obj.scale.multiplyScalar(1+dt*3);else{p.obj.position.addScaledVector(p.v,dt);p.v.y-=12*dt}}}
+if(shake>0){camera.position.x+=(Math.random()-.5)*shake*.5;shake=Math.max(0,shake-dt*1.8)}renderer.render(scene,camera)}requestAnimationFrame(frame);
+
+$('create').onclick=startHost;$('join').onclick=startJoin;$('solo').onclick=startSolo;$('leave').onclick=reset;$('back').onclick=reset;
+$('again').onclick=()=>{if(mode==='client')return;const people=state.players.map(p=>({id:p.id,name:p.name,skin:p.skin,power:p.power}));state=init();people.forEach(p=>add(p.id,p.name,p.skin,p.power));$('end').classList.add('hidden');$('upgrades').classList.add('hidden');upgradeView=''};
+$('invite').onclick=async()=>{const url=new URL(location.href);url.searchParams.set('room',room);try{await navigator.clipboard.writeText(url.href);announce('MEGHÍVÓ KIMÁSOLVA')}catch{prompt('Meghívólink:',url.href)}};
+addEventListener('keydown',e=>{let k=e.key.toLowerCase();if(['w','a','s','d','q','arrowup','arrowdown','arrowleft','arrowright'].includes(k)&&mode!=='menu'){e.preventDefault();keys.add(k.replace('arrowup','w').replace('arrowdown','s').replace('arrowleft','a').replace('arrowright','d'))}});
+addEventListener('keyup',e=>keys.delete(e.key.toLowerCase().replace('arrowup','w').replace('arrowdown','s').replace('arrowleft','a').replace('arrowright','d')));
+$('c').onpointerdown=()=>fire=true;addEventListener('pointerup',()=>fire=false);addEventListener('blur',()=>{keys.clear();fire=false});
+$('c').onpointermove=e=>{const mouse=new THREE.Vector2(e.clientX/innerWidth*2-1,1-e.clientY/innerHeight*2),ray=new THREE.Raycaster();ray.setFromCamera(mouse,camera);const point=new THREE.Vector3();if(ray.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0,1,0),0),point)){aim.x=lim(point.x,-25,25);aim.z=lim(point.z,-25,25)}};
+for(const b of document.querySelectorAll('[data-k]')){const k=b.dataset.k;b.onpointerdown=e=>{e.preventDefault();keys.add(k);b.setPointerCapture(e.pointerId)};b.onpointerup=()=>keys.delete(k);b.onpointercancel=()=>keys.delete(k)}
+$('fire').onpointerdown=e=>{fire=true;$('fire').setPointerCapture(e.pointerId)};$('fire').onpointerup=()=>fire=false;
+$('useAbility').onclick=()=>{castTap=.35};
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+const q=new URLSearchParams(location.search).get('room');if(q&&/^[A-Z2-9]{6}$/i.test(q)){$('room').value=q.toUpperCase();$('status').textContent='Meghívót kaptál. Add meg a neved, majd csatlakozz!'}
+</script></html>
